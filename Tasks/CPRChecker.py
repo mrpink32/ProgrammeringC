@@ -7,30 +7,38 @@ weights = (4, 3, 2, 7, 6, 5, 4, 3, 2, 1)
 
 
 def CPRVerifier():
-    cprnum = str(input("cpr-number: "))
+    while True:
+        try:
+            cprnum = str(input("cpr-number: "))
+            if len(cprnum) == 10:
+                break
+            else:
+                print("Illegal action, input has to be ten characters long...")
+        except (IndexError, ValueError):
+            print("Illegal action, input has to be a valid number...")
+
     if VerifyDate(cprnum):
         if VerifyControlDigit(cprnum):
             print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
         elif VerifyWithoutControlDigit(cprnum, ReturnGender(int(cprnum[9]))):
             print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
             print(f"You are ugly, your cpr-number is in: {VerifyWithoutControlDigit(cprnum, ReturnGender(int(cprnum[9])))[1]}")
-            #print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
         else:
             print("You actually didn't input a valid cpr-number how are you so bad?")
-
-
     else:
         print(f"date is invalid!")
+
     while True:
         command = str(input("try again? [y/n]: "))
-        if command == "y":
-            CPRVerifier()
-            break
-        elif command == "n":
-            Main.main()
-            break
-        else:
-            print("Illegal action, input not valid...")
+        match command:
+            case "y":
+                CPRVerifier()
+                break
+            case "n":
+                Main.main()
+                break
+            case _:
+                print("Illegal action, input not valid...")
 
 
 def VerifyControlDigit(data):
