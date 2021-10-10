@@ -16,7 +16,6 @@ def CPRVerifier():
                 print("Illegal action, input has to be ten characters long...")
         except (IndexError, ValueError):
             print("Illegal action, input has to be a valid number...")
-
     if VerifyDate(cprnum):
         if VerifyControlDigit(cprnum):
             print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
@@ -27,7 +26,6 @@ def CPRVerifier():
             print("You actually didn't input a valid cpr-number how are you so bad?")
     else:
         print(f"date is invalid!")
-
     while True:
         command = str(input("try again? [y/n]: "))
         match command:
@@ -56,23 +54,23 @@ def VerifyWithoutControlDigit(data, gender):
         case "Male":
             for x in range(1, 1000, 6):
                 if x == int(i):
-                    return True, f"series 1"
+                    return True, "series 1"
             for x in range(3, 1000, 6):
                 if x == int(i):
-                    return True, f"series 2"
+                    return True, "series 2"
             for x in range(5, 1000, 6):
                 if x == int(i):
-                    return True, f"series 3"
+                    return True, "series 3"
         case "Female":
             for x in range(2, 1000, 6):
                 if x == int(i):
-                    return True, f"series 1"
+                    return True, "series 1"
             for x in range(4, 1000, 6):
                 if x == int(i):
-                    return True, f"series 2"
+                    return True, "series 2"
             for x in range(6, 1000, 6):
                 if x == int(i):
-                    return True, f"series 3"
+                    return True, "series 3"
 
 
 def VerifyDate(data):
