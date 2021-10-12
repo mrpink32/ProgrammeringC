@@ -14,19 +14,20 @@ def main():
     while True:
         try:
             operation = int(input("choose an operation: "))
-            if operation == operations[0]:
-                QuadraticEquation.quadraticFormula()
-                Retry(QuadraticEquation.quadraticFormula)
-            elif operation == operations[1]:
-                Table.table()
-                Retry(Table.table)
-            elif operation == operations[2]:
-                CPRChecker.CPRVerifier()
-                Retry(CPRChecker.CPRVerifier)
-            elif operation == operations[3]:
-                exit()
-            else:
-                print("Illegal action, input has to be a valid number...")
+            match operation
+                case operations[0]:
+                    QuadraticEquation.quadraticFormula()
+                    Retry(QuadraticEquation.quadraticFormula)
+                case operations[1]:
+                    Table.table()
+                    Retry(Table.table)
+                case operations[2]:
+                    CPRChecker.CPRVerifier()
+                    Retry(CPRChecker.CPRVerifier)
+                case operations[3]:
+                    exit()
+                case _:
+                    print("Illegal action, input has to be a valid number...")
         except ValueError:
             print("Illegal action, input has to be a valid number...")
 
