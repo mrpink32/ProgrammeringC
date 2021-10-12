@@ -26,17 +26,6 @@ def CPRVerifier():
             print("You actually didn't input a valid cpr-number how are you so bad?")
     else:
         print(f"date is invalid!")
-    while True:
-        command = str(input("try again? [y/n]: "))
-        match command:
-            case "y":
-                CPRVerifier()
-                break
-            case "n":
-                Main.main()
-                break
-            case _:
-                print("Illegal action, input not valid...")
 
 
 def VerifyControlDigit(data):

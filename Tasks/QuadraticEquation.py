@@ -33,13 +33,3 @@ def quadraticFormula():
         print(f"This quadratic formula has 1 answer: {ans:>{ansFormat}f}")
     elif d < 0:
         print("This quadratic formula has 0 answers:")
-    while True:
-        command = str(input("try again? [y/n]: "))
-        if command == "y":
-            quadraticFormula()
-            break
-        elif command == "n":
-            Main.main()
-            break
-        else:
-            print("Illegal action, input not valid...")
