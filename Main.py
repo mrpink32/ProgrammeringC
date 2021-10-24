@@ -1,6 +1,8 @@
 from Tasks import Table
 from Tasks import QuadraticEquation
 from Tasks import CPRChecker
+from tkinter import *
+from tkinter import ttk
 import sys
 
 
