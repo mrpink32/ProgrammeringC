@@ -9,6 +9,9 @@ import sys
 operations = [1, 2, 3, 4]
 
 
+
+
+
 def main():
     global operations
     print(f"commands: \ntype {operations[0]} for Quadratic formula."
