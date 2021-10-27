@@ -11,7 +11,7 @@ def main():
 	#.grid(column=5, row=5)
 	mainText.pack()
 
-	button1 = ttk.Button(mainWindow, text="Press me")
+	button1 = ttk.Button(mainWindow, text="Quadratic formula")
 	button1.pack()
 
 	button2 = ttk.Button(mainWindow, text="Press me")
@@ -19,6 +19,9 @@ def main():
 
 	button3 = ttk.Button(mainWindow, text="Press me")
 	button3.pack()
+
+	button4 = ttk.Button(mainWindow, text="Exit")
+	button4.pack()
 
 	print(ReturnWidth(mainWindow))
 	mainWindow.mainloop()
