@@ -9,9 +9,6 @@ def main():
 
 	mainText = ttk.Label(mainWindow, text="Grim", style="Grim.TLabel")
 	mainText.grid(column=1, row=1)
-	#mainText.pack()
-
-	
 
 	button1 = ttk.Button(mainWindow, text="Quadratic formula")
 	button1.grid(column=1, row=2)
@@ -29,7 +26,6 @@ def main():
 
 	 
 def ReturnWidth(item):
-	Frame.grid_size
 	return item.grid_size()
 
 
