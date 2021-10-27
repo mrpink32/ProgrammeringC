@@ -3,21 +3,30 @@ from tkinter import ttk
 
 def main():
 	mainWindow = Tk()
-	frame = ttk.Frame(mainWindow, padding=10)
-	frame.grid()
 
-	style = ttk.Style()
-	style.configure("Grim.TLabel", background="yellow")
+	labelStyle = ttk.Style()
+	labelStyle.configure("Grim.TLabel", background="yellow")
+	
+	mainText = ttk.Label(mainWindow, text="Grim", style="Grim.TLabel")
+	#.grid(column=5, row=5)
+	mainText.pack()
 
+	button1 = ttk.Button(mainWindow, text="Press me")
+	button1.pack()
 
+	button2 = ttk.Button(mainWindow, text="Press me")
+	button2.pack()
 
-	ttk.Label(frame, text="Grim", style="Grim.TLabel").grid(column=5, row=5)
+	button3 = ttk.Button(mainWindow, text="Press me")
+	button3.pack()
 
+	print(ReturnWidth(mainWindow))
 	mainWindow.mainloop()
 
-
-def ReturnWidth():
-	mainWindow
+	 
+def ReturnWidth(item):
+	Frame.grid_size
+	return item.grid_size()
 
 
 if __name__ == '__main__':
