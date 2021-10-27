@@ -6,24 +6,23 @@ def main():
 
 	labelStyle = ttk.Style()
 	labelStyle.configure("Grim.TLabel", background="yellow")
-	
+
 	mainText = ttk.Label(mainWindow, text="Grim", style="Grim.TLabel")
-	#.grid(column=5, row=5)
-	mainText.pack()
+	mainText.grid(column=1, row=1)
+	#mainText.pack()
 
 	button1 = ttk.Button(mainWindow, text="Quadratic formula")
-	button1.pack()
+	button1.grid(column=1, row=2)
 
 	button2 = ttk.Button(mainWindow, text="Press me")
-	button2.pack()
-	#vguguugyug
+	button2.grid(column=1, row=3)
+	
 	button3 = ttk.Button(mainWindow, text="Press me")
-	button3.pack()
+	button3.grid(column=1, row=4)
 
-	button4 = ttk.Button(mainWindow, text="Exit")
-	button4.pack()
+	button4 = ttk.Button(mainWindow, text="Exit", command=exit)
+	button4.grid(column=1, row=5)
 
-	print(ReturnWidth(mainWindow))
 	mainWindow.mainloop()
 
 	 
