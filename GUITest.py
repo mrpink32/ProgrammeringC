@@ -3,7 +3,7 @@ from tkinter import ttk
 
 def main():
 	mainWindow = Tk()
-
+	
 	labelStyle = ttk.Style()
 	labelStyle.configure("Grim.TLabel", background="yellow")
 
