@@ -13,14 +13,17 @@ def main():
 	button1 = ttk.Button(mainWindow, text="Quadratic formula")
 	button1.grid(column=1, row=2)
 
-	button2 = ttk.Button(mainWindow, text="Press me")
+	button2 = ttk.Button(mainWindow, text="Table")
 	button2.grid(column=1, row=3)
 	
-	button3 = ttk.Button(mainWindow, text="Press me")
+	button3 = ttk.Button(mainWindow, text="CprChecker")
 	button3.grid(column=1, row=4)
 
 	button4 = ttk.Button(mainWindow, text="Exit", command=exit)
-	button4.grid(column=1, row=5)
+	button4.grid(column=1, row=6)
+
+	button5 = ttk.Button(mainWindow, text="GUI Mockup", command=exit)
+	button5.grid(column=1, row=5)
 
 	mainWindow.mainloop()
 
