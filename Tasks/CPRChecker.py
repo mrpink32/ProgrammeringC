@@ -11,18 +11,21 @@ def CPRVerifier():
             cprnum = str(input("cpr-number: "))
             if len(cprnum) == 10:
                 if VerifyDate(cprnum):
-                    break
+                    if VerifyControlDigit(cprnum):
+                        print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
+                        break
+                    else:
+                        print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
+                        print(f"Your cpr-number is in: {WithoutControlDigit(cprnum, ReturnGender(int(cprnum[9])))}")
+                        break
                 else:
                     print("Invalid date!")
             else:
                 print("Illegal action, input has to be a ten character long number...")
-        except TypeError:
+        except ValueError:
             print("Illegal action, input has to be a valid number...")
-    if VerifyControlDigit(cprnum):
-        print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
-    else:
-        print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
-        print(f"Your cpr-number is in: {WithoutControlDigit(cprnum, ReturnGender(int(cprnum[9])))}")
+        
+    
 
 
 def VerifyControlDigit(data):
@@ -60,13 +63,16 @@ def WithoutControlDigit(data, gender):
 
 
 def VerifyDate(data):
-    day = f"{data[0:2]}"
-    month = f"{data[2:4]}"
-    year = f"{str(GetCentury(int(data[6]), int(data[4:6]))) + data[4:6]}"
-    global dIQ
-    dIQ = datetime.date(int(year), int(month), int(day))
-    if datetime.date.min < dIQ < datetime.date.max:
-        return True
+    try:
+        day = f"{data[0:2]}"
+        month = f"{data[2:4]}"
+        year = f"{str(GetCentury(int(data[6]), int(data[4:6]))) + data[4:6]}"
+        global dIQ
+        dIQ = datetime.date(int(year), int(month), int(day))
+        if datetime.date.min < dIQ < datetime.date.max:
+            return True
+    except (ValueError, TypeError):
+        return False
 
 
 def GetCentury(x, y):
