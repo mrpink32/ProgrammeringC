@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Tasks"
   ],
-  "SelectedNode": "\\GUITest.py",
+  "SelectedNode": "\\Tasks\\CPRChecker.py",
   "PreviewInSolutionExplorer": false
 }

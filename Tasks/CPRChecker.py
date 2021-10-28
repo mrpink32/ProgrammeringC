@@ -16,7 +16,7 @@ def CPRVerifier():
                     print("Invalid date!")
             else:
                 print("Illegal action, input has to be a ten character long number...")
-        except (ValueError):
+        except TypeError:
             print("Illegal action, input has to be a valid number...")
     if VerifyControlDigit(cprnum):
         print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
