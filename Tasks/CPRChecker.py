@@ -20,9 +20,9 @@ def CPRVerifier():
             print("Illegal action, input has to be a valid number...")
     if VerifyControlDigit(cprnum):
         print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
-    elif VerifyWithoutControlDigit(cprnum, ReturnGender(int(cprnum[9])))[0]:
+    else:
         print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
-        print(f"Your cpr-number is in: {VerifyWithoutControlDigit(cprnum, ReturnGender(int(cprnum[9])))[1]}")
+        print(f"Your cpr-number is in: {WithoutControlDigit(cprnum, ReturnGender(int(cprnum[9])))}")
 
 
 def VerifyControlDigit(data):
@@ -34,29 +34,29 @@ def VerifyControlDigit(data):
         return True
 
 
-def VerifyWithoutControlDigit(data, gender):
+def WithoutControlDigit(data, gender):
     i = data[7:10]
     match gender:
         case "Male":
             for x in range(1, 1000, 6):
                 if x == int(i):
-                    return True, "series 1"
+                    return "series 1"
             for x in range(3, 1000, 6):
                 if x == int(i):
-                    return True, "series 2"
+                    return "series 2"
             for x in range(5, 1000, 6):
                 if x == int(i):
-                    return True, "series 3"
+                    return "series 3"
         case "Female":
             for x in range(2, 1000, 6):
                 if x == int(i):
-                    return True, "series 1"
+                    return "series 1"
             for x in range(4, 1000, 6):
                 if x == int(i):
-                    return True, "series 2"
+                    return "series 2"
             for x in range(6, 1000, 6):
                 if x == int(i):
-                    return True, "series 3"
+                    return "series 3"
 
 
 def VerifyDate(data):
