@@ -1,4 +1,3 @@
-import Main
 import math
 import datetime
 
@@ -11,21 +10,19 @@ def CPRVerifier():
         try:
             cprnum = str(input("cpr-number: "))
             if len(cprnum) == 10:
-                break
+                if VerifyDate(cprnum):
+                    break
+                else:
+                    print("Invalid date!")
             else:
-                print("Illegal action, input has to be ten characters long...")
-        except (IndexError, ValueError):
+                print("Illegal action, input has to be a ten character long number...")
+        except (ValueError):
             print("Illegal action, input has to be a valid number...")
-    if VerifyDate(cprnum):
-        if VerifyControlDigit(cprnum):
-            print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
-        elif VerifyWithoutControlDigit(cprnum, ReturnGender(int(cprnum[9]))):
-            print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
-            print(f"You are ugly, your cpr-number is in: {VerifyWithoutControlDigit(cprnum, ReturnGender(int(cprnum[9])))[1]}")
-        else:
-            print("You actually didn't input a valid cpr-number how are you so bad?")
-    else:
-        print(f"date is invalid!")
+    if VerifyControlDigit(cprnum):
+        print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
+    elif VerifyWithoutControlDigit(cprnum, ReturnGender(int(cprnum[9])))[0]:
+        print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
+        print(f"Your cpr-number is in: {VerifyWithoutControlDigit(cprnum, ReturnGender(int(cprnum[9])))[1]}")
 
 
 def VerifyControlDigit(data):
@@ -89,3 +86,7 @@ def ReturnGender(data):
         return "Female"
     elif (data % 2) == 1:
         return "Male"
+
+
+
+CPRVerifier()
