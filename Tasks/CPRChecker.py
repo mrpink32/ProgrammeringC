@@ -88,5 +88,4 @@ def ReturnGender(data):
         return "Male"
 
 
-
 CPRVerifier()
