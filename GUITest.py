@@ -1,19 +1,26 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import font
 
 def main():
-	mainWindow = Tk()
+	root = Tk()
 	
+	mainWindow = Frame(root, background="#FF64FF")
+	mainWindow.grid()
+
 	labelStyle = ttk.Style()
 	labelStyle.configure("Grim.TLabel", background="yellow")
+
+	buttonStyle = ttk.Style()
+	buttonStyle.configure("Grim.TButton", background="yellow")
 
 	mainText = ttk.Label(mainWindow, text="Grim", style="Grim.TLabel")
 	mainText.grid(column=1, row=1)
 	 
-	button1 = ttk.Button(mainWindow, text="Quadratic formula")
+	button1 = ttk.Button(mainWindow, text="Quadratic formula", style="Grim.TButton")
 	button1.grid(column=1, row=2)
 
-	button2 = ttk.Button(mainWindow, text="Table")
+	button2 = ttk.Button(mainWindow, text="Table", style="Grim.TButton")
 	button2.grid(column=1, row=3)
 	
 	button3 = ttk.Button(mainWindow, text="CprChecker")
