@@ -7,14 +7,11 @@ def main():
 
 	mainWindow = Frame(root, background="#FF64FF")
 	mainWindow.grid()
-
-#region Styles
 	labelStyle = ttk.Style()
 	labelStyle.configure("Grim.TLabel", background="yellow")
 
 	buttonStyle = ttk.Style()
 	buttonStyle.configure("Grim.TButton", background="yellow")
-#endregion
 
 	mainText = ttk.Label(mainWindow, text="Grim", style="Grim.TLabel")
 	mainText.grid(columnspan=100, row=1)
