@@ -15,7 +15,7 @@ def CPRVerifier():
                         print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
                         break
                     else:
-                        print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
+                        print(f"cpr-number cannot be validated with modulus 11 but may still be valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
                         print(f"Your cpr-number is in: {WithoutControlDigit(cprnum, ReturnGender(int(cprnum[9])))}")
                         break
                 else:
