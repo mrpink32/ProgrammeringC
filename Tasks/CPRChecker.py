@@ -88,10 +88,7 @@ def GetCentury(x, y):
 
 
 def ReturnGender(data):
-    if (data % 2) == 0:
-        return "Female"
-    elif (data % 2) == 1:
-        return "Male"
+    return "Female" if (data % 2) == 0 else "Male"
 
 
 CPRVerifier()
