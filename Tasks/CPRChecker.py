@@ -8,7 +8,7 @@ weights = (4, 3, 2, 7, 6, 5, 4, 3, 2, 1)
 def CPRVerifier():
     while True:
         try:
-            cprnum = str(input("cpr-number: "))
+            cprnum = str(input("cpr-number: ")).replace("-","")
             if len(cprnum) == 10:
                 if VerifyDate(cprnum):
                     if VerifyControlDigit(cprnum):
