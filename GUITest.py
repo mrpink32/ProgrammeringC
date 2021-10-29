@@ -17,13 +17,13 @@ def main():
 #endregion
 
 	mainText = ttk.Label(mainWindow, text="Grim", style="Grim.TLabel")
-	mainText.grid(column=1, row=1)
+	mainText.grid(columnspan=100, row=1)
 	 
 	button1 = ttk.Button(mainWindow, text="Quadratic formula", style="Grim.TButton")
-	button1.grid(column=1, row=2)
+	button1.grid(columnspan=100, row=2)
 
 	button2 = ttk.Button(mainWindow, text="Table", style="Grim.TButton")
-	button2.grid(column=1, row=3)
+	button2.grid(columnspan=100, row=3)
 	
 	button3 = ttk.Button(mainWindow, text="CprChecker")
 	button3.grid(column=1, row=4)
