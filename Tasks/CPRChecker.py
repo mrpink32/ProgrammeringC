@@ -12,10 +12,10 @@ def CPRVerifier():
             if len(cprnum) == 10:
                 if VerifyDate(cprnum):
                     if VerifyControlDigit(cprnum):
-                        print(f"cpr-number is valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
+                        print(f"cpr-number is valid!\ndate of birth: {VerifyDate(cprnum)[1]}\ngender: {ReturnGender(int(cprnum[9]))}")
                         break
                     else:
-                        print(f"cpr-number cannot be validated with modulus 11 but may still be valid!\ndate of birth: {dIQ}\ngender: {ReturnGender(int(cprnum[9]))}")
+                        print(f"cpr-number cannot be validated with modulus 11 but may still be valid!\ndate of birth: {VerifyDate(cprnum)[1]}\ngender: {ReturnGender(int(cprnum[9]))}")
                         print(f"Your cpr-number is in: {WithoutControlDigit(cprnum, ReturnGender(int(cprnum[9])))}")
                         break
                 else:
@@ -67,10 +67,9 @@ def VerifyDate(data):
         day = f"{data[0:2]}"
         month = f"{data[2:4]}"
         year = f"{str(GetCentury(int(data[6]), int(data[4:6]))) + data[4:6]}"
-        global dIQ
         dIQ = datetime.date(int(year), int(month), int(day))
         if datetime.date.min < dIQ < datetime.date.max:
-            return True
+            return True, dIQ
     except (ValueError, TypeError):
         return False
 
