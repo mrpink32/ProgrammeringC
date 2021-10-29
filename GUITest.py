@@ -1,18 +1,20 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter import font
+
 
 def main():
 	root = Tk()
-	
+
 	mainWindow = Frame(root, background="#FF64FF")
 	mainWindow.grid()
 
+#region Styles
 	labelStyle = ttk.Style()
 	labelStyle.configure("Grim.TLabel", background="yellow")
 
 	buttonStyle = ttk.Style()
 	buttonStyle.configure("Grim.TButton", background="yellow")
+#endregion
 
 	mainText = ttk.Label(mainWindow, text="Grim", style="Grim.TLabel")
 	mainText.grid(column=1, row=1)
@@ -33,10 +35,6 @@ def main():
 	button5.grid(column=1, row=5)
 
 	mainWindow.mainloop()
-
-	 
-def ReturnWidth(item):
-	return item.grid_size()
 
 
 if __name__ == '__main__':
