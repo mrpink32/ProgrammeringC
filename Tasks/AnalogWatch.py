@@ -14,14 +14,19 @@ def main():
     root.geometry(f"{size}x{size}")   #  geometry("800x800")
 
     canvas = Canvas(root, width=size, height=size, background="#ff64ff")
-    canvas.pack(expand=YES, fill=BOTH)
+    canvas.pack(expand=1, fill="both")
 
     update(root, canvas)
     root.mainloop()
 
 
 def update(root, canvas):
-    canvas.delete(all)
+    canvas.delete("all")
+    t = datetime.datetime.now()
+    print(t)
+    canvas.create_oval(size - 50, size - 50, size - 750, size - 750, width=2, fill='yellow')
+    canvas.create_line(size/2, size-750, size/2, size/2, width=5, fill='black')
+    root.after(1000, update, root, canvas)
 
 
 
