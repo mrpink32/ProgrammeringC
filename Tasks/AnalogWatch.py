@@ -24,8 +24,15 @@ def update(root, canvas):
     t = datetime.datetime.now()
     print(t)
     canvas.create_oval(size - 50, size - 50, size - 750, size - 750, width=2, fill="yellow")
-    canvas.create_line(size/2, size/2, size/2, size/2-300, width=3, fill="black")
+    canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(1)[0], size/2+returnPalcementWeights(1)[1], width=3, fill="black")
     root.after(1000, update, root, canvas)
+
+
+def returnPalcementWeights(hour):
+    vinkel = 360/12*hour
+    xWeight = math.cos(vinkel) * 300
+    yWeight = math.sin(vinkel) * 300
+    return xWeight, yWeight
 
 
 
