@@ -4,14 +4,13 @@ import datetime
 import math
 
 
-size = 800
-handSizes = 300, 200, 150
+size = 200
 offset = 0.465, 0
 
 
 def main():
     root = Tk()
-    root.title("Watch") 
+    root.title("AnalogWatch") 
     root.geometry(f"{size}x{size}")
 
     canvas = Canvas(root, width=size, height=size, background="#ffffff")
@@ -27,8 +26,13 @@ def update(root, canvas):
     timeMinute = returnTime()[1]
     timeSecond = returnTime()[2]
     #print(f"Time: {timeHour, timeMinute, timeSecond}")
-    canvas.create_oval(size - 50, size - 50, size - 750, size - 750, width=5, fill="#ff64ff")
-    canvas.create_line(size/2, 100, size/2, 55, width=3, fill="#000000")
+    canvas.create_oval(10, 10, size-10, size-10, width=5, fill="#ff64ff")
+
+    canvas.create_line(size/2, 15, size/2, size/10, width=3, fill="#000000")#; print(15+size/10)
+    canvas.create_line(size/2, size-size/10, size/2, size-15, width=3, fill="#000000")#; print(size-size/10-size-15)
+    canvas.create_line(15, size/2, size/10, size/2, width=3, fill="#000000")#; print(15+size/10)
+    canvas.create_line(size-size/10, size/2, size-15, size/2, width=3, fill="#000000")#; print(size-size/10-size-15)
+
     canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(hour=timeHour)[0], size/2+returnPalcementWeights(hour=timeHour)[1], width=7, fill="#00ff00")
     canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(minute=timeMinute)[2], size/2+returnPalcementWeights(minute=timeMinute)[3], width=5, fill="#ff0000")
     canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(second=timeSecond)[4], size/2+returnPalcementWeights(second=timeSecond)[5], width=3, fill="#0000ff")
@@ -40,6 +44,7 @@ def returnPalcementWeights(hour=0, minute=0, second=0):
     vinkelMinute = 90-(360/60)*(math.pi/180)*minute
     vinkelSecond = 90-(360/60)*(math.pi/180)*second
     #print(f"Angle: {vinkelHour, vinkelMinute, vinkelSecond}")
+    handSizes = size/3, size/4, size/5
     xWeightHour = math.cos(-vinkelHour+offset[0]) * handSizes[0]
     yWeightHour = math.sin(-vinkelHour+offset[0]) * handSizes[0]
     xWeightMinute = math.cos(-vinkelMinute+offset[0]) * handSizes[1]
@@ -47,7 +52,7 @@ def returnPalcementWeights(hour=0, minute=0, second=0):
     xWeightsecond = math.cos(-vinkelSecond+offset[0]) * handSizes[2]
     yWeightsecond = math.sin(-vinkelSecond+offset[0]) * handSizes[2]
     #print(xWeightHour, yWeightHour, xWeightMinute, yWeightMinute, xWeightsecond, yWeightsecond)
-    return xWeightHour, yWeightHour, xWeightMinute, yWeightMinute, xWeightsecond, yWeightsecond
+    return (xWeightHour, yWeightHour, xWeightMinute, yWeightMinute, xWeightsecond, yWeightsecond)
 
 
 def returnTime():
