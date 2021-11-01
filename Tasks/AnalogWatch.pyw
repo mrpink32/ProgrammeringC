@@ -23,7 +23,7 @@ def main():
 
 
 def update(root, canvas):
-    #print(0.465*(180/math.pi))
+    print(0.465*(180/math.pi))
     # Gets the time and assigns it
     timeHour = returnTime()[0]
     timeMinute = returnTime()[1]
@@ -74,7 +74,7 @@ def returnPalcementWeights(handSizes, hour=0, minute=0, second=0):
 def returnTime():
     time = datetime.datetime.now()
     #print(f"{time.hour}")
-    return (time.hour-timeInterval[0], time.minute, time.second) if time.hour>12 else (time.hour, time.minute, time.second)
+    return (time.hour-12, time.minute, time.second) if time.hour>12 else (time.hour, time.minute, time.second)
 
 
 
