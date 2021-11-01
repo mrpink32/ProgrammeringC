@@ -4,27 +4,26 @@ import datetime
 import math
 
 
-size = 400
 offset = 0.465, 0
 
 
 def main():
     root = Tk()
     root.title("AnalogWatch") 
-    root.geometry(f"{size}x{size}")
 
-    #changeTimeInterval = Button(root)
-    #changeTimeInterval.pack()
-
-    canvas = Canvas(root, width=size, height=size, background="#ffffff")
+    canvas = Canvas(root, width=400, height=400, background="#ffffff")
     canvas.pack(expand=1, fill="both")
 
+    # todo fix button changing canvas size
+    #changeTimeInterval = Button(canvas, text="Change time interval")
+    #changeTimeInterval.grid(sticky="NW")
 
     update(root, canvas)
     root.mainloop()
 
 
 def update(root, canvas):
+    #print(0.465*(180/math.pi))
     # Gets the time and assigns it
     timeHour = returnTime()[0]
     timeMinute = returnTime()[1]
@@ -46,7 +45,7 @@ def update(root, canvas):
     canvas.create_line(size-size/10, size/2, size/2+(size/2-15), size/2, width=size/100, fill="#000000")#; print(size-size/10-size-15)
 
     # Creates hourhands
-    handSizes = size/3, size/4, size/5
+    handSizes = size/5, size/4, size/3
     canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, hour=timeHour)[0], size/2+returnPalcementWeights(handSizes, hour=timeHour)[1], width=size/100+2, fill="#00ff00")
     canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, minute=timeMinute)[2], size/2+returnPalcementWeights(handSizes, minute=timeMinute)[3], width=size/100+1, fill="#ff0000")
     canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, second=timeSecond)[4], size/2+returnPalcementWeights(handSizes, second=timeSecond)[5], width=size/100, fill="#0000ff")
