@@ -6,7 +6,6 @@ import math
 
 size = 400
 offset = 0.465, 0
-timeInterval = 12, 0
 
 
 def main():
