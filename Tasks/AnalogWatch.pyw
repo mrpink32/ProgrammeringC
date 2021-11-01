@@ -14,8 +14,8 @@ def main():
     root.title("AnalogWatch") 
     root.geometry(f"{size}x{size}")
 
-    changeTimeInterval = Button(root)
-    changeTimeInterval.pack()
+    #changeTimeInterval = Button(root)
+    #changeTimeInterval.pack()
 
     canvas = Canvas(root, width=size, height=size, background="#ffffff")
     canvas.pack(expand=1, fill="both")
@@ -26,15 +26,18 @@ def main():
 
 
 def update(root, canvas):
+    # Gets the time and assigns it
     timeHour = returnTime()[0]
     timeMinute = returnTime()[1]
     timeSecond = returnTime()[2]
     print(f"Time: {timeHour, timeMinute, timeSecond}")
 
+    # Deleting everything and returning window size
     canvas.delete('all')
     size = root.winfo_height() if root.winfo_height() < root.winfo_width() else root.winfo_width()
     #print(size)
 
+    # Creating watch disc
     canvas.create_oval(size/2-(size/2-15), size/2-(size/2-15), size/2+(size/2-15), size/2+(size/2-15), width=size/100, fill="#ff64ff")
 
     # Creating ticks
@@ -43,11 +46,13 @@ def update(root, canvas):
     canvas.create_line(size/2-(size/2-15), size/2, size/10, size/2, width=size/100, fill="#000000")#; print(15+size/10)
     canvas.create_line(size-size/10, size/2, size/2+(size/2-15), size/2, width=size/100, fill="#000000")#; print(size-size/10-size-15)
 
+    # Creates hourhands
     handSizes = size/3, size/4, size/5
     canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, hour=timeHour)[0], size/2+returnPalcementWeights(handSizes, hour=timeHour)[1], width=size/100+2, fill="#00ff00")
     canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, minute=timeMinute)[2], size/2+returnPalcementWeights(handSizes, minute=timeMinute)[3], width=size/100+1, fill="#ff0000")
     canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, second=timeSecond)[4], size/2+returnPalcementWeights(handSizes, second=timeSecond)[5], width=size/100, fill="#0000ff")
     
+    # Creates a circle in the middle to cover the origin of the hourhands
     canvas.create_oval(size/2-size/100, size/2-size/100, size/2+size/100, size/2+size/100, fill="#000000")
     
     root.after(100, update, root, canvas)
