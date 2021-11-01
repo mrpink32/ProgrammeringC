@@ -6,6 +6,7 @@ import math
 
 size = 400
 offset = 0.465, 0
+timeInterval = 12, 0
 
 
 def main():
@@ -13,9 +14,12 @@ def main():
     root.title("AnalogWatch") 
     root.geometry(f"{size}x{size}")
 
+    changeTimeInterval = Button(root)
+    changeTimeInterval.pack()
+
     canvas = Canvas(root, width=size, height=size, background="#ffffff")
     canvas.pack(expand=1, fill="both")
-    #changeTimeInterval = Button(root)
+
 
     update(root, canvas)
     root.mainloop()
@@ -33,6 +37,7 @@ def update(root, canvas):
 
     canvas.create_oval(size/2-(size/2-15), size/2-(size/2-15), size/2+(size/2-15), size/2+(size/2-15), width=size/100, fill="#ff64ff")
 
+    # Creating ticks
     canvas.create_line(size/2, size/2-(size/2-15), size/2, size/10, width=size/100, fill="#000000")#; print(15+size/10)
     canvas.create_line(size/2, size-size/10, size/2, size/2+(size/2-15), width=size/100, fill="#000000")#; print(size-size/10-size-15)
     canvas.create_line(size/2-(size/2-15), size/2, size/10, size/2, width=size/100, fill="#000000")#; print(15+size/10)
@@ -66,7 +71,10 @@ def returnPalcementWeights(handSizes, hour=0, minute=0, second=0):
 def returnTime():
     time = datetime.datetime.now()
     #print(f"{time.hour}")
-    return (time.hour-12, time.minute, time.second) if time.hour>12 else (time.hour, time.minute, time.second)
+    return (time.hour-timeInterval[0], time.minute, time.second) if time.hour>12 else (time.hour, time.minute, time.second)
+
+
+
 
 
 if __name__ == "__main__":
