@@ -1,5 +1,7 @@
+from os import X_OK
 from tkinter import *
 from tkinter import ttk
+from PIL import Image, ImageTk
 import datetime
 import math
 
@@ -14,9 +16,11 @@ def main():
     canvas = Canvas(root, width=400, height=400, background="#ffffff")
     canvas.pack(expand=1, fill="both")
 
-    # todo fix button changing canvas size
-    #changeTimeInterval = Button(canvas, text="Change time interval")
-    #changeTimeInterval.grid(sticky="NW")
+    changeTimeIntervalButton = Button(canvas, text="Change time interval")
+    changeTimeIntervalButton.place(anchor="nw")
+
+    #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
+    #image = ImageTk.PhotoImage(image)
 
     update(root, canvas)
     root.mainloop()
@@ -37,6 +41,12 @@ def update(root, canvas):
 
     # Creating watch disc
     canvas.create_oval(size/2-(size/2-15), size/2-(size/2-15), size/2+(size/2-15), size/2+(size/2-15), width=size/100, fill="#ff64ff")
+
+    #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
+    #image = ImageTk.PhotoImage(image)
+    #test = Label(canvas, image=image)
+    #test.image = image
+    #test.place(x=1, y=1)
 
     # Creating ticks
     canvas.create_line(size/2, size/2-(size/2-15), size/2, size/10, width=size/100, fill="#000000")#; print(15+size/10)
@@ -77,8 +87,8 @@ def returnTime():
     return (time.hour-12, time.minute, time.second) if time.hour>12 else (time.hour, time.minute, time.second)
 
 
-
-
+def changeTimeInterval():
+    pass
 
 if __name__ == "__main__":
 	main()
