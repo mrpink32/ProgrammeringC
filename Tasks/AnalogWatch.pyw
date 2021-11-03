@@ -40,7 +40,8 @@ def update(root, canvas):
     #print(size)
 
     # Creating watch disc
-    canvas.create_oval(size/2-(size/2-15), size/2-(size/2-15), size/2+(size/2-15), size/2+(size/2-15), width=size/100, fill="#ff64ff")
+    #canvas.create_oval(size/2-(size/2-15), size/2-(size/2-15), size/2+(size/2-15), size/2+(size/2-15), width=size/100, fill="#ff64ff")
+    drawCircle(canvas, size/2, size/2, size/2-15, size/100)
 
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
     #image = ImageTk.PhotoImage(image)
@@ -61,7 +62,8 @@ def update(root, canvas):
     canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, second=timeSecond)[4], size/2+returnPalcementWeights(handSizes, second=timeSecond)[5], width=size/100, fill="#0000ff")
     
     # Creates a circle in the middle to cover the origin of the hourhands
-    canvas.create_oval(size/2-size/100, size/2-size/100, size/2+size/100, size/2+size/100, fill="#000000")
+    drawCircle(canvas, size/2, size/2, size/100, color="black")
+    #canvas.create_oval(size/2-size/100, size/2-size/100, size/2+size/100, size/2+size/100, fill="#000000")
     
     root.after(100, update, root, canvas)
 
@@ -79,6 +81,10 @@ def returnPalcementWeights(handSizes, hour=0, minute=0, second=0):
     yWeightsecond = math.sin(-vinkelSecond+offset[0]) * handSizes[2]
     #print(xWeightHour, yWeightHour, xWeightMinute, yWeightMinute, xWeightsecond, yWeightsecond)
     return (xWeightHour, yWeightHour, xWeightMinute, yWeightMinute, xWeightsecond, yWeightsecond)
+
+
+def drawCircle(canvas, x, y, r, borderWidth=1, color="#ff64ff"):
+    canvas.create_oval(x-r, y-r, x+r, y+r, width=borderWidth, fill=color)
 
 
 def returnTime():
