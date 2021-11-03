@@ -37,7 +37,7 @@ def update(root, canvas):
 
     # Creating watch disc
     #canvas.create_oval(size/2-(size/2-15), size/2-(size/2-15), size/2+(size/2-15), size/2+(size/2-15), width=size/100, fill="#ff64ff")
-    drawCircle(canvas, size/2, size/2, size/2-15, size/100)
+    drawCircle(canvas, size/2, size/2, size/2-15, size/100, color="#ff64ff")
 
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
     #image = ImageTk.PhotoImage(image)
@@ -80,21 +80,15 @@ def returnPalcementWeights(handSizes, hour=0, minute=0, second=0):
     return (xWeightHour, yWeightHour, xWeightMinute, yWeightMinute, xWeightsecond, yWeightsecond)
 
 
-def drawCircle(canvas, x, y, r, borderWidth=1, color="#ff64ff"):
-    canvas.create_oval(x-r, y-r, x+r, y+r, width=borderWidth, fill=color)
-
-
-def degreeToRadians(vinkel):
-    pass
-
+def drawCircle(canvas, xCenter, yCenter, r, borderWidth=1, color="#ffffff"):
+    canvas.create_oval(xCenter-r, yCenter-r, xCenter+r, yCenter+r, width=borderWidth, fill=color)
 
 
 def returnTime():
     time = datetime.datetime.now()
-    #print(f"{time.hour}")
     # todo modolu 12
     return (time.hour-12, time.minute, time.second) if time.hour>12 else (time.hour, time.minute, time.second)
-
+    
 
 def changeTimeInterval():
     pass
