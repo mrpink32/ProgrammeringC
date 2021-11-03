@@ -6,9 +6,6 @@ import datetime
 import math
 
 
-offset = 0.465, 0
-
-
 def main():
     root = Tk()
     root.title("AnalogWatch") 
@@ -27,7 +24,6 @@ def main():
 
 
 def update(root, canvas):
-    print(0.465*(180/math.pi))
     # Gets the time and assigns it
     timeHour = returnTime()[0]
     timeMinute = returnTime()[1]
@@ -69,16 +65,17 @@ def update(root, canvas):
 
 
 def returnPalcementWeights(handSizes, hour=0, minute=0, second=0):
-    vinkelHour = 90-(360/12)*(math.pi/180)*hour
-    vinkelMinute = 90-(360/60)*(math.pi/180)*minute
-    vinkelSecond = 90-(360/60)*(math.pi/180)*second
+    vinkelHour = (360/12)*hour-90
+    #print(f"Vinkel: {vinkelHour}")
+    vinkelMinute = (360/60)*minute-90
+    vinkelSecond = (360/60)*second-90
     #print(f"Angle: {vinkelHour, vinkelMinute, vinkelSecond}")
-    xWeightHour = math.cos(-vinkelHour+offset[0]) * handSizes[0]
-    yWeightHour = math.sin(-vinkelHour+offset[0]) * handSizes[0]
-    xWeightMinute = math.cos(-vinkelMinute+offset[0]) * handSizes[1]
-    yWeightMinute = math.sin(-vinkelMinute+offset[0]) * handSizes[1]
-    xWeightsecond = math.cos(-vinkelSecond+offset[0]) * handSizes[2]
-    yWeightsecond = math.sin(-vinkelSecond+offset[0]) * handSizes[2]
+    xWeightHour = math.cos(math.radians(vinkelHour)) * handSizes[0]
+    yWeightHour = math.sin(math.radians(vinkelHour)) * handSizes[0]
+    xWeightMinute = math.cos(math.radians(vinkelMinute)) * handSizes[1]
+    yWeightMinute = math.sin(math.radians(vinkelMinute)) * handSizes[1]
+    xWeightsecond = math.cos(math.radians(vinkelSecond)) * handSizes[2]
+    yWeightsecond = math.sin(math.radians(vinkelSecond)) * handSizes[2]
     #print(xWeightHour, yWeightHour, xWeightMinute, yWeightMinute, xWeightsecond, yWeightsecond)
     return (xWeightHour, yWeightHour, xWeightMinute, yWeightMinute, xWeightsecond, yWeightsecond)
 
@@ -87,9 +84,15 @@ def drawCircle(canvas, x, y, r, borderWidth=1, color="#ff64ff"):
     canvas.create_oval(x-r, y-r, x+r, y+r, width=borderWidth, fill=color)
 
 
+def degreeToRadians(vinkel):
+    pass
+
+
+
 def returnTime():
     time = datetime.datetime.now()
     #print(f"{time.hour}")
+    # todo modolu 12
     return (time.hour-12, time.minute, time.second) if time.hour>12 else (time.hour, time.minute, time.second)
 
 
