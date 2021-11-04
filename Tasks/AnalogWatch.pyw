@@ -33,10 +33,8 @@ def update(root, canvas):
     # Deleting everything and returning window size
     canvas.delete('all')
     size = root.winfo_height() if root.winfo_height() < root.winfo_width() else root.winfo_width()
-    #print(size)
 
     # Creating watch disc
-    #canvas.create_oval(size/2-(size/2-15), size/2-(size/2-15), size/2+(size/2-15), size/2+(size/2-15), width=size/100, fill="#ff64ff")
     drawCircle(canvas, size/2, size/2, size/2-15, size/100, color="#ff64ff")
 
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
@@ -59,14 +57,12 @@ def update(root, canvas):
     
     # Creates a circle in the middle to cover the origin of the hourhands
     drawCircle(canvas, size/2, size/2, size/100, color="black")
-    #canvas.create_oval(size/2-size/100, size/2-size/100, size/2+size/100, size/2+size/100, fill="#000000")
     
     root.after(100, update, root, canvas)
 
 
 def returnPalcementWeights(handSizes, hour=0, minute=0, second=0):
     vinkelHour = (360/12)*hour-90
-    #print(f"Vinkel: {vinkelHour}")
     vinkelMinute = (360/60)*minute-90
     vinkelSecond = (360/60)*second-90
     #print(f"Angle: {vinkelHour, vinkelMinute, vinkelSecond}")
@@ -86,7 +82,7 @@ def drawCircle(canvas, xCenter, yCenter, r, borderWidth=1, color="#ffffff"):
 
 def returnTime():
     time = datetime.datetime.now()
-    # todo modolu 12
+    # todo modolus 12
     return (time.hour-12, time.minute, time.second) if time.hour>12 else (time.hour, time.minute, time.second)
     
 
