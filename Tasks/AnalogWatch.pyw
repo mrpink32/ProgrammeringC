@@ -38,6 +38,7 @@ def update(root, canvas):
     size = root.winfo_height() if root.winfo_height() < root.winfo_width() else root.winfo_width()
     coolcolor = "#ffffff"
     newestcolor = coolcolor 
+    # måske boller fill mig, kunne være.
     # Creating watch disc
     drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=newestcolor)
     
@@ -47,7 +48,7 @@ def update(root, canvas):
     #test.image = image
     #test.place(x=1, y=1)
 
-    # Creating ticks
+    # Creating ticks 
     canvas.create_line(size/2, size/2-(size/2-15), size/2, size/10, width=size/100, fill="#000000")#; print(15+size/10)
     canvas.create_line(size/2, size-size/10, size/2, size/2+(size/2-15), width=size/100, fill="#000000")#; print(size-size/10-size-15)
     canvas.create_line(size/2-(size/2-15), size/2, size/10, size/2, width=size/100, fill="#000000")#; print(15+size/10)
