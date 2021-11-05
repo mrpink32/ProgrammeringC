@@ -61,12 +61,12 @@ def drawCircle(canvas, xCenter, yCenter, r, borderWidth=1, color="#ffffff"):
 
 def drawHourHand(canvas, x, y, handSize, color="#000000"):
     vinkel = (360/12)*returnTime()[0]-90
-    canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100, fill=color)
+    canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100+2, fill=color)
 
 
 def drawMinuteHand(canvas, x, y, handSize, color="#000000"):
     vinkel = (360/60)*returnTime()[1]-90
-    canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100, fill=color)
+    canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100+1, fill=color)
 
 
 def drawSecondHand(canvas, x, y, handSize, color="#000000"):
