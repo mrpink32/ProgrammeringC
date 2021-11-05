@@ -42,7 +42,7 @@ def update(root, canvas):
     #test.place(x=1, y=1)
 
     # Creating ticks 
-    drawTicks(canvas, size/2, size/2-15)
+    drawTicks(canvas, size/2, size/2, size/2-15)
 
     # Creates time hands
     drawHourHand(canvas, size/2, size/2, size/5, "#00ff00")
@@ -60,7 +60,7 @@ def drawCircle(canvas, xCenter, yCenter, r, borderWidth=1, color="#ffffff"):
 
 
 def drawHourHand(canvas, x, y, handSize, color="#000000"):
-    vinkel = (360/12)*returnTime()[0]-90
+    vinkel = ((360/12)*returnTime()[0]-90)
     canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100+2, fill=color)
 
 
@@ -74,18 +74,15 @@ def drawSecondHand(canvas, x, y, handSize, color="#000000"):
     canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100, fill=color)
 
 
-# c is the center of the screen
-def drawTicks(canvas, c, r, color="#000000"):
+def drawTicks(canvas, x, y, r, color="#000000"):
     v = 12
     for i in range(1, 13):
-        cosTicks = cos(radians(360/v*i-90))
-        sinTicks = sin(radians(360/v*i-90))
-        canvas.create_line(c+cosTicks*r, c+sinTicks*r, c+cosTicks*(c-c/10), c+sinTicks*(c-c/10), width=c*2/100, fill=color)
+        cosTicks, sinTicks = cos(radians(360/v*i-90)), sin(radians(360/v*i-90))
+        canvas.create_line(x+cosTicks*r, y+sinTicks*r, x+cosTicks*(x-x/5), y+sinTicks*(y-y/5), width=x*2/100, fill=color)
     v = 60
     for i in range(1, 61):
-        cosTicks = cos(radians(360/v*i-90))
-        sinTicks = sin(radians(360/v*i-90))
-        canvas.create_line(c+cosTicks*r, c+sinTicks*r, c+cosTicks*(c-c/10), c+sinTicks*(c-c/10), width=1, fill=color)
+        cosTicks, sinTicks = cos(radians(360/v*i-90)), sin(radians(360/v*i-90))
+        canvas.create_line(x+cosTicks*r, y+sinTicks*r, x+cosTicks*(x-x/6), y+sinTicks*(y-y/6), width=1, fill=color)
 
 
 def returnTime():
@@ -105,6 +102,7 @@ def changethecolor():
             case _:
                 newestcolor = "#136207"
                 return newestcolor
+
 
 if __name__ == "__main__":
 	main()
