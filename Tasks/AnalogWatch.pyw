@@ -5,6 +5,10 @@ import datetime
 from math import *
 
 
+colorNumber = 0
+currentColor = "#ffffff"
+
+
 def main():
     root = Tk()
     root.title("AnalogWatch") 
@@ -15,8 +19,8 @@ def main():
     changeTimeIntervalButton = Button(canvas, text="Change time interval")
     changeTimeIntervalButton.place(anchor="nw")
 
-    Colorbutton = Button(canvas, text="Color changer", command = changethecolor)
-    Colorbutton.place(relx=0.70,height=25,width=120)
+    colorbutton = Button(canvas, text="Color changer", command=changethecolor)
+    colorbutton.place(relx=0.70,height=25,width=120)
 
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
     #image = ImageTk.PhotoImage(image)
@@ -29,11 +33,11 @@ def update(root, canvas):
     # Deleting everything and returning window size
     canvas.delete('all')
     size = root.winfo_height() if root.winfo_height() < root.winfo_width() else root.winfo_width()
-    coolcolor = "#ffffff"
-    newestcolor = coolcolor 
+    print(colorNumber, currentColor)
     # m�ske boller fill mig, kunne v�re.
+
     # Creating watch disc
-    drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=newestcolor)
+    drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=currentColor)
     
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
     #image = ImageTk.PhotoImage(image)5
@@ -60,7 +64,7 @@ def drawCircle(canvas, xCenter, yCenter, r, borderWidth=1, color="#ffffff"):
 
 
 def drawHourHand(canvas, x, y, handSize, color="#000000"):
-    vinkel = ((360/12)*returnTime()[0]-90)
+    vinkel = (360/12)*returnTime()[0]-90
     canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100+2, fill=color)
 
 
@@ -91,17 +95,27 @@ def returnTime():
     
 
 def changethecolor():
-    for newcolor in range (0,3):
-        match newcolor:
-            case 0:
-                newestcolor = "#AB2330"
-                return newestcolor
-            case 1:
-                newestcolor = "#4169e1"
-                return newestcolor
-            case _:
-                newestcolor = "#136207"
-                return newestcolor
+    global currentColor
+    global colorNumber
+    match colorNumber:
+        case 0:
+            #newestcolor = "#AB2330"
+            colorNumber += 1
+            currentColor = "#AB2330"
+            #return "#AB2330"
+        case 1:
+            #newestcolor = "#4169e1"
+            colorNumber += 1
+            currentColor = "#4169e1"
+            #return "#4169e1"
+        case 2:
+            #newestcolor = "#136207"
+            colorNumber += 1
+            currentColor = "#136207"
+            #return "#136207"
+        case _:
+            colorNumber = 0
+            currentColor = "#ffffff"
 
 
 if __name__ == "__main__":
