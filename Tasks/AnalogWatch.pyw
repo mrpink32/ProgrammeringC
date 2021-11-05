@@ -16,6 +16,9 @@ def main():
     changeTimeIntervalButton = Button(canvas, text="Change time interval")
     changeTimeIntervalButton.place(anchor="nw")
 
+    Colorbutton = Button(canvas, text="Color changer", command = changethecolor)
+    Colorbutton.place(relx=0.70,height=25,width=120)
+
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
     #image = ImageTk.PhotoImage(image)
 
@@ -33,12 +36,13 @@ def update(root, canvas):
     # Deleting everything and returning window size
     canvas.delete('all')
     size = root.winfo_height() if root.winfo_height() < root.winfo_width() else root.winfo_width()
-
+    coolcolor = "#ffffff"
+    newestcolor = coolcolor 
     # Creating watch disc
-    drawCircle(canvas, size/2, size/2, size/2-15, size/100, color="#ff64ff")
-
+    drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=newestcolor)
+    
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
-    #image = ImageTk.PhotoImage(image)
+    #image = ImageTk.PhotoImage(image)5
     #test = Label(canvas, image=image)
     #test.image = image
     #test.place(x=1, y=1)
@@ -51,9 +55,9 @@ def update(root, canvas):
 
     # Creates hourhands
     handSizes = size/5, size/4, size/3
-    canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, hour=timeHour)[0], size/2+returnPalcementWeights(handSizes, hour=timeHour)[1], width=size/100+2, fill="#00ff00")
-    canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, minute=timeMinute)[2], size/2+returnPalcementWeights(handSizes, minute=timeMinute)[3], width=size/100+1, fill="#ff0000")
-    canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, second=timeSecond)[4], size/2+returnPalcementWeights(handSizes, second=timeSecond)[5], width=size/100, fill="#0000ff")
+    canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, hour=timeHour)[0], size/2+returnPalcementWeights(handSizes, hour=timeHour)[1], width=size/100+2, fill="#000000")
+    canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, minute=timeMinute)[2], size/2+returnPalcementWeights(handSizes, minute=timeMinute)[3], width=size/100+1, fill="#d3d3d3")
+    canvas.create_line(size/2, size/2, size/2+returnPalcementWeights(handSizes, second=timeSecond)[4], size/2+returnPalcementWeights(handSizes, second=timeSecond)[5], width=size/100, fill="#808080")
     
     # Creates a circle in the middle to cover the origin of the hourhands
     drawCircle(canvas, size/2, size/2, size/100, color="black")
@@ -88,6 +92,20 @@ def returnTime():
 
 def changeTimeInterval():
     pass
+
+
+def changethecolor():
+    for newcolor in range (0,3):
+        match newcolor:
+            case 0:
+                newestcolor = "#AB2330"
+                return newestcolor
+            case 1:
+                newestcolor = "#4169e1"
+                return newestcolor
+            case _:
+                newestcolor = "#136207"
+                return newestcolor
 
 if __name__ == "__main__":
 	main()
