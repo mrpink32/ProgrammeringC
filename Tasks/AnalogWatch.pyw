@@ -14,12 +14,12 @@ def main():
     root.title("AnalogWatch") 
 
     canvas = Canvas(root, width=400, height=400, background="#ffffff")
-    canvas.pack(expand=1, fill="both")
+    canvas.pack(expand=True, fill="both")
 
     changeTimeIntervalButton = Button(canvas, text="Change time interval")
     changeTimeIntervalButton.place(anchor="nw")
 
-    colorbutton = Button(canvas, text="Color changer", command=changethecolor)
+    colorbutton = Button(canvas, text="Color changer", command=colorChanger)
     colorbutton.place(relx=0.70,height=25,width=120)
 
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
@@ -33,7 +33,7 @@ def update(root, canvas):
     # Deleting everything and returning window size
     canvas.delete('all')
     size = root.winfo_height() if root.winfo_height() < root.winfo_width() else root.winfo_width()
-    print(colorNumber, currentColor)
+    #print(colorNumber, currentColor)
     # m�ske boller fill mig, kunne v�re.
 
     # Creating watch disc
@@ -64,17 +64,18 @@ def drawCircle(canvas, xCenter, yCenter, r, borderWidth=1, color="#ffffff"):
 
 
 def drawHourHand(canvas, x, y, handSize, color="#000000"):
-    vinkel = (360/12)*returnTime()[0]-90
-    canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100+2, fill=color)
+    vinkel = (360/12)*getTime()[0]-90
+    vinkelMinuteOffset = ((360/60)*getTime()[1])/5
+    canvas.create_line(x, y, x+cos(radians(vinkel+vinkelMinuteOffset)) * handSize, y+sin(radians(vinkel+vinkelMinuteOffset)) * handSize, width=(x+y)/100+2, fill=color)
 
 
 def drawMinuteHand(canvas, x, y, handSize, color="#000000"):
-    vinkel = (360/60)*returnTime()[1]-90
+    vinkel = (360/60)*getTime()[1]-90
     canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100+1, fill=color)
 
 
 def drawSecondHand(canvas, x, y, handSize, color="#000000"):
-    vinkel = (360/60)*returnTime()[2]-90
+    vinkel = (360/60)*getTime()[2]-90
     canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100, fill=color)
 
 
@@ -89,12 +90,13 @@ def drawTicks(canvas, x, y, r, color="#000000"):
         canvas.create_line(x+cosTicks*r, y+sinTicks*r, x+cosTicks*(x-x/6), y+sinTicks*(y-y/6), width=1, fill=color)
 
 
-def returnTime():
+def getTime():
     time = datetime.datetime.now()
+    print(time.hour%12, time.minute, time.second)
     return (time.hour%12, time.minute, time.second)
     
 
-def changethecolor():
+def colorChanger():
     global currentColor
     global colorNumber
     match colorNumber:
