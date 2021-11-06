@@ -51,7 +51,7 @@ def update(root, canvas):
     drawTicks(canvas, size/2, size/2, size/2-15)
 
     # Creates time hands
-    drawHourHand(canvas, size/2, size/2, size/5, "#00ff00")
+    drawHourHand(canvas, size/2, size/2, size/2, "#00ff00")
     drawMinuteHand(canvas, size/2, size/2, size/4, "#ff0000")
     drawSecondHand(canvas, size/2, size/2, size/3, "#0000ff")
     
@@ -67,7 +67,7 @@ def drawCircle(canvas, xCenter, yCenter, r, borderWidth=1, color="#ffffff"):
 
 def drawHourHand(canvas, x, y, handSize, color="#000000"):
     vinkel = (360/12)*getTime()[0]-90
-    vinkelMinuteOffset = ((360/60)*getTime()[1])/5
+    vinkelMinuteOffset = ((360/60)*getTime()[1])/12
     canvas.create_line(x, y, x+cos(radians(vinkel+vinkelMinuteOffset)) * handSize, y+sin(radians(vinkel+vinkelMinuteOffset)) * handSize, width=(x+y)/100+2, fill=color)
 
 
