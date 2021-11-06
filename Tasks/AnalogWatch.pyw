@@ -38,6 +38,8 @@ def update(root, canvas):
 
     # Creating watch disc
     drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=currentColor)
+    canvas.create_text(size/2, size/2-size/2.75, text=f"{getDate()}")
+    canvas.create_text(size/2, size/2+size/2.75, text=f"{getTime()[0]}:{getTime()[1]}:{getTime()[2]}")
     
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
     #image = ImageTk.PhotoImage(image)5
@@ -95,6 +97,11 @@ def getTime():
     print(time.hour%12, time.minute, time.second)
     return (time.hour%12, time.minute, time.second)
     
+
+def getDate():
+    date = datetime.date.today()
+    return date
+
 
 def colorChanger():
     global currentColor
