@@ -51,7 +51,7 @@ def update(root, canvas):
     drawTicks(canvas, size/2, size/2, size/2-15)
 
     # Creates time hands
-    drawHourHand(canvas, size/2, size/2, size/2, "#00ff00")
+    drawHourHand(canvas, size/2, size/2, size/5, "#00ff00")
     drawMinuteHand(canvas, size/2, size/2, size/4, "#ff0000")
     drawSecondHand(canvas, size/2, size/2, size/3, "#0000ff")
     
