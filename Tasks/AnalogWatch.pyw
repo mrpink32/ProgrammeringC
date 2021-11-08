@@ -78,6 +78,7 @@ def drawMinuteHand(canvas, x, y, handSize, color="#000000"):
 
 def drawSecondHand(canvas, x, y, handSize, color="#000000"):
     vinkel = (360/60)*getTime()[2]-90
+    #v3 = ((360/100)*getTime()[3])/1000000
     canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100, fill=color)
 
 
@@ -94,8 +95,8 @@ def drawTicks(canvas, x, y, r, color="#000000"):
 
 def getTime():
     time = datetime.datetime.now()
-    print(time.hour%12, time.minute, time.second)
-    return (time.hour%12, time.minute, time.second)
+    print(time.hour%12, time.minute, time.second, time.microsecond)
+    return (time.hour%12, time.minute, time.second, time.microsecond)
     
 
 def getDate():
