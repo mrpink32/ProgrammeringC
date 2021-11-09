@@ -38,7 +38,7 @@ def update(root, canvas):
 
     # Creating watch disc
     drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=currentColor)
-    canvas.create_text(size/2, size/2-size/2.75, text=f"{getDate()}")
+    canvas.create_text(size/2, size/2-size/2.75, text=f"date: {getDate()[0]}\n week:{getDate()[1]}\n day:{getDate()[2]}")
     canvas.create_text(size/2, size/2+size/2.75, text=f"{getTime()[0]}:{getTime()[1]}:{getTime()[2]}")
     
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
@@ -93,15 +93,18 @@ def drawTicks(canvas, x, y, r, color="#000000"):
         canvas.create_line(x+cosTicks*r, y+sinTicks*r, x+cosTicks*(x-x/6), y+sinTicks*(y-y/6), width=1, fill=color)
 
 
-def getTime():
+def getTime(timeIntervalBool=True):
     time = datetime.datetime.now()
     print(time.hour%12, time.minute, time.second, time.microsecond)
-    return (time.hour%12, time.minute, time.second, time.microsecond)
+    return (time.hour%12, time.minute, time.second, time.microsecond) #if timeIntervalBool == True else (time.hour, time.minute, time.second, time.microsecond)
     
 
 def getDate():
     date = datetime.date.today()
-    return date
+    #print(date, datetime.date.isocalendar(date).week, datetime.date.isocalendar(date).weekday)
+    #print(date.isocalendar().week)
+    # todo maybe use from isocalendar to convert numbers to actual weekdays else return it with af match statement.
+    return (date, date.isocalendar().week, date.isocalendar().weekday)
 
 
 def colorChanger():
