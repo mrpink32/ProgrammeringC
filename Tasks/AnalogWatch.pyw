@@ -8,7 +8,6 @@ from math import *
 colorNumber = 0
 currentColor = "#ffffff"
 
-
 def main():
     root = Tk()
     root.title("AnalogWatch") 
@@ -34,11 +33,10 @@ def update(root, canvas):
     canvas.delete('all')
     size = root.winfo_height() if root.winfo_height() < root.winfo_width() else root.winfo_width()
     #print(colorNumber, currentColor)
-    # m�ske boller fill mig, kunne v�re.
 
     # Creating watch disc
     drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=currentColor)
-    canvas.create_text(size/2, size/2-size/2.75, text=f"date: {getDate()[0]}\n week:{getDate()[1]}\n day:{getDate()[2]}")
+    canvas.create_text(size/2, size/2-size/2.75, text=f"Date: {getDate()[0]}\n Month: {getmonthfromdate()}\n Week: {getDate()[1]}\n Day: {getdayfromdate()}")
     canvas.create_text(size/2, size/2+size/2.75, text=f"{getTime()[0]}:{getTime()[1]}:{getTime()[2]}")
     
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
@@ -57,7 +55,7 @@ def update(root, canvas):
     
     # Creates a circle in the middle to cover the origin of the hourhands
     drawCircle(canvas, size/2, size/2, size/100, color="black")
-    
+
     root.after(100, update, root, canvas)
 
 
@@ -129,6 +127,52 @@ def colorChanger():
         case _:
             colorNumber = 0
             currentColor = "#ffffff"
+
+
+def getdayfromdate():
+    match getDate()[2]:
+        case 1:
+            return "Monday"
+        case 2:
+            return "Tuesday"
+        case 3:
+            return "Wednesday"
+        case 4:
+            return "Thursday"
+        case 5:
+            return "Friday"
+        case 6:
+            return "Saturday"
+        case 7:
+            return "Sunday"
+
+def getmonthfromdate():
+    match datetime.datetime.now().month:
+        case 1:
+            return "January"
+        case 2:
+            return "February"
+        case 3:
+            return "March"
+        case 4:
+            return "April"
+        case 5:
+            return "May"
+        case 6:
+            return "June"
+        case 7:
+            return "July"
+        case 8:
+            return "August"
+        case 9:
+            return "September"
+        case 10:
+            return "October"
+        case 11:
+            return "November"
+        case 12:
+            return "December"
+
 
 
 if __name__ == "__main__":
