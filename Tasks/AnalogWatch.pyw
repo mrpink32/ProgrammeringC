@@ -5,8 +5,16 @@ import datetime
 from math import *
 
 
-colorNumber = 0
-currentColor = "#ffffff"
+class WatchColor:
+    colorList = ("#ffffff", "#AB2330", "#4169e1", "#136207")
+    def __init__(self, index=0):
+        self.index = index
+        self.currentColor = self.colorList[self.index]
+    def colorChange(self):
+        self.index += 1 if self.index < 3 else (-self.index)
+        #print(self.index)
+        self.currentColor = self.colorList[self.index]
+
 
 def main():
     root = Tk()
@@ -18,29 +26,29 @@ def main():
     changeTimeIntervalButton = Button(canvas, text="Change time interval")
     changeTimeIntervalButton.place(anchor="nw")
 
-    colorbutton = Button(canvas, text="Color changer", command=colorChanger)
+    wc = WatchColor()
+    colorbutton = Button(canvas, text="Color changer", command=wc.colorChange)
     colorbutton.place(relx=0.70,height=25,width=120)
 
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
     #image = ImageTk.PhotoImage(image)
 
-    update(root, canvas)
+    update(root, canvas, wc)
     root.mainloop()
 
 
-def update(root, canvas):
+def update(root, canvas, wc):
     # Deleting everything and returning window size
     canvas.delete('all')
     size = root.winfo_height() if root.winfo_height() < root.winfo_width() else root.winfo_width()
-    #print(colorNumber, currentColor)
 
     # Creating watch disc
-    drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=currentColor)
-    canvas.create_text(size/2, size/2-size/2.75, text=f"Date: {getDate()[0]}\n Month: {getmonthfromdate()}\n Week: {getDate()[1]}\n Day: {getdayfromdate()}")
-    canvas.create_text(size/2, size/2+size/2.75, text=f"{getTime()[0]}:{getTime()[1]}:{getTime()[2]}")
+    drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=wc.currentColor)
+    drawText(canvas, size/2, size/2, -size/3, f"Date: {getDate()[0]}\n Month: {getmonthfromdate()}\n Week: {getDate()[1]}\n Day: {getdayfromdate()}")
+    drawText(canvas, size/2, size/2, size/2.75, f"{getTime()[0]}:{getTime()[1]}:{getTime()[2]}")
     
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
-    #image = ImageTk.PhotoImage(image)5
+    #image = ImageTk.PhotoImage(image)
     #test = Label(canvas, image=image)
     #test.image = image
     #test.place(x=1, y=1)
@@ -56,7 +64,7 @@ def update(root, canvas):
     # Creates a circle in the middle to cover the origin of the hourhands
     drawCircle(canvas, size/2, size/2, size/100, color="black")
 
-    root.after(100, update, root, canvas)
+    root.after(100, update, root, canvas, wc)
 
 
 def drawCircle(canvas, xCenter, yCenter, r, borderWidth=1, color="#ffffff"):
@@ -80,6 +88,9 @@ def drawSecondHand(canvas, x, y, handSize, color="#000000"):
     canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100, fill=color)
 
 
+    # maybe make a hand to show current month, maybe also weekday
+
+
 def drawTicks(canvas, x, y, r, color="#000000"):
     v = 12
     for i in range(1, 13):
@@ -91,6 +102,10 @@ def drawTicks(canvas, x, y, r, color="#000000"):
         canvas.create_line(x+cosTicks*r, y+sinTicks*r, x+cosTicks*(x-x/6), y+sinTicks*(y-y/6), width=1, fill=color)
 
 
+def drawText(canvas, x, y, yOffset, text):
+    canvas.create_text(x, y+yOffset, text=text)
+
+
 def getTime(timeIntervalBool=True):
     time = datetime.datetime.now()
     print(time.hour%12, time.minute, time.second, time.microsecond)
@@ -99,34 +114,7 @@ def getTime(timeIntervalBool=True):
 
 def getDate():
     date = datetime.date.today()
-    #print(date, datetime.date.isocalendar(date).week, datetime.date.isocalendar(date).weekday)
-    #print(date.isocalendar().week)
-    # todo maybe use from isocalendar to convert numbers to actual weekdays else return it with af match statement.
     return (date, date.isocalendar().week, date.isocalendar().weekday)
-
-
-def colorChanger():
-    global currentColor
-    global colorNumber
-    match colorNumber:
-        case 0:
-            #newestcolor = "#AB2330"
-            colorNumber += 1
-            currentColor = "#AB2330"
-            #return "#AB2330"
-        case 1:
-            #newestcolor = "#4169e1"
-            colorNumber += 1
-            currentColor = "#4169e1"
-            #return "#4169e1"
-        case 2:
-            #newestcolor = "#136207"
-            colorNumber += 1
-            currentColor = "#136207"
-            #return "#136207"
-        case _:
-            colorNumber = 0
-            currentColor = "#ffffff"
 
 
 def getdayfromdate():
@@ -145,6 +133,7 @@ def getdayfromdate():
             return "Saturday"
         case 7:
             return "Sunday"
+
 
 def getmonthfromdate():
     match datetime.datetime.now().month:
