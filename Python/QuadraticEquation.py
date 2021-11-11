@@ -1,11 +1,10 @@
 import math
-import Main
 
 
 ansFormat = float(8.4)
 
 
-def quadraticFormula():
+def main():
     a, b, c = None, None, None
     while True:
         try:
@@ -33,3 +32,20 @@ def quadraticFormula():
         print(f"This quadratic formula has 1 answer: {ans:>{ansFormat}f}")
     elif d < 0:
         print("This quadratic formula has 0 answers:")
+    while True:
+        try:
+            command = str(input("try again? [y/n]: "))
+            match command:
+                case "y":
+                    break
+                case "n":
+                    exit()
+                case _:
+                    print("Illegal action, input has to be a valid key...")
+        except Exception as e:
+            print(f"Illegal action, input has to be a valid key... {e}")
+    main()
+
+
+if __name__ == "__main__":
+    main()

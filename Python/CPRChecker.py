@@ -5,7 +5,7 @@ import datetime
 weights = (4, 3, 2, 7, 6, 5, 4, 3, 2, 1)
 
 
-def CPRVerifier():
+def main():
     while True:
         try:
             cprnum = str(input("cpr-number: ")).replace("-","")
@@ -24,6 +24,19 @@ def CPRVerifier():
                 print("Illegal action, input has to be a ten character long number...")
         except ValueError:
             print("Illegal action, input has to be a valid number...")
+    while True:
+        try:
+            command = str(input("try again? [y/n]: "))
+            match command:
+                case "y":
+                    break
+                case "n":
+                    exit()
+                case _:
+                    print("Illegal action, input has to be a valid key...")
+        except Exception as e:
+            print(f"Illegal action, input has to be a valid key... {e}")
+    main()
         
     
 
@@ -90,4 +103,5 @@ def ReturnGender(data):
     return "Female" if (data % 2) == 0 else "Male"
 
 
-CPRVerifier()
+if __name__ == "__main__":
+    main()
