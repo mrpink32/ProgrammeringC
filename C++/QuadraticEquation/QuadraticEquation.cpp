@@ -18,7 +18,7 @@ int main()
 			{
 				cout << "a: ";
 				cin >> a;
-				/*if (typeid(a) != typeid(float))
+				/*if (typeid(a) != typeid(float)) fix dis
 				{
 					throw a;
 				}*/
