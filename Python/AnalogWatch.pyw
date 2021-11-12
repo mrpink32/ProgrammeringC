@@ -11,9 +11,12 @@ class WatchColor:
         self.index = index
         self.currentColor = self.colorList[self.index]
     def colorChange(self):
-        self.index += 1 if self.index < 3 else (-self.index)
+        self.index += 1 if self.index < len(colorList)-1 else (-self.index)
         #print(self.index)
         self.currentColor = self.colorList[self.index]
+    def Insertcolor(self, newcolor):
+        pass    
+
 
 
 def main():
@@ -23,12 +26,16 @@ def main():
     canvas = Canvas(root, width=400, height=400, background="#ffffff")
     canvas.pack(expand=True, fill="both")
 
-    changeTimeIntervalButton = Button(canvas, text="Change time interval")
-    changeTimeIntervalButton.place(anchor="nw")
+    #changeTimeIntervalButton = Button(canvas, text="Useless button\n(Change time interval)")
+    #changeTimeIntervalButton.place(anchor="nw")
 
     wc = WatchColor()
     colorbutton = Button(canvas, text="Color changer", command=wc.colorChange)
     colorbutton.place(relx=0.70,height=25,width=120)
+
+    Colorinsertentry=Entry(canvas, text="Insert Hex color")
+    55Colorinsertentry.place("nw")
+
 
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
     #image = ImageTk.PhotoImage(image)
@@ -44,9 +51,10 @@ def update(root, canvas, wc):
 
     # Creating watch disc
     drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=wc.currentColor)
-    drawText(canvas, size/2, size/2, -size/3, f"Date: {getDate()[0]}\n Month: {getmonthfromdate()}\n Week: {getDate()[1]}\n Day: {getdayfromdate()}")
+    drawText(canvas, size/2, size/2, -size/3, f"Date: {getDate()[0]}\nMonth: {gettingmonth()}\nWeek: {getDate()[1]}\nDay: {gettingday()}")
     drawText(canvas, size/2, size/2, size/2.75, f"{getTime()[0]}:{getTime()[1]}:{getTime()[2]}")
     
+    #Trash:
     #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
     #image = ImageTk.PhotoImage(image)
     #test = Label(canvas, image=image)
@@ -89,6 +97,7 @@ def drawSecondHand(canvas, x, y, handSize, color="#000000"):
 
 
     # maybe make a hand to show current month, maybe also weekday
+    #have done that in terms of displaying the current month
 
 
 def drawTicks(canvas, x, y, r, color="#000000"):
@@ -108,8 +117,9 @@ def drawText(canvas, x, y, yOffset, text):
 
 def getTime(timeIntervalBool=True):
     time = datetime.datetime.now()
-    print(time.hour%12, time.minute, time.second, time.microsecond)
-    return (time.hour%12, time.minute, time.second, time.microsecond) #if timeIntervalBool == True else (time.hour, time.minute, time.second, time.microsecond)
+    print(time.hour%12, time.minute, time.second, time.microsecond) if time.hour>12 else print(time.hour, time.minute, time.second, time.microsecond)
+    return (time.hour%12, time.minute, time.second, time.microsecond) if time.hour>12 else (time.hour, time.minute, time.second, time.microsecond) 
+#if timeIntervalBool == True else (time.hour, time.minute, time.second, time.microsecond)
     
 
 def getDate():
@@ -117,7 +127,7 @@ def getDate():
     return (date, date.isocalendar().week, date.isocalendar().weekday)
 
 
-def getdayfromdate():
+def gettingday():
     match getDate()[2]:
         case 1:
             return "Monday"
@@ -133,9 +143,10 @@ def getdayfromdate():
             return "Saturday"
         case 7:
             return "Sunday"
+#Just shows which day it is
 
 
-def getmonthfromdate():
+def gettingmonth():
     match datetime.datetime.now().month:
         case 1:
             return "January"
@@ -161,6 +172,7 @@ def getmonthfromdate():
             return "November"
         case 12:
             return "December"
+        #Just shows which month it is
 
 
 
