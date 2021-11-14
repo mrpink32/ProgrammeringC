@@ -4,8 +4,6 @@
 void setup() {
   // put your setup code here, to run
   Serial.begin(115200);
-  ledcSetup(2, 5, 12);
-  ledcAttachPin(2, 2);
   pinMode(1, OUTPUT);
 
 }
