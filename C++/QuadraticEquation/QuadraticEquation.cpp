@@ -1,65 +1,78 @@
-// QuadraticEquation.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include <string>
 #include <math.h>
 using namespace std;
 
-int main()
-{
+#pragma region FunctionDeclarations
+void CheckIfFloat(string input, size_t length);
+float dValue(float a, float b, float c);
+//float GetRoots(float a, float b, float d);
+#pragma endregion
+
+int main() {
 	string input;
 	float a, b, c;
-	bool isA = false, isB = false, isC = false;
-	while (true)
-	{
-		try
-		{
-			if (isA == false)
+	bool isAssigned[3] = { false, false, false };
+	while (true) {
+		try {
+			if (isAssigned[0] == false)
 			{
 				cout << "a: ";
 				cin >> input;
 				size_t length = 0;
 				a = stof(input, &length);
-				if (input.size() != length)
-					throw;
-				//CheckIfFloat(inputA, length);
-
-
+				CheckIfFloat(input, length);
 				//a = atof(inputA.c_str());
 				//cout << a << " " << typeid(a).name() << endl;
-				isA = true;
+				isAssigned[0] = true;
 			}
-			if (isB == false)
+			if (isAssigned[1] == false)
 			{
 				cout << "b: ";
-				cin >> b;
-				isB = true;
+				cin >> input;
+				size_t length = 0;
+				b = stof(input, &length);
+				CheckIfFloat(input, length);
+				isAssigned[1] = true;
 			}
-			if (isC == false)
+			if (isAssigned[2] == false)
 			{
 				cout << "c: ";
-				cin >> c;
-				isC = true;
+				cin >> input;
+				size_t length = 0;
+				c = stof(input, &length);
+				CheckIfFloat(input, length);
+				isAssigned[2] = true;
 			}
 			break;
 		}
 		catch (...)
 		{
 			cout << "Illegal action, input has to be a valid number..." << endl;
-			if (isB == false && isA == true)
+			if (isAssigned[1] == false && isAssigned[0] == true)
 			{
 				cout << "a: " << a << endl;
 			}
-			else if (isC == false && isB == true)
+			else if (isAssigned[2] == false && isAssigned[1] == true)
 			{
 				cout << "a: " << a << endl;
 				cout << "b: " << b << endl;
 			}
 		}
 	}
-	float d = pow(b, 2) - 4 * a * c;
+	float d = dValue(a, b, c);
 	//cout << d << endl;
+
+	/*float ans[] = GetRoots(a, b, d);
+
+	if () {
+		cout << "This quadratic formula has 2 answers:" << endl << "1: " << ans[0] << endl << "2: " << ans[1] << endl;
+	}
+	else if () {
+		cout << "This quadratic formula has 1 answer: " << ans[0] << endl;
+	}
+	else { cout << "This quadratic formula has 0 answers:" << endl; }*/
+
 	if (d > 0)
 	{
 		float ans1 = (-b + sqrt(d)) / 2 * a;
@@ -72,40 +85,39 @@ int main()
 		float ans = (-b + sqrt(d)) / 2 * a;
 		cout << "This quadratic formula has 1 answer: " << ans << endl;
 	}
-	else
-	{
-		cout << "This quadratic formula has 0 answers:" << endl;
-	}
+	else { cout << "This quadratic formula has 0 answers:" << endl; }
 	while (true)
 	{
 		string command;
 		cout << "try again? [y/n]: ";
 		cin >> command;
-		if (command == "y")
-		{
-			break;
-		}
-		else if (command == "n")
-		{
-			return 0;
-		}
-		else
-		{
-			cout << "Illegal action, input has to be a valid key..." << endl;
-		}
+		if (command == "y") { break; }
+		else if (command == "n") { return 0; }
+		else { cout << "Illegal action, input has to be a valid key..." << endl; }
 	}
 	main();
 }
 
 
-//void CheckIfFloat(string input, size_t length)
-//{
-//	if (input.size() != length)
-//		throw;
+void CheckIfFloat(string input, size_t length) {
+	if (input.size() != length) { throw; }
+}
+
+
+float dValue(float a, float b, float c) {
+	return (pow(b, 2) - 4 * a * c);
+}
+
+
+//float GetRoots(float a, float b, float d) {
+//	if (d>0) {
+//		return ((-b + sqrt(d)) / 2 * a), ((-b - sqrt(d)) / 2 * a);
+//	}
+//	else if (d == 0) {
+//		return (-b + sqrt(d)) / 2 * a;
+//	}
 //}
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
 
 // Tips for Getting Started: 
 //   1. Use the Solution Explorer window to add/manage files
