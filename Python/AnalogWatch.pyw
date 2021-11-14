@@ -1,24 +1,25 @@
 from tkinter import *
 from tkinter import ttk
+from types import prepare_class
 from PIL import Image, ImageTk
 import datetime
 from math import *
 
 
 class WatchProperties:
-    colorList = ["#ffffff", "#AB2330", "#4169e1", "#136207"]
-    def __init__(self, index=0):
+    colorList = ["", "#AB2330", "#4169e1", "#136207"]
+    def __init__(self, index=0, timeInterval12 = True):
         self.index = index
-        self.currentColor = self.colorList[self.index]
+        self.watchDiscColor = self.colorList[self.index]
+        self.timeInterval12 = timeInterval12
     def colorChange(self):
         self.index += 1 if self.index < len(self.colorList)-1 else (-self.index)
-        print(self.index, len(self.colorList), len(self.colorList)-1, self.colorList)
-        self.currentColor = self.colorList[self.index]
+        self.watchDiscColor = self.colorList[self.index]
+        #print(self.index, len(self.colorList), len(self.colorList)-1, self.colorList)
     def insertColor(self, newColor):
-        self.colorList.append(newColor)
-        print(f"{newColor} added")
-    def timeIntervalChange():
-        pass
+        print(f"{newColor} is already in the list") if newColor in self.colorList else (self.colorList.append(newColor), print(f"{newColor} added"))
+    def timeIntervalChange(self):
+        self.timeInterval12 = False if self.timeInterval12 else True
 
 
 def main():
@@ -30,38 +31,40 @@ def main():
 
     wp = WatchProperties()
 
-    #changeTimeIntervalButton = Button(canvas, text="Useless button\n(Change time interval)")
-    #changeTimeIntervalButton.place(anchor="nw")
+    changeTimeIntervalButton = Button(canvas, text="Change time interval", command=wp.timeIntervalChange)
+    changeTimeIntervalButton.place(anchor="nw")
 
     colorbutton = Button(canvas, text="Color changer", command=wp.colorChange)
     colorbutton.place(relx=0.70,height=25,width=120)
 
     ColorInsertEntry=Entry(canvas, text="Insert Hex color")
-    ColorInsertEntry.place(anchor="nw")
+    ColorInsertEntry.place(x=0, y=25)
     ColorInsertButton=Button(canvas, text="Add color", command=lambda:wp.insertColor(ColorInsertEntry.get()))
-    ColorInsertButton.place(x=0, y=20)
+    ColorInsertButton.place(x=0, y=40)
 
     update(root, canvas, wp)
     root.mainloop()
 
 
 def update(root, canvas, wp):
-    # Deleting everything and returning window size
+    # Deleting everything and returning window size and time
     canvas.delete('all')
     size = root.winfo_height() if root.winfo_height() < root.winfo_width() else root.winfo_width()
+    time = getTime(wp.timeInterval12)
+    dateDayMonth = getDate()
 
     # Creating watch disc
-    drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=wp.currentColor)
-    drawText(canvas, size/2, size/2, -size/3, f"Date: {getDate()[0]}\nMonth: {gettingmonth()}\nWeek: {getDate()[1]}\nDay: {gettingday()}")
-    drawText(canvas, size/2, size/2, size/2.75, f"{getTime()[0]}:{getTime()[1]}:{getTime()[2]}")
+    drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=wp.watchDiscColor)
+    drawText(canvas, size/2, size/2, -size/3, f"Date: {dateDayMonth[0]}\nMonth: {getMonth(dateDayMonth[1])}\nWeek: {dateDayMonth[1]}\nDay: {getDay(dateDayMonth[2])}")
+    drawText(canvas, size/2, size/2, size/2.75, f"{time[0]}:{time[1]}:{time[2]}")
     
     # Creating ticks 
     drawTicks(canvas, size/2, size/2, size/2-15)
 
     # Creates time hands
-    drawHourHand(canvas, size/2, size/2, size/5, "#00ff00")
-    drawMinuteHand(canvas, size/2, size/2, size/4, "#ff0000")
-    drawSecondHand(canvas, size/2, size/2, size/3, "#0000ff")
+    drawHourHand(canvas, size/2, size/2, size/5, time, "#00ff00")
+    drawMinuteHand(canvas, size/2, size/2, size/4, time, "#ff0000")
+    drawSecondHand(canvas, size/2, size/2, size/3, time, "#0000ff")
     
     # Creates a circle in the middle to cover the origin of the hourhands
     drawCircle(canvas, size/2, size/2, size/100, color="black")
@@ -73,19 +76,19 @@ def drawCircle(canvas, xCenter, yCenter, r, borderWidth=1, color="#ffffff"):
     canvas.create_oval(xCenter-r, yCenter-r, xCenter+r, yCenter+r, width=borderWidth, fill=color)
 
 
-def drawHourHand(canvas, x, y, handSize, color="#000000"):
-    vinkel = (360/12)*getTime()[0]-90
-    vinkelMinuteOffset = ((360/60)*getTime()[1])/12
+def drawHourHand(canvas, x, y, handSize, time, color="#000000"):
+    vinkel = (360/12)*time[0]-90
+    vinkelMinuteOffset = ((360/60)*time[1])/12
     canvas.create_line(x, y, x+cos(radians(vinkel+vinkelMinuteOffset)) * handSize, y+sin(radians(vinkel+vinkelMinuteOffset)) * handSize, width=(x+y)/100+2, fill=color)
 
 
-def drawMinuteHand(canvas, x, y, handSize, color="#000000"):
-    vinkel = (360/60)*getTime()[1]-90
+def drawMinuteHand(canvas, x, y, handSize, time, color="#000000"):
+    vinkel = (360/60)*time[1]-90
     canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100+1, fill=color)
 
 
-def drawSecondHand(canvas, x, y, handSize, color="#000000"):
-    vinkel = (360/60)*getTime()[2]-90
+def drawSecondHand(canvas, x, y, handSize, time, color="#000000"):
+    vinkel = (360/60)*time[2]-90
     #v3 = ((360/100)*getTime()[3])/1000000
     canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100, fill=color)
 
@@ -105,11 +108,18 @@ def drawText(canvas, x, y, yOffset, text):
     canvas.create_text(x, y+yOffset, text=text)
 
 
-def getTime(timeIntervalBool=True):
+def getTime(timeInterval12):
     time = datetime.datetime.now()
-    #print(time.hour%12, time.minute, time.second, time.microsecond) if time.hour>12 else print(time.hour, time.minute, time.second, time.microsecond)
-    return (time.hour%12, time.minute, time.second, time.microsecond) if time.hour>12 else (time.hour, time.minute, time.second, time.microsecond) 
-#if timeIntervalBool == True else (time.hour, time.minute, time.second, time.microsecond)
+    if timeInterval12:
+        print(time.hour%12, time.minute, time.second, time.microsecond) if time.hour>12 else print(time.hour, time.minute, time.second, time.microsecond)
+        return (time.hour%12, time.minute, time.second, time.microsecond) if time.hour>12 else (time.hour, time.minute, time.second, time.microsecond)
+    else:
+        print(time.hour, time.minute, time.second, time.microsecond) 
+        return (time.hour, time.minute, time.second, time.microsecond) 
+
+
+    #print(time.hour%12, time.minute, time.second, time.microsecond) if timeInterval12 else print(time.hour, time.minute, time.second, time.microsecond)
+    #return (time.hour%12, time.minute, time.second, time.microsecond) if timeInterval12 else (time.hour, time.minute, time.second, time.microsecond) 
     
 
 def getDate():
@@ -117,8 +127,8 @@ def getDate():
     return (date, date.isocalendar().week, date.isocalendar().weekday)
 
 
-def gettingday():
-    match getDate()[2]:
+def getDay(day):
+    match day:
         case 1:
             return "Monday"
         case 2:
@@ -133,11 +143,10 @@ def gettingday():
             return "Saturday"
         case 7:
             return "Sunday"
-#Just shows which day it is
 
 
-def gettingmonth():
-    match datetime.datetime.now().month:
+def getMonth(month):
+    match month:
         case 1:
             return "January"
         case 2:
@@ -162,7 +171,6 @@ def gettingmonth():
             return "November"
         case 12:
             return "December"
-        #Just shows which month it is
 
 
 if __name__ == "__main__":
