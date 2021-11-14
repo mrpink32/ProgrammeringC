@@ -5,18 +5,20 @@ import datetime
 from math import *
 
 
-class WatchColor:
-    colorList = ("#ffffff", "#AB2330", "#4169e1", "#136207")
+class WatchProperties:
+    colorList = ["#ffffff", "#AB2330", "#4169e1", "#136207"]
     def __init__(self, index=0):
         self.index = index
         self.currentColor = self.colorList[self.index]
     def colorChange(self):
-        self.index += 1 if self.index < len(colorList)-1 else (-self.index)
-        #print(self.index)
+        self.index += 1 if self.index < len(self.colorList)-1 else (-self.index)
+        print(self.index, len(self.colorList), len(self.colorList)-1, self.colorList)
         self.currentColor = self.colorList[self.index]
-    def Insertcolor(self, newcolor):
-        pass    
-
+    def insertColor(self, newColor):
+        self.colorList.append(newColor)
+        print(f"{newColor} added")
+    def timeIntervalChange():
+        pass
 
 
 def main():
@@ -26,41 +28,33 @@ def main():
     canvas = Canvas(root, width=400, height=400, background="#ffffff")
     canvas.pack(expand=True, fill="both")
 
+    wp = WatchProperties()
+
     #changeTimeIntervalButton = Button(canvas, text="Useless button\n(Change time interval)")
     #changeTimeIntervalButton.place(anchor="nw")
 
-    wc = WatchColor()
-    colorbutton = Button(canvas, text="Color changer", command=wc.colorChange)
+    colorbutton = Button(canvas, text="Color changer", command=wp.colorChange)
     colorbutton.place(relx=0.70,height=25,width=120)
 
-    Colorinsertentry=Entry(canvas, text="Insert Hex color")
-    55Colorinsertentry.place("nw")
+    ColorInsertEntry=Entry(canvas, text="Insert Hex color")
+    ColorInsertEntry.place(anchor="nw")
+    ColorInsertButton=Button(canvas, text="Add color", command=lambda:wp.insertColor(ColorInsertEntry.get()))
+    ColorInsertButton.place(x=0, y=20)
 
-
-    #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
-    #image = ImageTk.PhotoImage(image)
-
-    update(root, canvas, wc)
+    update(root, canvas, wp)
     root.mainloop()
 
 
-def update(root, canvas, wc):
+def update(root, canvas, wp):
     # Deleting everything and returning window size
     canvas.delete('all')
     size = root.winfo_height() if root.winfo_height() < root.winfo_width() else root.winfo_width()
 
     # Creating watch disc
-    drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=wc.currentColor)
+    drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=wp.currentColor)
     drawText(canvas, size/2, size/2, -size/3, f"Date: {getDate()[0]}\nMonth: {gettingmonth()}\nWeek: {getDate()[1]}\nDay: {gettingday()}")
     drawText(canvas, size/2, size/2, size/2.75, f"{getTime()[0]}:{getTime()[1]}:{getTime()[2]}")
     
-    #Trash:
-    #image = Image.open("D:\GitHub\ProgrammeringC\Extra\Screenshot 2021-10-30 214304.png");
-    #image = ImageTk.PhotoImage(image)
-    #test = Label(canvas, image=image)
-    #test.image = image
-    #test.place(x=1, y=1)
-
     # Creating ticks 
     drawTicks(canvas, size/2, size/2, size/2-15)
 
@@ -72,7 +66,7 @@ def update(root, canvas, wc):
     # Creates a circle in the middle to cover the origin of the hourhands
     drawCircle(canvas, size/2, size/2, size/100, color="black")
 
-    root.after(100, update, root, canvas, wc)
+    root.after(100, update, root, canvas, wp)
 
 
 def drawCircle(canvas, xCenter, yCenter, r, borderWidth=1, color="#ffffff"):
@@ -96,10 +90,6 @@ def drawSecondHand(canvas, x, y, handSize, color="#000000"):
     canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100, fill=color)
 
 
-    # maybe make a hand to show current month, maybe also weekday
-    #have done that in terms of displaying the current month
-
-
 def drawTicks(canvas, x, y, r, color="#000000"):
     v = 12
     for i in range(1, 13):
@@ -117,7 +107,7 @@ def drawText(canvas, x, y, yOffset, text):
 
 def getTime(timeIntervalBool=True):
     time = datetime.datetime.now()
-    print(time.hour%12, time.minute, time.second, time.microsecond) if time.hour>12 else print(time.hour, time.minute, time.second, time.microsecond)
+    #print(time.hour%12, time.minute, time.second, time.microsecond) if time.hour>12 else print(time.hour, time.minute, time.second, time.microsecond)
     return (time.hour%12, time.minute, time.second, time.microsecond) if time.hour>12 else (time.hour, time.minute, time.second, time.microsecond) 
 #if timeIntervalBool == True else (time.hour, time.minute, time.second, time.microsecond)
     
@@ -173,7 +163,6 @@ def gettingmonth():
         case 12:
             return "December"
         #Just shows which month it is
-
 
 
 if __name__ == "__main__":
