@@ -2,53 +2,62 @@
 //
 
 #include <iostream>
-#include <cmath>
+#include <string>
+#include <math.h>
 using namespace std;
 
 int main()
 {
-	float a = NULL;
-	float b = NULL;
-	float c = NULL;
-    while (true)
-    {
+	string input;
+	float a, b, c;
+	bool isA = false, isB = false, isC = false;
+	while (true)
+	{
 		try
 		{
-			if (a == NULL)
+			if (isA == false)
 			{
 				cout << "a: ";
-				cin >> a;
-				/*if (typeid(a) != typeid(float)) fix dis
-				{
-					throw a;
-				}*/
+				cin >> input;
+				size_t length = 0;
+				a = stof(input, &length);
+				if (input.size() != length)
+					throw;
+				//CheckIfFloat(inputA, length);
+
+
+				//a = atof(inputA.c_str());
+				//cout << a << " " << typeid(a).name() << endl;
+				isA = true;
 			}
-			if (b == NULL)
+			if (isB == false)
 			{
 				cout << "b: ";
 				cin >> b;
+				isB = true;
 			}
-			if (c == NULL)
+			if (isC == false)
 			{
 				cout << "c: ";
 				cin >> c;
+				isC = true;
 			}
 			break;
 		}
 		catch (...)
 		{
 			cout << "Illegal action, input has to be a valid number..." << endl;
-			if (b == NULL)
+			if (isB == false && isA == true)
 			{
 				cout << "a: " << a << endl;
 			}
-			else if (c == NULL)
+			else if (isC == false && isB == true)
 			{
 				cout << "a: " << a << endl;
 				cout << "b: " << b << endl;
 			}
 		}
-    }
+	}
 	float d = pow(b, 2) - 4 * a * c;
 	//cout << d << endl;
 	if (d > 0)
@@ -87,6 +96,13 @@ int main()
 	}
 	main();
 }
+
+
+//void CheckIfFloat(string input, size_t length)
+//{
+//	if (input.size() != length)
+//		throw;
+//}
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
