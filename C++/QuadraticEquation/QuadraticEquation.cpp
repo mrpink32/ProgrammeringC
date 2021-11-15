@@ -1,12 +1,13 @@
 #include <iostream>
 #include <string>
+#include <tuple>
 #include <math.h>
 using namespace std;
 
 #pragma region FunctionDeclarations
 void CheckIfFloat(string input, size_t length);
 float dValue(float a, float b, float c);
-//float GetRoots(float a, float b, float d);
+tuple<float, float> GetRoots(float a, float b, float d);
 #pragma endregion
 
 int main() {
@@ -63,9 +64,9 @@ int main() {
 	float d = dValue(a, b, c);
 	//cout << d << endl;
 
-	/*float ans[] = GetRoots(a, b, d);
+	auto answers = GetRoots(a, b, d);
 
-	if () {
+	/*if () {
 		cout << "This quadratic formula has 2 answers:" << endl << "1: " << ans[0] << endl << "2: " << ans[1] << endl;
 	}
 	else if () {
@@ -109,14 +110,14 @@ float dValue(float a, float b, float c) {
 }
 
 
-//float GetRoots(float a, float b, float d) {
-//	if (d>0) {
-//		return ((-b + sqrt(d)) / 2 * a), ((-b - sqrt(d)) / 2 * a);
-//	}
-//	else if (d == 0) {
-//		return (-b + sqrt(d)) / 2 * a;
-//	}
-//}
+tuple<float, float> GetRoots(float a, float b, float d) {
+	if (d>0) {
+		return make_tuple((-b + sqrt(d)) / 2 * a, (-b - sqrt(d)) / 2 * a);
+	}
+	else if (d == 0) {
+		return make_tuple((-b + sqrt(d)) / 2 * a);
+	}
+}
 
 
 // Tips for Getting Started: 
