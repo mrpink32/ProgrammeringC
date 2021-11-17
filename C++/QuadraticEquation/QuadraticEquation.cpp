@@ -62,29 +62,12 @@ int main() {
 		}
 	}
 	float d = dValue(a, b, c);
-	//cout << d << endl;
-
-	auto answers = GetRoots(a, b, d);
-
-	/*if () {
-		cout << "This quadratic formula has 2 answers:" << endl << "1: " << ans[0] << endl << "2: " << ans[1] << endl;
+	tuple<float,float> answers = GetRoots(a, b, d);
+	if (d>0) {
+		cout << "This quadratic formula has 2 answers:" << endl << "1: " << get<0>(answers) << endl << "2: " << get<1>(answers) << endl;
 	}
-	else if () {
-		cout << "This quadratic formula has 1 answer: " << ans[0] << endl;
-	}
-	else { cout << "This quadratic formula has 0 answers:" << endl; }*/
-
-	if (d > 0)
-	{
-		float ans1 = (-b + sqrt(d)) / 2 * a;
-		float ans2 = (-b - sqrt(d)) / 2 * a;
-		//printf("This quadratic formula has 2 answers:\n1: %f\n2: %f", ans1, ans2);
-		cout << "This quadratic formula has 2 answers:" << endl << "1: " << ans1 << endl << "2: " << ans2 << endl;
-	}
-	else if (d == 0)
-	{
-		float ans = (-b + sqrt(d)) / 2 * a;
-		cout << "This quadratic formula has 1 answer: " << ans << endl;
+	else if (d==0) {
+		cout << "This quadratic formula has 1 answer: " << endl << "1: " <<  get<0>(answers) << endl;
 	}
 	else { cout << "This quadratic formula has 0 answers:" << endl; }
 	while (true)
@@ -100,6 +83,7 @@ int main() {
 }
 
 
+#pragma region FunctionDefinitions
 void CheckIfFloat(string input, size_t length) {
 	if (input.size() != length) { throw; }
 }
@@ -111,13 +95,11 @@ float dValue(float a, float b, float c) {
 
 
 tuple<float, float> GetRoots(float a, float b, float d) {
-	if (d>0) {
-		return make_tuple((-b + sqrt(d)) / 2 * a, (-b - sqrt(d)) / 2 * a);
-	}
-	else if (d == 0) {
-		return make_tuple((-b + sqrt(d)) / 2 * a);
-	}
+	float ans1 = (-b + sqrt(d)) / 2 * a;
+	float ans2 = (-b - sqrt(d)) / 2 * a;
+	return make_tuple(ans1, ans2);
 }
+#pragma endregion
 
 
 // Tips for Getting Started: 
