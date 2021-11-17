@@ -56,7 +56,7 @@ def update(root, canvas, wp):
     drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=wp.watchDiscColor)
 
     # Populates watch disc with text showing time and date realted stuff
-    drawText(canvas, size/2, size/2, -size/3, f"Date: {dateDayMonth[0]}\nMonth: {getMonth(dateDayMonth[1])}\nWeek: {dateDayMonth[1]}\nDay: {getDay(dateDayMonth[2])}")
+    drawText(canvas, size/2, size/2, -size/3, f"Date: {dateDayMonth[0]}\nMonth: {getMonth(dateDayMonth[0].month)}\nWeek: {dateDayMonth[1]}\nDay: {getDay(dateDayMonth[2])}")
     drawText(canvas, size/2, size/2, size/2.75, f"{time[0]}:{time[1]}:{time[2]}")
     
     # Creating ticks 
