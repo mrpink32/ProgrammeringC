@@ -15,7 +15,6 @@ class WatchProperties:
     def colorChange(self):
         self.index += 1 if self.index < len(self.colorList)-1 else (-self.index)
         self.watchDiscColor = self.colorList[self.index]
-        #print(self.index, len(self.colorList), len(self.colorList)-1, self.colorList)
     def insertColor(self, newColor):
         print(f"{newColor} is already in the list") if newColor in self.colorList else (self.colorList.append(newColor), print(f"{newColor} added"))
     def timeIntervalChange(self):
@@ -48,13 +47,15 @@ def main():
 
 def update(root, canvas, wp):
     # Deleting everything and returning window size and time
-    canvas.delete('all')
     size = root.winfo_height() if root.winfo_height() < root.winfo_width() else root.winfo_width()
     time = getTime(wp.timeInterval12)
     dateDayMonth = getDate()
+    canvas.delete('all')
 
     # Creating watch disc
     drawCircle(canvas, size/2, size/2, size/2-15, size/100, color=wp.watchDiscColor)
+
+    # Populates watch disc with text showing time and date realted stuff
     drawText(canvas, size/2, size/2, -size/3, f"Date: {dateDayMonth[0]}\nMonth: {getMonth(dateDayMonth[1])}\nWeek: {dateDayMonth[1]}\nDay: {getDay(dateDayMonth[2])}")
     drawText(canvas, size/2, size/2, size/2.75, f"{time[0]}:{time[1]}:{time[2]}")
     
@@ -89,7 +90,6 @@ def drawMinuteHand(canvas, x, y, handSize, time, color="#000000"):
 
 def drawSecondHand(canvas, x, y, handSize, time, color="#000000"):
     vinkel = (360/60)*time[2]-90
-    #v3 = ((360/100)*getTime()[3])/1000000
     canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100, fill=color)
 
 
@@ -111,15 +111,11 @@ def drawText(canvas, x, y, yOffset, text):
 def getTime(timeInterval12):
     time = datetime.datetime.now()
     if timeInterval12:
-        print(time.hour%12, time.minute, time.second, time.microsecond) if time.hour>12 else print(time.hour, time.minute, time.second, time.microsecond)
-        return (time.hour%12, time.minute, time.second, time.microsecond) if time.hour>12 else (time.hour, time.minute, time.second, time.microsecond)
+        #print(time.hour%12, time.minute, time.second, time.microsecond) if time.hour>12 else print(time.hour, time.minute, time.second, time.microsecond)
+        return (time.hour%12, time.minute, time.second, time.microsecond) #if time.hour>12 else (time.hour, time.minute, time.second, time.microsecond)
     else:
-        print(time.hour, time.minute, time.second, time.microsecond) 
+        #print(time.hour, time.minute, time.second, time.microsecond) 
         return (time.hour, time.minute, time.second, time.microsecond) 
-
-
-    #print(time.hour%12, time.minute, time.second, time.microsecond) if timeInterval12 else print(time.hour, time.minute, time.second, time.microsecond)
-    #return (time.hour%12, time.minute, time.second, time.microsecond) if timeInterval12 else (time.hour, time.minute, time.second, time.microsecond) 
     
 
 def getDate():
