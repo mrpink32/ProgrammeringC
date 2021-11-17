@@ -85,7 +85,8 @@ def drawHourHand(canvas, x, y, handSize, time, color="#000000"):
 
 def drawMinuteHand(canvas, x, y, handSize, time, color="#000000"):
     vinkel = (360/60)*time[1]-90
-    canvas.create_line(x, y, x+cos(radians(vinkel)) * handSize, y+sin(radians(vinkel)) * handSize, width=(x+y)/100+1, fill=color)
+    vinkelSecondOffset = ((360/60)*time[2])/60
+    canvas.create_line(x, y, x+cos(radians(vinkel+vinkelSecondOffset)) * handSize, y+sin(radians(vinkel+vinkelSecondOffset)) * handSize, width=(x+y)/100+1, fill=color)
 
 
 def drawSecondHand(canvas, x, y, handSize, time, color="#000000"):
