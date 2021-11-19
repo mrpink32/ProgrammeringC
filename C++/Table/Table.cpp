@@ -2,11 +2,14 @@
 //
 
 #include <iostream>
+using namespace std;
 
 int main()
 {
+    int size;
+    cout << "Input the your desired size of table: ";
+    cin >> size;
 
-    std::cout << "Hello World!\n";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
