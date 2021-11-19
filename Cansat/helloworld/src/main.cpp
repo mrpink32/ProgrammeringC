@@ -32,15 +32,15 @@ void loop()
 {
   // put your main code here, to run repeatedly:
   Serial.printf("Dav: %d\n", value);
-  // while (!inputIsAssigned)
-  // {
-  //   input = Serial.read();//Serial.readStringUntil('\n');
-  //   if (input.length() < 0)
-  //   {
-  //     break;
-  //   }
-  // }
-  // Serial.printf(input.c_str());
+  while (!inputIsAssigned)
+  {
+    input = Serial.read();//Serial.readStringUntil('\n');
+    if (input.length() < 0)
+    {
+      break;
+    }
+  }
+  Serial.print(input);
   for (int i = 0; i < value; i++)
   {
     BlinkLED(17);
