@@ -5,7 +5,7 @@ def main_root():
     root = Tk()
     print(root.winfo_geometry())
     #root.geometry('400x400')
-    print(root.winfo_geometry())
+    #print(root.winfo_geometry())
     #root.title('CPR validation program')
     
     root.rowconfigure(0,weight = 1)
@@ -28,5 +28,8 @@ def main_root():
     #exitbutton.grid 
 
     root.mainloop()
-
+def update():
+    #to do: make a function that makes the widgets update so that it scales, might copy from AnalogWatch document.
+    #maybe unnessesary if there is a function to do that already, might look into it
+    pass
 main_root()
