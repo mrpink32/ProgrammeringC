@@ -23,8 +23,6 @@ int main() {
 				size_t length = 0;
 				a = stof(input, &length);
 				CheckIfFloat(input, length);
-				//a = atof(inputA.c_str());
-				//cout << a << " " << typeid(a).name() << endl;
 				isAssigned[0] = true;
 			}
 			if (isAssigned[1] == false)
