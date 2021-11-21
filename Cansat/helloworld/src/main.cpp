@@ -9,14 +9,22 @@ void BlinkLED(unsigned char pinNumber, unsigned short int length);
 
 class MorseCodeManager
 {
-  String input;
-  unsigned char pinNumber;
+  char charArray[];
 public:
-  MorseCodeManager(String input, unsigned char pinNumber);
+  unsigned char pinNumber;
+  MorseCodeManager(unsigned char pinNumber);
+  void String2Morse(String input)
+  {
+    for (unsigned char i = 0; i < input.length(); i++)
+    {
+      Char2Morse(input[i]);
+      delay(1000);
+    }
+  }
   ~MorseCodeManager();
 private:
-  const unsigned char longDelay = 500;
-  const unsigned char shortDelay = 250;
+  const unsigned short int longDelay = 500;
+  const unsigned short int shortDelay = 250;
   void LongBlink()
   {
     digitalWrite(pinNumber, HIGH);
@@ -31,11 +39,29 @@ private:
     digitalWrite(pinNumber, LOW);
     delay(shortDelay);
   }
+  void Char2Morse(char data)
+  {
+    /* todo maybe make some kind of list that contains the
+    corresponding amount of blinks to it's char*/
+    switch (data)
+    {
+    case 'a':
+      ShortBlink();
+      LongBlink();
+      break;
+    case 'b':
+      LongBlink();
+      ShortBlink();
+      ShortBlink();
+      ShortBlink();
+    default:
+      break;
+    }
+  }
 };
 
-MorseCodeManager::MorseCodeManager(String input, unsigned char pinNumber)
+MorseCodeManager::MorseCodeManager(unsigned char pinNumber)
 {
-  this->input = input;
   this->pinNumber = pinNumber;
 }
 
@@ -43,12 +69,9 @@ MorseCodeManager::~MorseCodeManager()
 {
 }
 
-
-
-
-
-char ssid[] = "CableBox-9027";
-char pass[] = "u2y3ygmmtj";
+const char ssid[] = "CableBox-9027";
+const char pass[] = "u2y3ygmmtj";
+MorseCodeManager mcm(LED2);
 
 void setup()
 {
@@ -72,7 +95,7 @@ void loop()
 {
   // put your main code here, to run repeatedly:
   String input;
-  while (true)//Serial.available()>0
+  while (true)
   {
     input = Serial.readString();
     if (input.length() > 0)
@@ -80,10 +103,9 @@ void loop()
       break;
     }
   }
-  // todo convert input to morsecode
-  BlinkLED(LED2, 250);
+  mcm.String2Morse(input);
+  //BlinkLED(LED2, 250);
   Serial.print("It worked: "+input+"\n");
-
 
 
 
