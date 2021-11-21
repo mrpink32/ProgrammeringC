@@ -24,9 +24,11 @@ class WatchProperties:
 def main():
     root = Tk()
     root.title("AnalogWatch") 
+    print(root.winfo_geometry())
 
     canvas = Canvas(root, width=400, height=400, background="#ffffff")
     canvas.pack(expand=True, fill="both")
+    print(root.winfo_geometry())
 
     wp = WatchProperties()
 
@@ -48,6 +50,7 @@ def main():
 def update(root, canvas, wp):
     # Deleting everything and returning window size and time
     size = root.winfo_height() if root.winfo_height() < root.winfo_width() else root.winfo_width()
+    print(root.winfo_geometry())
     time = getTime(wp.timeInterval12)
     dateDayMonth = getDate()
     canvas.delete('all')

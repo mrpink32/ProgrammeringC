@@ -8,5 +8,11 @@
 			"path": "helloworld"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"xlocale": "cpp",
+			"xstring": "cpp",
+			"string_view": "cpp"
+		}
+	}
 }
