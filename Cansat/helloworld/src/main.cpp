@@ -253,14 +253,14 @@ void setup()
   // put your setup code here, to run
   Serial.begin(115200);
   WiFi.begin(ssid, pass);
-  while (true)
-  {
-    if (WiFi.isConnected())
-    {
-      Serial.printf("Connection status: %d\n", WiFi.isConnected());
-      break;
-    }
-  }
+  // while (true)
+  // { 
+  //   if (WiFi.isConnected())
+  //   {
+  //     Serial.printf("Connection status: %d\n", WiFi.isConnected());
+  //     break;
+  //   }
+  // }
   pinMode(LED2, OUTPUT);
 }
 
