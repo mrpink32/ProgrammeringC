@@ -247,6 +247,7 @@ MorseCodeManager::~MorseCodeManager()
 const char ssid[] = "CableBox-9027";
 const char pass[] = "u2y3ygmmtj";
 MorseCodeManager mcm(LED2);
+WiFiServer server(80);
 
 void setup()
 {
@@ -261,6 +262,10 @@ void setup()
   //     break;
   //   }
   // }
+  //server.begin();
+  //Serial.print("Connected to wifi. My address:");
+  //IPAddress myAddress = WiFi.localIP();
+  //Serial.println(myAddress);
   pinMode(LED2, OUTPUT);
 }
 
