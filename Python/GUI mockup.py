@@ -1,32 +1,32 @@
 from tkinter import *
 from tkinter import ttk
 
-#Thought is to make a CPR checker with 5 or less widgets
 def main_root():
     root = Tk()
     root.geometry('400x400')
-    root.update()
     root.title('CPR validation program')
-    
     root.rowconfigure(0,weight = 1)
     root.columnconfigure(0,weight = 1)
 
-    frame = Frame(root,bg = "#d2d2d2",width = 100,height = 100)
+    frame = Frame(root,bg = "#555555",width = 100,height = 100)
     frame.grid(sticky = N+S+E+W)
+    frame.rowconfigure(0,weight = 1)
+    frame.rowconfigure(1,weight = 1)
+    frame.rowconfigure(2,weight = 1)
+    frame.columnconfigure(0,weight = 2)
+    frame.columnconfigure(1,weight = 1)
 
-    #CPR_EUL = Label(frame,bg = "#555555",width = 10, height = int(10/3))
-    #CPR_EUL.grid(row = 0,column = 0)
-    CPRentry = Entry(root,text = "Insert CPR number" ,width = int(2*(root.winfo_width/3)))
-    CPRentry.grid(row = 0, column = 0,sticky = N+W)
-    print(root.winfo_geometry())
-    
-    #Entry doesnt quite work with .grid it seems, i think it doenst registre it as a object in the grid.
-    #CPRentry was supposed to be in the far left corner but the exit button just underlaps it. i might work around it. by placing a lable underneath.
+    Data_L = Text(frame,bg = "#ffffff",width = 10, height = 1)
+    Data_L.grid(row = 0,column = 0, sticky = N+S+E+W)
 
-    
+    R_CPR_B = Button(frame, bg ="grey",text = "I am useless", width = 10, height = 1)
+    R_CPR_B.grid(row = 1, column = 0, sticky = N+S+E+W)
 
-    #exitbutton = Button(frame,width = 4,height = 1, bg = "#ffffff", text = "Quit",command = exit)
-    #exitbutton.grid 
+    CPRD_L = Label(frame,bg ="red",width = 10, height = 3)
+    CPRD_L.grid(row=0, rowspan = 3, column = 1, sticky = N+S+E+W)
+
+    E_B = Button(frame,width = 4,height = 1, bg = "white", text = "Quit",command = exit)
+    E_B.grid(row = 2, column = 0, sticky = N+S+E+W)
 
     root.mainloop()
 
