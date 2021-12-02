@@ -13,26 +13,16 @@ class TDG(Frame):
         top.geometry("500x500")
         top.rowconfigure(0, weight=1)
         top.columnconfigure(0, weight=1)
-        for x in range(0, 99):
-            self.rowconfigure(x, weight=1)
-            self.columnconfigure(x, weight=1)
+        for i in range(0, 99):
+            self.rowconfigure(i, weight=1)
+            self.columnconfigure(i, weight=1)
         self.populateGrid()
     def populateGrid(self):
-        #grassImg = Image.open("D:/HTX/ProgrammeringC/Python/TowerDefenseResources/Grass.png")
-        grassImg = PhotoImage(file="D:/HTX/ProgrammeringC/Python/TowerDefenseResources/Grass.png")
-        grassImg.configure(height=1, width=1)
-        grassTile = Label(self, image=grassImg)
+        # Why no work: https://www.youtube.com/watch?v=NoTM8JciWaQ
+        grassImg = ImageTk.PhotoImage(Image.open("D:/HTX/ProgrammeringC/Python/TowerDefenseResources/Grass.png"))
+        grassTile = Label(self, bg="#5eff5e", text="test", height=10, width=10) #, image=grassImg
         grassTile.grid(row=1, column=1) #, sticky=N+S+E+W
         print(grassTile.winfo_height(), grassTile.winfo_width())
-
-
-        #grassImg = Image.
-        #grassTile = ImageTk.BitmapImage(image=grassImg)
-        #grassTile.grid(row=1,column=1)
-
-
-
-
 
 
 class BasicEnemy:
