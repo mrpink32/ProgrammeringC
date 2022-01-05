@@ -1,54 +1,36 @@
 from tkinter import *
-from math import *
+from tkinter import ttk
+from types import prepare_class
 from PIL import Image, ImageTk
+import datetime
+from math import *
 
-
-class TDG(Frame):
-    def __init__(self, master = None):
+class Application(Frame):  # Application is a Frame (inheritance from Frame)
+    def __init__(self, master):
         Frame.__init__(self, master) 
-        self.grid(sticky = N+S+E+W)
-        self.createGrid()
-    def createGrid(self):
-        top = self.winfo_toplevel()
+        self.grid(sticky=N+S+E+W) # put frame in toplevel window
+        self.createWidgets()
+   
+    def createWidgets(self):
+        top=self.winfo_toplevel()
         top.geometry("500x500")
-        top.rowconfigure(0, weight=1)
-        top.columnconfigure(0, weight=1)
-        for i in range(0, 49):
-            self.rowconfigure(i, weight=1)
-            self.columnconfigure(i, weight=1)
-        self.populateGrid()
-    def populateGrid(self):
-        # Why no work: https://www.youtube.com/watch?v=NoTM8JciWaQ
-        grassImg = ImageTk.PhotoImage(Image.open("D:/HTX/ProgrammeringC/Python/TowerDefenseResources/Grass.png"))
-        for i in range(0, 49):
-            for j in range(0, 49):
-                grassTile = Label(self, bg="#5eff5e", height=10, width=10, image=grassImg)
-                grassTile.grid(row=j, column=i, sticky=N+S+E+W)
-
-        #grassTile = Label(self, bg="#5eff5e", text="test", height=10, width=10, image=grassImg)
-        #grassTile.grid(row=0, column=0, sticky=N+S+E+W)
-        #print(grassTile.winfo_height(), grassTile.winfo_width())
-
-
-class BasicEnemy:
-    def __init__(self, hitPoints, damageCount, moveSpeed):
-        self.hitPoints = hitPoints
-        self.damageCount = damageCount
-        self.moveSpeed = moveSpeed
+        #canvas = Canvas(self, width=500, height=500)
+        #canvas.pack(expand=True, fill="both")
 
 
 def main():
     root = Tk()
-    app = TDG(root)
-    app.master.title("Shitty monkey ripoff")
-    gameLoop(app)
-    app.mainloop()
+    app = Application(root)
+    app.master.title("Min applikation")
+    Canvas(app, width=500, height=500).pack()
 
+    update(root,app)
+    root.mainloop
 
-def gameLoop(app):
+def update(root,app):
+   
 
-    app.after(600, gameLoop, app)
+    root.after(17, update, root, app)
 
-
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__":  
+	main()
