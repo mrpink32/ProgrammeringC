@@ -5,3 +5,5 @@
 /.vs/slnx.sqlite-journal
 *.sqlite
 *.suo
+.vs/ProgrammeringC/v17/.suo
+.vs/slnx.sqlite
