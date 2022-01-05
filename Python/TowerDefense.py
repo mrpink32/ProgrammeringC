@@ -1,36 +1,36 @@
 from tkinter import *
-from tkinter import ttk
-from types import prepare_class
-from PIL import Image, ImageTk
-import datetime
 from math import *
+#from PIL import Image, ImageTk
+import Resources
 
-class Application(Frame):  # Application is a Frame (inheritance from Frame)
+
+class Application(Canvas):  # Application is a Canvas (inheritance from Canvas)
     def __init__(self, master):
-        Frame.__init__(self, master) 
-        self.grid(sticky=N+S+E+W) # put frame in toplevel window
-        self.createWidgets()
-   
-    def createWidgets(self):
-        top=self.winfo_toplevel()
-        top.geometry("500x500")
-        #canvas = Canvas(self, width=500, height=500)
-        #canvas.pack(expand=True, fill="both")
+        Canvas.__init__(self, master, width=500, height=500) 
+        self.grid(sticky=N+S+E+W) # put canvas in toplevel window
+        self.populateCanvas()
+     
+    def populateCanvas(self):
+        img = PhotoImage("D:\HTX\ProgrammeringC\Python\Resources\download.png")
+        self.create_image(0, 0, anchor=NW, image=img)
+        self.create_line(0,0,50,50)
+
+
 
 
 def main():
     root = Tk()
     app = Application(root)
-    app.master.title("Min applikation")
-    Canvas(app, width=500, height=500).pack()
+    app.master.title("Monkey")
 
-    update(root,app)
-    root.mainloop
+    update(root, app)
+    root.mainloop()
 
-def update(root,app):
+def update(root, app):
    
 
     root.after(17, update, root, app)
+
 
 if __name__ == "__main__":  
 	main()
