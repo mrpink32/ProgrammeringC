@@ -11,7 +11,7 @@ class Application(Canvas):  # Application is a Canvas (inheritance from Canvas)
         self.populateCanvas()
      
     def populateCanvas(self):
-        img = PhotoImage("D:\HTX\ProgrammeringC\Python\Resources\download.png")
+        img = PhotoImage(file="Resources\download.png")
         self.create_image(0, 0, anchor=NW, image=img)
         self.create_line(0,0,50,50)
 
