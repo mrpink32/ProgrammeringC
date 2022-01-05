@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\TowerDefense"
   ],
-  "SelectedNode": "\\AnalogWatch.pyw",
+  "SelectedNode": "\\TowerDefense\\TowerDefense.py",
   "PreviewInSolutionExplorer": false
 }
