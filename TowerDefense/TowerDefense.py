@@ -17,14 +17,13 @@ class Application(Canvas):  # Application is a Canvas (inheritance from Canvas)
 
 
 def main():
-    root = Tk()
-    app = Application(root)
+    app = Application(Tk())
     app.master.title("Monkey")
     img = PhotoImage(file="Resources\download.png")
     app.create_image(0, 0, anchor=NW, image=img)
 
     update(app)
-    root.mainloop()
+    app.master.mainloop()
 
 
 def update(app):
