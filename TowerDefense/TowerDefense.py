@@ -4,23 +4,31 @@ from math import *
 import Resources
 
 
-class Application(Canvas):  # Application is a Canvas (inheritance from Canvas)
+class Application(Frame):  # Application is a Canvas (inheritance from Canvas)
     def __init__(self, master):
-        Canvas.__init__(self, master, width=500, height=500) 
+        Frame.__init__(self, master) 
         self.grid(sticky=N+S+E+W) # put canvas in toplevel window
-        #self.populateCanvas()
+        self.populateCanvas()
      
     def populateCanvas(self):
+        self.rowconfigure(0, weight=1)
+        self.columnconfigure(0, weight=1)
         img = PhotoImage(file="Resources\download.png")
         self.create_image(0, 0, anchor=NW, image=img)
+        self.image = img
         self.create_line(0,0,50,50)
+
+
+class Grim(Canavs):
+    def __init__(self):
+        pass
 
 
 def main():
     app = Application(Tk())
     app.master.title("Monkey")
-    img = PhotoImage(file="Resources\download.png")
-    app.create_image(0, 0, anchor=NW, image=img)
+    #img = PhotoImage(file="Resources\download.png")
+    #app.create_image(0, 0, anchor=NW, image=img)
 
     update(app)
     app.master.mainloop()

@@ -1,0 +1,6 @@
+{
+	"host": "localhost",
+	"port": 9600,
+	"header_size": 10,
+	"max_queue": 1
+}
