@@ -2,7 +2,5 @@
 	"host": "localhost",
 	"port": 9000,
 	"header_size": 10,
-	"max_queue": 1,
-	"max_connections": 2,
 	"language": "en"
 }

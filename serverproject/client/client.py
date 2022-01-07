@@ -1,22 +1,23 @@
 from socket import *
 from tkinter import *
-from utils import networking as nw
+from utils.networking import *
 
 
 def main():
+    ip, port, header_size, answers = config_setup()
     client = socket(AF_INET, SOCK_STREAM)
     while True:
         try:
-            client.connect(("localhost", 9600))
+            client.connect((ip, port))
             break
         except:
-            print("Failed to connect to server... retrying...")
+            print(answers['connection_fail_message'])
             continue
-    print("Connection to server has been established!")
-    print(nw.receive_string(client))
+    print(answers['connected_message'])
+    print(receive_string(client))
     while True:
         command = str(input("Type command for server: "))
-        nw.send_string(client, command)
+        send_string(client, header_size, command)
     # todo make a simple ui for easier interaction with the client
 
 

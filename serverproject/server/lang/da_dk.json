@@ -1,4 +1,6 @@
 {
     "startup_message": "starter server på port: {}...",
-    "welcome_message": "Velkommen til serveren!"
+    "connected_message": "forbindelse fra {} er blevet oprettet/etableret!",
+    "welcome_message": "Velkommen til serveren!",
+    "client_disconnect": "forbindelsen fra {} er blevet afbrudt"
 }
