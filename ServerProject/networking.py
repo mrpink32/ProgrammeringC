@@ -1,25 +1,12 @@
-import json
 from socket import *
 
-NETWORKING_CONFIG = json.load(open("NetworkingConfig.json"))
-IP = NETWORKING_CONFIG['host']
-PORT = NETWORKING_CONFIG['port']
 
-def send_string(sender, message):
-    message = f"{len(message):<{NETWORKING_CONFIG['header_size']}}" + message
+def send_string(sender, header_size, message):
+    message = f"{len(message):<{header_size}}" + message
     sender.send(message.encode("utf-8"))
 def receive_string(receiver):
     message = receiver.recv(1024)
     return str(message.decode("utf-8"))
-
-
-# class networking():
-#     def send_string(sender, message):
-#         data = f"{len(message):<{NETWORKING_CONFIG['header_size']}}" + message
-#         sender.send(data.encode("utf-8"))
-#     def receive_string(receiver):
-#         message = receiver.recv(1024)
-#         return str(message.decode("utf-8"))
 
 
 # class client(socket):

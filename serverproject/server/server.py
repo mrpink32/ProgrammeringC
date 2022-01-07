@@ -1,0 +1,43 @@
+import json
+from socket import *
+from threading import *
+from .. import networking
+
+
+def setup():
+    SERVER_CONFIG = json.load(open("server_config.json"))
+    match  SERVER_CONFIG['language']:
+        case "en":
+            answers = json.load(open("lang/en_us.json"))
+        case "da":
+            answers = json.load(open("lang/da_dk.json"))
+        case "ja":
+            answers = json.load(open("lang/ja_jp.json"))
+    return SERVER_CONFIG['host'], SERVER_CONFIG['port'], SERVER_CONFIG['header_size'], answers
+
+
+def main():
+    IP, PORT, HEADER_SIZE, answers = setup()
+    server = socket(AF_INET, SOCK_STREAM)
+    print(answers['startup_message'].format(PORT))
+    server.bind((IP, PORT))
+    server.listen(1)
+    while True:
+        client, client_address = server.accept()
+        print(f"Connection from {client_address} has been established!")
+        send_string(client, HEADER_SIZE, answers['welcome_message'])
+        while True:
+            command = receive_string(client)
+            print(command)
+            #handle_command()
+        client.close()
+
+
+def handle_command(command):
+    match command:
+        case _:
+            pass
+        
+
+if __name__ == "__main__":
+    main()

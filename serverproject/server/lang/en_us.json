@@ -1,0 +1,4 @@
+{
+    "startup_message": "starting server on port: {}...",
+    "welcome_message": "Welcome to the server!"
+}
