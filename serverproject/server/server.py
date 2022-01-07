@@ -1,11 +1,12 @@
 import json
 from socket import *
 from threading import *
-from .. import networking
+from utils import networking as nw
+import utils
 
 
 def setup():
-    SERVER_CONFIG = json.load(open("server_config.json"))
+    SERVER_CONFIG = json.load(open("utils/server_config.json"))
     match  SERVER_CONFIG['language']:
         case "en":
             answers = json.load(open("lang/en_us.json"))
@@ -17,17 +18,17 @@ def setup():
 
 
 def main():
-    IP, PORT, HEADER_SIZE, answers = setup()
+    ip, port, header_size, answers = setup()
     server = socket(AF_INET, SOCK_STREAM)
-    print(answers['startup_message'].format(PORT))
-    server.bind((IP, PORT))
+    print(answers['startup_message'].format(port))
+    server.bind((ip, port))
     server.listen(1)
     while True:
         client, client_address = server.accept()
         print(f"Connection from {client_address} has been established!")
-        send_string(client, HEADER_SIZE, answers['welcome_message'])
+        nw.send_string(client, header_size, answers['welcome_message'])
         while True:
-            command = receive_string(client)
+            command = nw.receive_string(client)
             print(command)
             #handle_command()
         client.close()

@@ -1,4 +1,4 @@
 {
-    "startup_message": "ポート「{}」でサーバーを開けています...",
+    "startup_message": "ポート{}でサーバーを開けています...",
     "welcome_message": "サーバーへようこそ!"
 }

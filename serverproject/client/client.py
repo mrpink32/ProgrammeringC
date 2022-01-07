@@ -1,6 +1,6 @@
 from socket import *
 from tkinter import *
-import networking as nw
+from utils import networking as nw
 
 
 def main():
