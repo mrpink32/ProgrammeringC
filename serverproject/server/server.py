@@ -4,11 +4,11 @@ from utils.networking import *
 
 
 def main():
-    (ip, port, header_size, max_qeueu, max_connections, answers) = config_setup()
+    (ip, port, header_size, max_queue, max_connections, answers) = config_setup()
     server = socket(AF_INET, SOCK_STREAM)
     print(answers['startup_message'].format(port))
-    server.bind((ip, port))
-    server.listen(max_qeueu)
+    server.bind((gethostname(), port))
+    server.listen(max_queue)
     while True:
         client, client_address = server.accept()
         print(answers['connected_message'].format(client_address))
