@@ -1,7 +1,6 @@
 import json
 from socket import *
 
-
 def config_setup():
     SERVER_CONFIG = json.load(open("utils/server_config.json"))
     match  SERVER_CONFIG['language']:
@@ -26,9 +25,15 @@ def receive_string(receiver):
     return str(message.decode("utf-8"))
 
 
-def handle_command(command):
+def handle_command(client, thread):
+    thread.aqquire()
+    command = receive_string()
     match command:
+        case "disconnect":
+            client.close()
+            thread.release()
         case _:
+            thread.release()
             pass
-
+    
 
