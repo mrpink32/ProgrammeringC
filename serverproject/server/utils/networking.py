@@ -17,7 +17,7 @@ def config_setup():
 
 def send_string(sender, header_size, message):
     message = f"{len(message):<{header_size}}" + message
-    sender.send(message.encode("utf-8"))
+    return sender.send(message.encode("utf-8"))
 
 
 def receive_string(receiver):
@@ -25,15 +25,14 @@ def receive_string(receiver):
     return str(message.decode("utf-8"))
 
 
-def handle_command(client, thread):
-    thread.aqquire()
-    command = receive_string()
+def command_handler(client): # thread
+    #thread.aqquire()
+    command = receive_string(client)
+    print(command)
     match command:
-        case "disconnect":
+        case "10        disconnect":
             client.close()
-            thread.release()
+            #thread.release()
         case _:
-            thread.release()
+            #thread.release()
             pass
-    
-

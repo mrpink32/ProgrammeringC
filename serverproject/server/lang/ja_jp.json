@@ -1,5 +1,6 @@
 {
     "startup_message": "ポート{}でサーバーを開けています...",
+    "started_message": "{}:{}でサーバーを始めました",
     "connected_message": "{}からの接続(せつぞく)が確立(かくりつ)されました!",
     "welcome_message": "サーバーへようこそ!",
     "client_disconnect": "{}からの接続(せつぞく)が遮(さえぎ)られました!"
