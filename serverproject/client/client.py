@@ -15,9 +15,8 @@ def main():
             continue
     print(answers['connected_message'])
     print(receive_string(client))
-    while True:
-        command = str(input("Type command for server: "))
-        send_string(client, header_size, command)
+    client_handler(client)
+    exit()
     # todo make a simple ui for easier interaction with the client
 
 

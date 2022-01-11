@@ -9,20 +9,13 @@ def main():
     server = socket(AF_INET, SOCK_STREAM)
     print(answers['startup_message'].format(port))
     server.bind((ip, port))
+    server.listen(max_queue)
     print(answers['started_message'].format(ip, port))
     while True:
-        server.listen(max_queue)
         client, client_address = server.accept()
-        # todo figure out how to thread in python and implement
         print(answers['connected_message'].format(client_address))
         send_string(client, header_size, answers['welcome_message'])
-        while True:
-            try:
-                command_handler(client)
-            except:
-                print(answers['client_disconnect'].format(client_address))
-                client.close()
-                break
+        client_handler(client, client_address)
 
 
 if __name__ == "__main__":

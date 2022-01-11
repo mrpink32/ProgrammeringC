@@ -1,23 +1,28 @@
 import json
 from socket import *
 
-def config_setup():
-    SERVER_CONFIG = json.load(open("utils/server_config.json"))
+SERVER_CONFIG = json.load(open("utils/server_config.json"))
+
+def lang_setup():
     match  SERVER_CONFIG['language']:
         case "en":
-            answers = json.load(open("lang/en_us.json"))
+            return json.load(open("lang/en_us.json"))
         case "da":
-            answers = json.load(open("lang/da_dk.json", encoding="utf-8"))
+            return json.load(open("lang/da_dk.json", encoding="utf-8"))
         case "ja":
-            answers = json.load(open("lang/ja_jp.json", encoding="utf-8"))
+            return json.load(open("lang/ja_jp.json", encoding="utf-8"))
+
+language = lang_setup()
+
+def config_setup():
     return (SERVER_CONFIG['host'], SERVER_CONFIG['port'], 
             SERVER_CONFIG['header_size'], SERVER_CONFIG['max_queue'], 
-            SERVER_CONFIG['max_connections'], answers)
+            SERVER_CONFIG['max_connections'], language)
 
 
-def send_string(sender, header_size, message):
+def send_string(receiver, header_size, message):
     message = f"{len(message):<{header_size}}" + message
-    return sender.send(message.encode("utf-8"))
+    return receiver.send(message.encode("utf-8"))
 
 
 def receive_string(receiver):
@@ -25,14 +30,20 @@ def receive_string(receiver):
     return str(message.decode("utf-8"))
 
 
-def command_handler(client): # thread
-    #thread.aqquire()
-    command = receive_string(client)
-    print(command)
-    match command:
-        case "10        disconnect":
+def client_handler(client, client_address):
+    while True:
+        try:
+            message = client.recv(1024)
+            message = str(message.decode("utf-8"))
+            message.strip()
+            print(message)
+            match message:
+                case "10        disconnect":
+                    client.close()
+                    break
+                case _:
+                    continue
+        except:
+            print(language['client_disconnect'].format(client_address))
             client.close()
-            #thread.release()
-        case _:
-            #thread.release()
-            pass
+            break

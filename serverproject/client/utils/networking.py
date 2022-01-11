@@ -1,22 +1,27 @@
 import json
 from socket import *
 
-def config_setup():
-    CLIENT_CONFIG = json.load(open("utils/client_config.json"))
+CLIENT_CONFIG = json.load(open("utils/client_config.json"))
+
+def lang_setup():
     match  CLIENT_CONFIG['language']:
         case "en":
-            answers = json.load(open("lang/en_us.json"))
+            return json.load(open("lang/en_us.json"))
         case "da":
-            answers = json.load(open("lang/da_dk.json", encoding="utf-8"))
+            return json.load(open("lang/da_dk.json", encoding="utf-8"))
         case "ja":
-            answers = json.load(open("lang/ja_jp.json", encoding="utf-8"))
+            return json.load(open("lang/ja_jp.json", encoding="utf-8"))
+
+language = lang_setup()
+
+def config_setup():
     return (CLIENT_CONFIG['host'], CLIENT_CONFIG['port'], 
-            CLIENT_CONFIG['header_size'], answers)
+            CLIENT_CONFIG['header_size'], language)
 
 
-def send_string(sender, header_size, message):
+def send_string(receiver, header_size, message):
     message = f"{len(message):<{header_size}}" + message
-    return sender.send(message.encode("utf-8"))
+    return receiver.send(message.encode("utf-8"))
 
 
 def receive_string(receiver):
@@ -24,11 +29,14 @@ def receive_string(receiver):
     return str(message.decode("utf-8"))
 
 
-def command_handler(client):
-    command = receive_string(client)
-    print(command)
-    match command:
-        case "10        disconnect":
-            client.close()
-        case _:
-            pass
+def client_handler(client, header_size=CLIENT_CONFIG['header_size']):
+    while True:
+        message = str(input("Type command for server: "))
+        data = f"{len(message):<{header_size}}" + message
+        client.send(data.encode("utf-8"))
+        match message:
+            case "disconnect":
+                client.close()
+                break
+            case _:
+                continue
