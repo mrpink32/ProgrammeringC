@@ -1,5 +1,7 @@
+import sys
 import json
 from socket import *
+import _thread as thread
 
 SERVER_CONFIG = json.load(open("utils/server_config.json"))
 
@@ -31,12 +33,14 @@ def receive_string(receiver):
 
 
 def client_handler(client, client_address):
+    #thread_lock = thread.allocate_lock()
     while True:
         try:
             message = client.recv(1024)
             message = str(message.decode("utf-8"))
-            message.strip()
+            #thread_lock.acquire()
             print(message)
+            #thread_lock.release()
             match message:
                 case "10        disconnect":
                     client.close()
@@ -47,3 +51,5 @@ def client_handler(client, client_address):
             print(language['client_disconnect'].format(client_address))
             client.close()
             break
+    thread.exit()
+    #sys.exit()
