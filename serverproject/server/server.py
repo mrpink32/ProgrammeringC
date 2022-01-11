@@ -1,4 +1,5 @@
 from socket import *
+import _thread as thread
 from utils.networking import *
 
 
@@ -15,7 +16,8 @@ def main():
         client, client_address = server.accept()
         print(answers['connected_message'].format(client_address))
         send_string(client, header_size, answers['welcome_message'])
-        client_handler(client, client_address)
+        thread.start_new_thread(client_handler, (client, client_address))
+        #client_handler(client, client_address)
 
 
 if __name__ == "__main__":
