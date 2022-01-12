@@ -1,5 +1,5 @@
 {
-	"host": "195.249.51.75",
+	"host": "localhost",
 	"port": 9000,
 	"header_size": 10,
 	"language": "en"
