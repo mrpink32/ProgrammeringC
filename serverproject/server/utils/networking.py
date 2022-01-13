@@ -1,7 +1,5 @@
-import sys
 import json
 from socket import *
-import _thread as thread
 
 SERVER_CONFIG = json.load(open("utils/server_config.json"))
 
@@ -22,34 +20,34 @@ def config_setup():
             SERVER_CONFIG['max_connections'], language)
 
 
-def send_string(receiver, header_size, message):
+def send_message(receiver, header_size, message):
     message = f"{len(message):<{header_size}}" + message
     return receiver.send(message.encode("utf-8"))
 
 
-def receive_string(receiver):
+def receive_message(receiver):
     message = receiver.recv(1024)
     return str(message.decode("utf-8"))
 
 
-def client_handler(client, client_address):
-    #thread_lock = thread.allocate_lock()
-    while True:
-        try:
-            message = client.recv(1024)
-            message = str(message.decode("utf-8"))
-            #thread_lock.acquire()
-            print(message)
-            #thread_lock.release()
-            match message:
-                case "10        disconnect":
-                    client.close()
-                    break
-                case _:
-                    continue
-        except:
-            print(language['client_disconnect'].format(client_address))
-            client.close()
-            break
-    thread.exit()
-    #sys.exit()
+# def client_handler(client, client_address, lock):
+#     while True:
+#         try:
+#             message = client.recv(1024)
+#             message = str(message.decode("utf-8"))
+#             print(message)
+#             match message:
+#                 case "10        disconnect":
+#                     client.close()
+#                     break
+#                 case _:
+#                     continue
+#         except:
+#             print(language['client_disconnect'].format(client_address))
+#             client.close()
+#             break
+#     with lock:
+#         global current_connections
+#         current_connections -= 1
+#     print("current_connections: {current_connections}")
+#     #thread.exit()
