@@ -3,6 +3,8 @@
     "started_message": "{}:{}でサーバーを始めました",
     "connected_message": "{}からの接続(せつぞく)が確立(かくりつ)されました!",
     "welcome_message": "サーバーへようこそ!",
+    "client_message": "message from client: {}",
+    "connection_count": "current_connections: {}",
     "client_disconnect": "{}からの接続(せつぞく)が遮(さえぎ)られました!"
 
 }

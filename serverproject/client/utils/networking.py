@@ -15,13 +15,7 @@ def lang_setup():
 language = lang_setup()
 
 def config_setup():
-    return (CLIENT_CONFIG['host'], CLIENT_CONFIG['port'], 
-            CLIENT_CONFIG['header_size'], language)
-
-
-def send_string(receiver, header_size, message):
-    message = f"{len(message):<{header_size}}" + message
-    return receiver.send(message.encode("utf-8"))
+    return CLIENT_CONFIG['host'], CLIENT_CONFIG['port'] 
 
 
 def receive_string(receiver):
@@ -38,5 +32,8 @@ def client_handler(client, header_size=CLIENT_CONFIG['header_size']):
             case "disconnect":
                 client.close()
                 break
+            case "music":
+                play_music()
+                continue
             case _:
                 continue

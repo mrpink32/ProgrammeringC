@@ -1,9 +1,13 @@
 import json
+import ffmpeg
 import threading
 from socket import *
 import _thread as thread
 
-SERVER_CONFIG = json.load(open("utils/server_config.json"))
+
+def config_setup():
+    return SERVER_CONFIG['host'], SERVER_CONFIG['port']
+
 
 def lang_setup():
     match  SERVER_CONFIG['language']:
@@ -14,67 +18,66 @@ def lang_setup():
         case "ja":
             return json.load(open("lang/ja_jp.json", encoding="utf-8"))
 
-language = lang_setup()
 
-def config_setup():
-    return (SERVER_CONFIG['host'], SERVER_CONFIG['port'], 
-            SERVER_CONFIG['header_size'], SERVER_CONFIG['max_queue'], 
-            SERVER_CONFIG['max_connections'], language)
-
-
-def send_message(receiver, header_size, message):
-    message = f"{len(message):<{header_size}}" + message
-    return receiver.send(message.encode("utf-8"))
+# def send_message(receiver, message, header_size=SERVER_CONFIG['header_size']):
+#     message = f"{len(message):<{header_size}}" + message
+#     return receiver.send(message.encode("utf-8"))
 
 
 def receive_message(receiver):
-    message = receiver.recv(1024)
+    message = receiver.recv(SERVER_CONFIG['buffer_size'])
     return str(message.decode("utf-8"))
 
 
 def main():
-    (ip, port, header_size, max_queue, max_connections, answers) = config_setup()
+    ip, port = config_setup()
     if (ip != "localhost"):
         ip = gethostname()
     server = socket(AF_INET, SOCK_STREAM)
-    print(answers['startup_message'].format(port))
+    print(LANG['startup_message'].format(port))
     server.bind((ip, port))
-    server.listen(max_queue)
+    server.listen(SERVER_CONFIG['max_queue'])
     global current_connections
     current_connections = 0
     lock = threading.Lock()
-    print(answers['started_message'].format(ip, port))
+    print(LANG['started_message'].format(ip, port))
     while True:
-        if current_connections < max_connections:
+        if current_connections < SERVER_CONFIG['max_connections']:
             client, client_address = server.accept()
-            print(answers['connected_message'].format(client_address))
-            send_message(client, header_size, answers['welcome_message'])
+            print(LANG['connected_message'].format(client_address))
+            client.sendall(LANG['welcome_message'].encode("utf-8"))
             thread.start_new_thread(client_handler, (client, client_address, lock))
             current_connections += 1
             print(threading.enumerate(), current_connections)
-        
+
 
 def client_handler(client, client_address, lock):
     while True:
         try:
-            message = client.recv(1024)
-            message = str(message.decode("utf-8"))
-            print(message)
+            message = receive_message(client)
+            print(LANG['client_message'].format(message))
             match message:
-                case "10        disconnect":
+                case "disconnect":
                     client.close()
+                    break
+                case "music":
+                    file = open("temp.wav", 'rb')
+                    for l in file:
+                        client.sendall(l)
                     break
                 case _:
                     continue
         except:
-            print(language['client_disconnect'].format(client_address))
+            print(LANG['client_disconnect'].format(client_address))
             client.close()
             break
     with lock:
         global current_connections
         current_connections -= 1
-    print("current_connections: {current_connections}")
+    print(LANG['connection_count'].format(current_connections))
 
 
 if __name__ == "__main__":
+    SERVER_CONFIG = json.load(open("utils/server_config.json"))
+    LANG = lang_setup()
     main()

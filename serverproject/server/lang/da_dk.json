@@ -3,5 +3,7 @@
     "started_message": "serveren er startet på: {}:{}",
     "connected_message": "forbindelse fra {} er blevet oprettet/etableret!",
     "welcome_message": "Velkommen til serveren!",
+    "client_message": "message from client: {}",
+    "connection_count": "current_connections: {}",
     "client_disconnect": "forbindelsen fra {} er blevet afbrudt"
 }
