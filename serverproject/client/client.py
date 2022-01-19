@@ -123,3 +123,4 @@ if __name__ == "__main__":
     app.master.title("Client")
     app.mainloop()
     main()
+    # lad main være ligesom en update function?
