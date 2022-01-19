@@ -48,7 +48,7 @@ def main():
             client.sendall(LANG['welcome_message'].encode("utf-8"))
             thread.start_new_thread(client_handler, (client, client_address, lock))
             current_connections += 1
-            print(threading.enumerate(), current_connections)
+            #print(threading.enumerate(), current_connections)
 
 
 def client_handler(client, client_address, lock):
@@ -62,9 +62,9 @@ def client_handler(client, client_address, lock):
                     break
                 case "music":
                     file = open("temp.wav", 'rb')
-                    for l in file:
-                        client.sendall(l)
-                    break
+                    for b in file:
+                        client.sendall(b)
+                    continue
                 case _:
                     continue
         except:

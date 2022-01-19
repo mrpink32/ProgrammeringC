@@ -1,4 +1,4 @@
-import json
+import json, os
 import ffmpeg
 from socket import *
 from tkinter import *
@@ -59,20 +59,33 @@ def client_handler(client):
                 client.close()
                 break
             case "music":
-                something(client)
+                #something(client)
+                file = open('temp.wav', 'wb')
+                i = 0
+                while True:
+                    print(i)
+                    i += 1
+                    b = client.recv(CLIENT_CONFIG['buffer_size'])
+                    if not b: 
+                        break
+                    file.write(b)
+                print("done")
                 continue
             case _:
                 continue
 
 
 def something(client):
-    with open('temp', 'wb') as f:
-        while True:
-            l = client.recv(CLIENT_CONFIG['buffer_size'])
-            if not l: break
-            f.write(l)
+    file = open('temp.wav', 'wb')
+    i = 0
+    while True:
+        print(i)
+        i += 1
+        b = client.recv(CLIENT_CONFIG['buffer_size'])
+        if not b: 
+            break
+        file.write(b)
     
-
 
 if __name__ == "__main__":
     CLIENT_CONFIG = json.load(open("utils/client_config.json"))
