@@ -86,6 +86,9 @@ def receive_file(receiver): # take path as argument
 
 
 def main():
+    app = Application(Tk())
+    app.master.title("Client")
+
     ip, port = config_setup()
     client = socket(AF_INET, SOCK_STREAM)
     while True:
@@ -98,7 +101,7 @@ def main():
     print(LANG['connected_message'])
     print(receive_message(client))
     client_handler(client)
-    exit()
+    app.master.mainloop()
     # todo make a simple ui for easier interaction with the client
 
 
@@ -121,8 +124,3 @@ if __name__ == "__main__":
     CLIENT_CONFIG = json.load(open("utils/client_config.json"))
     LANG = lang_setup()
     main()
-
-root = Tk()
-app = Application(root)
-app.master.title(" ")
-app.mainloop()
