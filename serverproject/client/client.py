@@ -30,8 +30,8 @@ class Application(Frame):
         poL.grid(row=2, column=0, sticky=N+S+E+W)
 
         #button
-        eB = Button(mainWin,text="Exit", command = quit,bg ="#f0f0f0")
-        eB.grid(row=4,column=0,sticky=N+S+E+W)
+        eB = Button(mainWin, text="Exit", command = exit, bg ="#f0f0f0")
+        eB.grid(row=4, column=0, sticky=N+S+E+W)
        
          #checkbox(hvis den findes)
 
@@ -86,9 +86,6 @@ def receive_file(receiver): # take path as argument
 
 
 def main():
-    app = Application(Tk())
-    app.master.title("Client")
-
     ip, port = config_setup()
     client = socket(AF_INET, SOCK_STREAM)
     while True:
@@ -101,7 +98,6 @@ def main():
     print(LANG['connected_message'])
     print(receive_message(client))
     client_handler(client)
-    app.master.mainloop()
     # todo make a simple ui for easier interaction with the client
 
 
@@ -123,4 +119,7 @@ def client_handler(client):
 if __name__ == "__main__":
     CLIENT_CONFIG = json.load(open("utils/client_config.json"))
     LANG = lang_setup()
+    app = Application(Tk())
+    app.master.title("Client")
+    app.mainloop()
     main()
