@@ -1,5 +1,4 @@
 import json
-import ffmpeg
 import threading
 from socket import *
 import _thread as thread
@@ -19,14 +18,22 @@ def lang_setup():
             return json.load(open("lang/ja_jp.json", encoding="utf-8"))
 
 
-# def send_message(receiver, message, header_size=SERVER_CONFIG['header_size']):
-#     message = f"{len(message):<{header_size}}" + message
-#     return receiver.send(message.encode("utf-8"))
+def send_message(receiver, message):
+    packet = f"{len(message):<{SERVER_CONFIG['header_size']}}" + message
+    return receiver.send(packet.encode("utf-8"))
 
 
 def receive_message(receiver):
-    message = receiver.recv(SERVER_CONFIG['buffer_size'])
-    return str(message.decode("utf-8"))
+    message = ''
+    new_packet = True
+    while True:
+        packet = receiver.recv(SERVER_CONFIG['buffer_size'])
+        if new_packet:
+            packet_length = int(packet[:SERVER_CONFIG['header_size']])
+            new_packet = False
+        message += packet.decode("utf-8")
+        if len(message)-SERVER_CONFIG['header_size'] == packet_length:
+            return str(message[SERVER_CONFIG['header_size']:])
 
 
 def main():
@@ -45,7 +52,7 @@ def main():
         if current_connections < SERVER_CONFIG['max_connections']:
             client, client_address = server.accept()
             print(LANG['connected_message'].format(client_address))
-            client.sendall(LANG['welcome_message'].encode("utf-8"))
+            send_message(client, LANG['welcome_message'])
             thread.start_new_thread(client_handler, (client, client_address, lock))
             current_connections += 1
             #print(threading.enumerate(), current_connections)
@@ -61,9 +68,9 @@ def client_handler(client, client_address, lock):
                     client.close()
                     break
                 case "music":
-                    file = open("temp.wav", 'rb')
-                    for b in file:
-                        client.sendall(b)
+                    # file = open("temp.wav", 'rb')
+                    # for b in file:
+                    #     client.sendall(b)
                     continue
                 case _:
                     continue

@@ -35,6 +35,7 @@ class Application(Frame):
        
          #checkbox(hvis den findes)
 
+
 def config_setup():
     return CLIENT_CONFIG['host'], CLIENT_CONFIG['port']
 
@@ -49,19 +50,39 @@ def lang_setup():
             return json.load(open("lang/ja_jp.json", encoding="utf-8"))
 
 
-# def send_message(receiver, message, header_size=SERVER_CONFIG['header_size']):
-#     message = f"{len(message):<{header_size}}" + message
-#     return receiver.send(message.encode("utf-8"))
+def send_message(receiver, message):
+    packet = f"{len(message):<{CLIENT_CONFIG['header_size']}}" + message
+    return receiver.send(packet.encode("utf-8"))
 
 
-def receive_string(receiver):
-    # while True:
-    #     message = receiver.recv(CLIENT_CONFIG['buffer_size'])
-    #     if not message: 
-    #         break
-    # return str(message.decode("utf-8"))
-    message = receiver.recv(CLIENT_CONFIG['buffer_size'])
-    return str(message.decode("utf-8"))
+def receive_message(receiver):
+    message = ''
+    new_packet = True
+    while True:
+        packet = receiver.recv(CLIENT_CONFIG['buffer_size'])
+        if new_packet:
+            packet_length = int(packet[:CLIENT_CONFIG['header_size']])
+            new_packet = False
+        message += packet.decode("utf-8")
+        if len(message)-CLIENT_CONFIG['header_size'] == packet_length:
+            return str(message[CLIENT_CONFIG['header_size']:])
+
+
+def send_file():
+    pass
+
+
+def receive_file(receiver): # take path as argument
+    pass
+    # with open("temp.wav", "wb") as file
+    #             i = 0
+    #             while True:
+    #                 print(i)
+    #                 i += 1
+    #                 b = client.recv(CLIENT_CONFIG['buffer_size'])
+    #                 if not b: 
+    #                     break
+    #                 file.write(b)
 
 
 def main():
@@ -75,7 +96,7 @@ def main():
             print(LANG['connection_fail_message'])
             continue
     print(LANG['connected_message'])
-    print(receive_string(client))
+    print(receive_message(client))
     client_handler(client)
     exit()
     # todo make a simple ui for easier interaction with the client
@@ -84,39 +105,17 @@ def main():
 def client_handler(client):
     while True:
         message = str(input("Type command for server: "))
-        client.sendall(message.encode("utf-8"))
+        send_message(client, message)
         match message:
             case "disconnect":
                 client.close()
                 break
             case "music":
-                #something(client)
-                file = open('temp.wav', 'wb')
-                i = 0
-                while True:
-                    print(i)
-                    i += 1
-                    b = client.recv(CLIENT_CONFIG['buffer_size'])
-                    if not b: 
-                        break
-                    file.write(b)
-                print("done")
+                #receive_file(client)
                 continue
             case _:
                 continue
 
-
-def something(client):
-    file = open('temp.wav', 'wb')
-    i = 0
-    while True:
-        print(i)
-        i += 1
-        b = client.recv(CLIENT_CONFIG['buffer_size'])
-        if not b: 
-            break
-        file.write(b)
-    
 
 if __name__ == "__main__":
     CLIENT_CONFIG = json.load(open("utils/client_config.json"))

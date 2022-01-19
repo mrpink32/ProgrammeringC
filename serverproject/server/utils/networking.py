@@ -1,7 +1,10 @@
 import json
 from socket import *
 
-SERVER_CONFIG = json.load(open("utils/server_config.json"))
+
+def config_setup():
+    return SERVER_CONFIG['host'], SERVER_CONFIG['port']
+
 
 def lang_setup():
     match  SERVER_CONFIG['language']:
@@ -12,7 +15,6 @@ def lang_setup():
         case "ja":
             return json.load(open("lang/ja_jp.json", encoding="utf-8"))
 
-language = lang_setup()
 
 def config_setup():
     return (SERVER_CONFIG['host'], SERVER_CONFIG['port'], 
@@ -20,14 +22,22 @@ def config_setup():
             SERVER_CONFIG['max_connections'], language)
 
 
-def send_message(receiver, header_size, message):
-    message = f"{len(message):<{header_size}}" + message
-    return receiver.send(message.encode("utf-8"))
+def send_message(receiver, message):
+    packet = f"{len(message):<{SERVER_CONFIG['header_size']}}" + message
+    return receiver.send(packet.encode("utf-8"))
 
 
 def receive_message(receiver):
-    message = receiver.recv(1024)
-    return str(message.decode("utf-8"))
+    message = ''
+    new_packet = True
+    while True:
+        packet = receiver.recv(SERVER_CONFIG['buffer_size'])
+        if new_packet:
+            packet_length = int(packet[:SERVER_CONFIG['header_size']])
+            new_packet = False
+        message += packet.decode("utf-8")
+        if len(message)-SERVER_CONFIG['header_size'] == packet_length:
+            return str(message[SERVER_CONFIG['header_size']:])
 
 
 # def client_handler(client, client_address, lock):
