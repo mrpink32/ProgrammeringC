@@ -3,25 +3,26 @@ import ffmpeg
 from socket import *
 from tkinter import *
 
-class Application(Frame):  
+from matplotlib.pyplot import disconnect
 
+class Application(Frame):  
     def __init__(self, master):
         Frame.__init__(self, master) 
         self.grid(sticky=N+S+E+W)
-        self.shell()
+        self.setup_shell()
 
-    def shell(self):
+    def setup_shell(self):
         # window stuff
         mainWin = self.winfo_toplevel()
-        for row in range(0,4):
+        for row in range(0,5):
             mainWin.rowconfigure(row, weight=1)     
-        mainWin.columnconfigure(0, weight=1, minsize = 10)
+        mainWin.columnconfigure(0, weight=1, minsize=10)
         
         #texts
-        ipT = Text(mainWin,width=10, height = 1)
-        ipT.grid(row = 1, column = 0, sticky=N+S+E+W)
-        pT = Text(mainWin,width=10, height = 1)
-        pT.grid(row = 3, column = 0, sticky=N+S+E+W)
+        ipT = Text(mainWin,width=10, height=1)
+        ipT.grid(row=1, column=0, sticky=N+S+E+W)
+        pT = Text(mainWin,width=10, height=1)
+        pT.grid(row=3, column=0, sticky=N+S+E+W)
 
         # labels
         ipL = Label(mainWin, text="Enter the ip")
@@ -30,14 +31,25 @@ class Application(Frame):
         poL.grid(row=2, column=0, sticky=N+S+E+W)
 
         #button
-        eB = Button(mainWin, text="Exit", command = exit, bg ="#f0f0f0")
-        eB.grid(row=4, column=0, sticky=N+S+E+W)
+        cB = Button(mainWin, text="Connect", command=self.main_shell, bg="#f0f0f0")
+        cB.grid(row=4, column=0, sticky=N+S+E+W)
+        eB = Button(mainWin, text="Exit", command=exit, bg ="#f0f0f0")
+        eB.grid(row=5, column=0, sticky=N+S+E+W)
        
          #checkbox(hvis den findes)
+         #Checkbutton
+    def main_shell(self):
+        testWin = Toplevel()
+        for row in range(0,5):
+            testWin.rowconfigure(row, weight=1)     
+        testWin.columnconfigure(0, weight=1, minsize=10)
 
+        dB = Button(testWin, text="Disonnect", command=disconnect, bg="#f0f0f0")
+        dB.grid(row=4, column=0, sticky=N+S+E+W)
+        eB = Button(testWin, text="Exit", command=exit, bg ="#f0f0f0")
+        eB.grid(row=5, column=0, sticky=N+S+E+W)
 
-def config_setup():
-    return CLIENT_CONFIG['host'], CLIENT_CONFIG['port']
+        connect()
 
 
 def lang_setup():
@@ -85,8 +97,9 @@ def receive_file(receiver): # take path as argument
     #                 file.write(b)
 
 
-def main():
-    ip, port = config_setup()
+
+def connect():
+    ip, port = CLIENT_CONFIG['host'], CLIENT_CONFIG['port']
     client = socket(AF_INET, SOCK_STREAM)
     while True:
         try:
@@ -98,6 +111,12 @@ def main():
     print(LANG['connected_message'])
     print(receive_message(client))
     client_handler(client)
+
+
+def main():
+    app = Application(Tk())
+    app.master.title("Client")
+    app.mainloop()
     # todo make a simple ui for easier interaction with the client
 
 
@@ -119,8 +138,4 @@ def client_handler(client):
 if __name__ == "__main__":
     CLIENT_CONFIG = json.load(open("utils/client_config.json"))
     LANG = lang_setup()
-    app = Application(Tk())
-    app.master.title("Client")
-    app.mainloop()
     main()
-    # lad main være ligesom en update function?
