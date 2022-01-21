@@ -64,7 +64,6 @@ class Application(Frame):
 
     def connect(self):
         ip, port = self.CLIENT_CONFIG['host'], self.CLIENT_CONFIG['port']
-
         self.client = socket(AF_INET, SOCK_STREAM)
         while True:
             try:
@@ -90,7 +89,9 @@ class Application(Frame):
                     client.close()
                     break
                 case "send":
-                    #receive_file(client)
+                    # path = "temp.wav"
+                    # self.send_file(client, path)
+                    self.receive_file(client)
                     continue
                 case _:
                     continue
@@ -111,21 +112,29 @@ class Application(Frame):
             if len(message)-self.CLIENT_CONFIG['header_size'] == packet_length:
                 return str(message[self.CLIENT_CONFIG['header_size']:])
 
-    # def send_file(self, receiver, path):
-    #     with open(path, "rb"):
+    def send_file(self, receiver, path):
+        with open(path, "rb") as file:
+            lines = 0
+            for line in file:
+                lines += 1
+            self.send_message(receiver, lines)
+            for line in file:
+                receiver.sendall(line)
 
-
-# def receive_file(receiver): # take path as argument
-#     pass
-    # with open("temp.wav", "wb") as file
-    #             i = 0
-    #             while True:
-    #                 print(i)
-    #                 i += 1
-    #                 b = client.recv(CLIENT_CONFIG['buffer_size'])
-    #                 if not b: 
-    #                     break
-    #                 file.write(b)
+    def receive_file(self, receiver): # take path as argument
+        with open("temp.wav", "wb") as file:
+            while True:
+                packet = receiver.recv(4096)
+                if not packet: 
+                    break
+                file.write(packet)
+            # new_packet = True
+            # while True:
+            #     packet = receiver.recv(self.CLIENT_CONFIG['buffer_size'])
+            #     if new_packet:
+            #         packet_length = int(packet[:self.CLIENT_CONFIG['header_size']])
+            #         new_packet = False
+            #     file.write()
 
 
 def main():

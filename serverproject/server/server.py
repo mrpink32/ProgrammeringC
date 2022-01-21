@@ -36,6 +36,21 @@ def receive_message(receiver):
             return str(message[SERVER_CONFIG['header_size']:])
 
 
+def send_file(receiver, path):
+    with open(path, "rb") as file:
+        for line in file: 
+            receiver.sendall(line)
+
+
+def receive_file(receiver): # take path as argument
+        with open("temp.wav", "wb") as file:
+            while True:
+                packet = receiver.recv(1024)
+                if not packet: 
+                    break
+                file.write(packet)
+
+
 def main():
     ip, port = config_setup()
     if (ip != "localhost"):
@@ -67,10 +82,9 @@ def client_handler(client, client_address, lock):
                 case "disconnect":
                     client.close()
                     break
-                case "music":
-                    # file = open("temp.wav", 'rb')
-                    # for b in file:
-                    #     client.sendall(b)
+                case "send":
+                    path = "music\TeraIO_wav\09 Flamewall.wav"
+                    send_file(client, path)
                     continue
                 case _:
                     continue
