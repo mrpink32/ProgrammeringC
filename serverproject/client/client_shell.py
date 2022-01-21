@@ -1,5 +1,4 @@
 import json, os
-import ffmpeg
 from socket import *
 from tkinter import *
 
@@ -56,7 +55,7 @@ class Application(Frame):
         connection_status_label = Label(testWin, textvariable=self.connection_status)
         connection_status_label.grid(row=0, column=0, sticky=N+S+E+W)
 
-        dB = Button(testWin, text="Disonnect", command=None, bg="#f0f0f0")
+        dB = Button(testWin, text="Disonnect", command=self.disconnect, bg="#f0f0f0")
         dB.grid(row=4, column=0, sticky=N+S+E+W)
         eB = Button(testWin, text="Exit", command=exit, bg ="#f0f0f0")
         eB.grid(row=5, column=0, sticky=N+S+E+W)
@@ -65,17 +64,22 @@ class Application(Frame):
 
     def connect(self):
         ip, port = self.CLIENT_CONFIG['host'], self.CLIENT_CONFIG['port']
-        client = socket(AF_INET, SOCK_STREAM)
+
+        self.client = socket(AF_INET, SOCK_STREAM)
         while True:
             try:
-                client.connect((ip, port))
+                self.client.connect((ip, port))
                 break
             except:
                 self.connection_status.set(self.LANG['connection_fail_message'])
                 continue
         self.connection_status.set(self.LANG['connected_message'])
-        self.connection_status.set(self.receive_message(client))
-        self.client_handler(client)
+        self.connection_status.set(self.receive_message(self.client))
+        self.client_handler(self.client)
+
+    def disconnect(self):
+        self.send_message(self.client, "disconnect")
+        exit()
 
     def client_handler(self, client):
         while True:
@@ -85,7 +89,7 @@ class Application(Frame):
                 case "disconnect":
                     client.close()
                     break
-                case "music":
+                case "send":
                     #receive_file(client)
                     continue
                 case _:
@@ -107,8 +111,9 @@ class Application(Frame):
             if len(message)-self.CLIENT_CONFIG['header_size'] == packet_length:
                 return str(message[self.CLIENT_CONFIG['header_size']:])
 
-# def send_file():
-#     pass
+    # def send_file(self, receiver, path):
+    #     with open(path, "rb"):
+
 
 # def receive_file(receiver): # take path as argument
 #     pass

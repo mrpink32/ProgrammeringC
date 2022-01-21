@@ -55,7 +55,7 @@ def main():
             send_message(client, LANG['welcome_message'])
             thread.start_new_thread(client_handler, (client, client_address, lock))
             current_connections += 1
-            #print(threading.enumerate(), current_connections)
+            print(LANG['connection_count'].format(current_connections)) #threading.enumerate()
 
 
 def client_handler(client, client_address, lock):
