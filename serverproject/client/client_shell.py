@@ -6,19 +6,18 @@ class Application(Frame):
     def __init__(self, master):
         Frame.__init__(self, master) 
         self.grid(sticky=N+S+E+W)
-        self.CLIENT_CONFIG = json.load(open("utils/client_config.json"))
+        with open("utils/client_config.json") as config: self.CLIENT_CONFIG = json.load(config)
         self.connection_status = StringVar()
         self.setup()
 
     def setup(self):
         match  self.CLIENT_CONFIG['language']:
             case "en":
-                self.LANG = json.load(open("lang/en_us.json", encoding="utf-8"))
+                with open("lang/en_us.json", encoding="utf-8") as lang_config: self.LANG = json.load(lang_config)
             case "da":
-                self.LANG = json.load(open("lang/da_dk.json", encoding="utf-8"))
+                with open("lang/en_us.json", encoding="utf-8") as lang_config: self.LANG = json.load(lang_config)
             case "ja":
-                self.LANG = json.load(open("lang/ja_jp.json", encoding="utf-8"))
-
+                with open("lang/en_us.json", encoding="utf-8") as lang_config: self.LANG = json.load(lang_config)
         # window stuff
         mainWin = self.winfo_toplevel()
         for row in range(0,5):
@@ -89,18 +88,18 @@ class Application(Frame):
                     client.close()
                     break
                 case "send":
-                    # path = "temp.wav"
-                    # self.send_file(client, path)
                     self.receive_file(client)
                     continue
                 case _:
                     continue
-    
-    def send_message(self, receiver, message):
-        packet = f"{len(message):<{self.CLIENT_CONFIG['header_size']}}" + message
-        return receiver.send(packet.encode("utf-8"))
 
-    def receive_message(self, receiver):
+    def send_message(self, sender, message, encode=True):
+        packet = f"{len(message):<{self.CLIENT_CONFIG['header_size']}}" + message
+        if encode:
+            packet = packet.encode("utf-8")
+        return sender.send(packet)
+
+    def receive_message(self, receiver, encode=True):
         message = ''
         new_packet = True
         while True:
@@ -108,33 +107,26 @@ class Application(Frame):
             if new_packet:
                 packet_length = int(packet[:self.CLIENT_CONFIG['header_size']])
                 new_packet = False
-            message += packet.decode("utf-8")
+            if encode:
+                packet = packet.decode("utf-8")
+            message += packet
             if len(message)-self.CLIENT_CONFIG['header_size'] == packet_length:
                 return str(message[self.CLIENT_CONFIG['header_size']:])
 
-    def send_file(self, receiver, path):
+    def send_file(self, sender, path):
         with open(path, "rb") as file:
-            lines = 0
+            lines = []
             for line in file:
-                lines += 1
-            self.send_message(receiver, lines)
-            for line in file:
-                receiver.sendall(line)
+                lines.append(line)
+            self.send_message(sender, len(lines))
+            for line in lines:
+                self.send_message(sender, line, False)
 
     def receive_file(self, receiver): # take path as argument
         with open("temp.wav", "wb") as file:
-            while True:
-                packet = receiver.recv(4096)
-                if not packet: 
-                    break
-                file.write(packet)
-            # new_packet = True
-            # while True:
-            #     packet = receiver.recv(self.CLIENT_CONFIG['buffer_size'])
-            #     if new_packet:
-            #         packet_length = int(packet[:self.CLIENT_CONFIG['header_size']])
-            #         new_packet = False
-            #     file.write()
+            packets = self.receive_message(receiver)
+            for _ in range(0, len(packets)+1):
+                file.write(self.receive_message(receiver, False))
 
 
 def main():

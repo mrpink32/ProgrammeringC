@@ -11,44 +11,45 @@ def config_setup():
 def lang_setup():
     match  SERVER_CONFIG['language']:
         case "en":
-            return json.load(open("lang/en_us.json"))
+            with open("lang/en_us.json", encoding="utf-8") as _: return json.load(_)
         case "da":
-            return json.load(open("lang/da_dk.json", encoding="utf-8"))
+            with open("lang/da_dk.json", encoding="utf-8") as _: return json.load(_)
         case "ja":
-            return json.load(open("lang/ja_jp.json", encoding="utf-8"))
+            with open("lang/ja_jp.json", encoding="utf-8") as _: return json.load(_)
 
 
-def send_message(receiver, message):
-    packet = f"{len(message):<{SERVER_CONFIG['header_size']}}" + message
-    return receiver.send(packet.encode("utf-8"))
+def send_message(receiver, message, encode=True):
+        packet = f"{len(message):<{SERVER_CONFIG['header_size']}}" + message
+        packet = packet.encode("utf-8")
+        receiver.send(packet)
 
-
-def receive_message(receiver):
-    message = ''
-    new_packet = True
-    while True:
-        packet = receiver.recv(SERVER_CONFIG['buffer_size'])
-        if new_packet:
-            packet_length = int(packet[:SERVER_CONFIG['header_size']])
-            new_packet = False
-        message += packet.decode("utf-8")
-        if len(message)-SERVER_CONFIG['header_size'] == packet_length:
-            return str(message[SERVER_CONFIG['header_size']:])
-
+def receive_message(receiver, encode=True):
+        message = ''
+        new_packet = True
+        while True:
+            packet = receiver.recv(SERVER_CONFIG['buffer_size'])
+            if new_packet:
+                packet_length = int(packet[:SERVER_CONFIG['header_size']])
+                new_packet = False
+            packet = packet.decode("utf-8")
+            message += packet
+            if len(message)-SERVER_CONFIG['header_size'] == packet_length:
+                return str(message[SERVER_CONFIG['header_size']:])
 
 def send_file(receiver, path):
-    with open(path, "rb") as file:
-        for line in file: 
-            receiver.sendall(line)
-
+        with open(path, "rb") as file:
+            lines = []
+            for line in file:
+                lines.append(line)
+            send_message(receiver, len(lines))
+            for line in lines:
+                send_message(receiver, line, False)
 
 def receive_file(receiver): # take path as argument
         with open("temp.wav", "wb") as file:
-            while True:
-                packet = receiver.recv(1024)
-                if not packet: 
-                    break
-                file.write(packet)
+            packets = receive_message(receiver)
+            for packet in packets:
+                file.write(receive_message(receiver, False))
 
 
 def main():
@@ -99,6 +100,6 @@ def client_handler(client, client_address, lock):
 
 
 if __name__ == "__main__":
-    SERVER_CONFIG = json.load(open("utils/server_config.json"))
+    with open("utils/server_config.json") as _: SERVER_CONFIG = json.load(_)
     LANG = lang_setup()
     main()
