@@ -2,9 +2,6 @@ import math
 import datetime
 
 
-weights = (4, 3, 2, 7, 6, 5, 4, 3, 2, 1)
-
-
 def main():
     while True:
         try:
@@ -104,4 +101,5 @@ def ReturnGender(data):
 
 
 if __name__ == "__main__":
+    weights = (4, 3, 2, 7, 6, 5, 4, 3, 2, 1)
     main()
