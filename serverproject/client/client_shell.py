@@ -9,6 +9,8 @@ class Application(Frame):
         with open("utils/client_config.json") as config: self.CLIENT_CONFIG = json.load(config)
         self.connection_status = StringVar()
         self.setup()
+        self.use_custom_port
+        self.use_custom_ip = IntVar()
 
     def setup(self):
         match  self.CLIENT_CONFIG['language']:
@@ -22,7 +24,8 @@ class Application(Frame):
         mainWin = self.winfo_toplevel()
         for row in range(0,5):
             mainWin.rowconfigure(row, weight=1)     
-        mainWin.columnconfigure(0, weight=1, minsize=10)
+        for column in range(0,2):
+            mainWin.columnconfigure(column, weight=1, minsize=10)
         
         #texts
         ipT = Text(mainWin,width=10, height=1)
@@ -41,9 +44,12 @@ class Application(Frame):
         cB.grid(row=4, column=0, sticky=N+S+E+W)
         eB = Button(mainWin, text="Exit", command=exit, bg ="#f0f0f0")
         eB.grid(row=5, column=0, sticky=N+S+E+W)
-       
-         #checkbox(hvis den findes)
+    
          #Checkbutton
+         cbcustomport = Checkbutton(mainWin, text = "Custom port", variable = self.use_custom_ip)
+         cbcustomport.grid(row = 2, column = 1, sticky = N+S+E+W)
+         cbcustomip = Checkbutton(mainWin, text = "Custom ip")
+         cbcustomip.grid(row = 0, column = 1, sticky = N+S+E+W)
 
     def main_shell(self):
         testWin = Toplevel()
@@ -54,7 +60,7 @@ class Application(Frame):
         connection_status_label = Label(testWin, textvariable=self.connection_status)
         connection_status_label.grid(row=0, column=0, sticky=N+S+E+W)
 
-        dB = Button(testWin, text="Disonnect", command=self.disconnect, bg="#f0f0f0")
+        dB = Button(testWin, text="Disconnect", command=self.disconnect, bg="#f0f0f0")
         dB.grid(row=4, column=0, sticky=N+S+E+W)
         eB = Button(testWin, text="Exit", command=exit, bg ="#f0f0f0")
         eB.grid(row=5, column=0, sticky=N+S+E+W)
