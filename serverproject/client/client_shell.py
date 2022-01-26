@@ -28,8 +28,8 @@ class Application(Frame):
             mainWin.columnconfigure(column, weight=1, minsize=10)
         
         #texts
-        ipT = Text(mainWin,width=10, height=1)
-        ipT.grid(row=1, column=0, sticky=N+S+E+W)
+        self.ip_text = Text(mainWin,width=10, height=1, state="disabled")
+        self.ip_text.grid(row=1, column=0, sticky=N+S+E+W)
         pT = Text(mainWin,width=10, height=1)
         pT.grid(row=3, column=0, sticky=N+S+E+W)
 
@@ -46,18 +46,22 @@ class Application(Frame):
         eB.grid(row=5, column=0, sticky=N+S+E+W)
     
         #Checkbutton
-        self.cbcustomport = Checkbutton(mainWin, text = "Custom port", command=self.toggle_port_check)
-        self.cbcustomport.grid(row = 2, column = 1, sticky = N+S+E+W)
         cbcustomip = Checkbutton(mainWin, text = "Custom ip", command=self.toggle_ip_check)
         cbcustomip.grid(row = 0, column = 1, sticky = N+S+E+W)
-
-    def toggle_port_check(self):
-        self.use_custom_port = True if self.use_custom_port == False else False
-        print(self.use_custom_port)
-
+        self.cbcustomport = Checkbutton(mainWin, text = "Custom port", command=self.toggle_port_check)
+        self.cbcustomport.grid(row = 2, column = 1, sticky = N+S+E+W)
+    
     def toggle_ip_check(self):
         self.use_custom_ip = True if self.use_custom_ip == False else False
         print(self.use_custom_ip)
+
+    def toggle_port_check(self):
+        if self.use_custom_port == False:
+            self.use_custom_port = True
+            self.ip_text.configure(state="active")
+        else:
+            self.use_custom_port = False
+        print(self.use_custom_port)
 
     def main_shell(self):
         testWin = Toplevel()
