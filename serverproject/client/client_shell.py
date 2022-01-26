@@ -45,11 +45,11 @@ class Application(Frame):
         eB = Button(mainWin, text="Exit", command=exit, bg ="#f0f0f0")
         eB.grid(row=5, column=0, sticky=N+S+E+W)
     
-         #Checkbutton
-         cbcustomport = Checkbutton(mainWin, text = "Custom port", variable = self.use_custom_ip)
-         cbcustomport.grid(row = 2, column = 1, sticky = N+S+E+W)
-         cbcustomip = Checkbutton(mainWin, text = "Custom ip")
-         cbcustomip.grid(row = 0, column = 1, sticky = N+S+E+W)
+        #Checkbutton
+        cbcustomport = Checkbutton(mainWin, text = "Custom port", variable = self.use_custom_ip)
+        cbcustomport.grid(row = 2, column = 1, sticky = N+S+E+W)
+        cbcustomip = Checkbutton(mainWin, text = "Custom ip")
+        cbcustomip.grid(row = 0, column = 1, sticky = N+S+E+W)
 
     def main_shell(self):
         testWin = Toplevel()
