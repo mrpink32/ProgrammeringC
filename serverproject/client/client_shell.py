@@ -21,34 +21,34 @@ class Application(Frame):
             case "ja":
                 with open("lang/en_us.json", encoding="utf-8") as lang_config: self.LANG = json.load(lang_config)
         # window stuff
-        mainWin = self.winfo_toplevel()
+        main_window = self.winfo_toplevel()
         for row in range(0,5):
-            mainWin.rowconfigure(row, weight=1)     
+            main_window.rowconfigure(row, weight=1)     
         for column in range(0,2):
-            mainWin.columnconfigure(column, weight=1, minsize=10)
+            main_window.columnconfigure(column, weight=1, minsize=10)
         
         #texts
-        self.ip_text = Text(mainWin,width=10, height=1, state="disabled")
+        self.ip_text = Text(main_window,width=10, height=1, state="disabled")
         self.ip_text.grid(row=1, column=0, sticky=N+S+E+W)
-        self.port_text = Text(mainWin,width=10, height=1, state="disabled")
+        self.port_text = Text(main_window,width=10, height=1, state="disabled")
         self.port_text.grid(row=3, column=0, sticky=N+S+E+W)
 
         # labels
-        ipL = Label(mainWin, text="Enter the ip")
-        ipL.grid(row=0, column=0, sticky=N+S+E+W)
-        poL = Label(mainWin, text="Enter port")
-        poL.grid(row=2, column=0, sticky=N+S+E+W)
+        ip_label = Label(main_window, text="Enter the ip")
+        ip_label.grid(row=0, column=0, sticky=N+S+E+W)
+        port_label = Label(main_window, text="Enter port")
+        port_label.grid(row=2, column=0, sticky=N+S+E+W)
 
         #button
-        cB = Button(mainWin, text="Connect", command=self.main_shell, bg="#f0f0f0")
-        cB.grid(row=4, column=0, sticky=N+S+E+W)
-        eB = Button(mainWin, text="Exit", command=exit, bg ="#f0f0f0")
-        eB.grid(row=5, column=0, sticky=N+S+E+W)
+        connect_button = Button(main_window, text="Connect", command=self.main_shell, bg="#f0f0f0")
+        connect_button.grid(row=4, column=0, sticky=N+S+E+W)
+        exit_button = Button(main_window, text="Exit", command=exit, bg ="#f0f0f0")
+        exit_button.grid(row=5, column=0, sticky=N+S+E+W)
     
         #Checkbutton
-        cbcustomip = Checkbutton(mainWin, text = "Custom ip", command=self.toggle_ip_check)
+        cbcustomip = Checkbutton(main_window, text = "Custom ip", command=self.toggle_ip_check)
         cbcustomip.grid(row = 0, column = 1, sticky = N+S+E+W)
-        cbcustomport = Checkbutton(mainWin, text = "Custom port", command=self.toggle_port_check)
+        cbcustomport = Checkbutton(main_window, text = "Custom port", command=self.toggle_port_check)
         cbcustomport.grid(row = 2, column = 1, sticky = N+S+E+W)
     
     def toggle_ip_check(self):
@@ -78,10 +78,10 @@ class Application(Frame):
         connection_status_label = Label(testWin, textvariable=self.connection_status)
         connection_status_label.grid(row=0, column=0, sticky=N+S+E+W)
 
-        dB = Button(testWin, text="Disconnect", command=self.disconnect, bg="#f0f0f0")
-        dB.grid(row=4, column=0, sticky=N+S+E+W)
-        eB = Button(testWin, text="Exit", command=exit, bg ="#f0f0f0")
-        eB.grid(row=5, column=0, sticky=N+S+E+W)
+        disconnect_button = Button(testWin, text="Disconnect", command=self.disconnect, bg="#f0f0f0")
+        disconnect_button.grid(row=4, column=0, sticky=N+S+E+W)
+        exit_button = Button(testWin, text="Exit", command=exit, bg ="#f0f0f0")
+        exit_button.grid(row=5, column=0, sticky=N+S+E+W)
 
         self.connect()
 
