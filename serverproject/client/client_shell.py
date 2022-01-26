@@ -9,8 +9,8 @@ class Application(Frame):
         with open("utils/client_config.json") as config: self.CLIENT_CONFIG = json.load(config)
         self.connection_status = StringVar()
         self.setup()
-        self.use_custom_port
-        self.use_custom_ip = IntVar()
+        self.use_custom_port = False
+        self.use_custom_ip = False
 
     def setup(self):
         match  self.CLIENT_CONFIG['language']:
@@ -46,10 +46,18 @@ class Application(Frame):
         eB.grid(row=5, column=0, sticky=N+S+E+W)
     
         #Checkbutton
-        cbcustomport = Checkbutton(mainWin, text = "Custom port", variable = self.use_custom_ip)
-        cbcustomport.grid(row = 2, column = 1, sticky = N+S+E+W)
-        cbcustomip = Checkbutton(mainWin, text = "Custom ip")
+        self.cbcustomport = Checkbutton(mainWin, text = "Custom port", command=self.toggle_port_check)
+        self.cbcustomport.grid(row = 2, column = 1, sticky = N+S+E+W)
+        cbcustomip = Checkbutton(mainWin, text = "Custom ip", command=self.toggle_ip_check)
         cbcustomip.grid(row = 0, column = 1, sticky = N+S+E+W)
+
+    def toggle_port_check(self):
+        self.use_custom_port = True if self.use_custom_port == False else False
+        print(self.use_custom_port)
+
+    def toggle_ip_check(self):
+        self.use_custom_ip = True if self.use_custom_ip == False else False
+        print(self.use_custom_ip)
 
     def main_shell(self):
         testWin = Toplevel()
