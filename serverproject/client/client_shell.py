@@ -30,8 +30,8 @@ class Application(Frame):
         #texts
         self.ip_text = Text(mainWin,width=10, height=1, state="disabled")
         self.ip_text.grid(row=1, column=0, sticky=N+S+E+W)
-        pT = Text(mainWin,width=10, height=1)
-        pT.grid(row=3, column=0, sticky=N+S+E+W)
+        self.port_text = Text(mainWin,width=10, height=1, state="disabled")
+        self.port_text.grid(row=3, column=0, sticky=N+S+E+W)
 
         # labels
         ipL = Label(mainWin, text="Enter the ip")
@@ -48,20 +48,26 @@ class Application(Frame):
         #Checkbutton
         cbcustomip = Checkbutton(mainWin, text = "Custom ip", command=self.toggle_ip_check)
         cbcustomip.grid(row = 0, column = 1, sticky = N+S+E+W)
-        self.cbcustomport = Checkbutton(mainWin, text = "Custom port", command=self.toggle_port_check)
-        self.cbcustomport.grid(row = 2, column = 1, sticky = N+S+E+W)
+        cbcustomport = Checkbutton(mainWin, text = "Custom port", command=self.toggle_port_check)
+        cbcustomport.grid(row = 2, column = 1, sticky = N+S+E+W)
     
     def toggle_ip_check(self):
-        self.use_custom_ip = True if self.use_custom_ip == False else False
-        print(self.use_custom_ip)
+        if self.use_custom_ip == False:
+            self.use_custom_ip = True
+            print("normal")
+            self.ip_text.configure(state="normal")
+        else:
+            self.use_custom_ip = False
+            print("disable")
+            self.ip_text.configure(state="disabled")
 
     def toggle_port_check(self):
         if self.use_custom_port == False:
             self.use_custom_port = True
-            self.ip_text.configure(state="active")
+            self.port_text.configure(state="normal")
         else:
             self.use_custom_port = False
-        print(self.use_custom_port)
+            self.port_text.configure(state="disabled")
 
     def main_shell(self):
         testWin = Toplevel()
@@ -81,6 +87,8 @@ class Application(Frame):
 
     def connect(self):
         ip, port = self.CLIENT_CONFIG['host'], self.CLIENT_CONFIG['port']
+        #ip = #string var in text if self.use_custom_ip else self.CLIENT_CONFIG['host']
+        #port = #string var in text if self.use_custom_port else self.CLIENT_CONFIG['port']
         self.client = socket(AF_INET, SOCK_STREAM)
         while True:
             try:
