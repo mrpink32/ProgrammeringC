@@ -72,20 +72,24 @@ class Application(Frame):
     def clear_frame(self):
         for widget in self.main_window.winfo_children():
             widget.destroy()
+        #https://stackoverflow.com/questions/49313874/how-to-remove-columns-or-rows-while-redrawing-a-grid-in-python3-tkinter
+        for i in range(0, 5):
+            self.main_window.grid_columnconfigure(i, weight=0)
+            self.main_window.grid_rowconfigure(i, weight=0)
 
     def main_shell(self):
         self.clear_frame()
-        for row in range(0,5):
-            self.main_window.rowconfigure(row, weight=1)     
+        for row in range(0,3):
+            self.main_window.rowconfigure(row, weight=1)
         self.main_window.columnconfigure(0, weight=1, minsize=10)
 
         connection_status_label = Label(self.main_window, textvariable=self.connection_status)
         connection_status_label.grid(row=0, column=0, sticky=N+S+E+W)
 
         disconnect_button = Button(self.main_window, text="Disconnect", command=self.disconnect, bg="#f0f0f0")
-        disconnect_button.grid(row=4, column=0, sticky=N+S+E+W)
+        disconnect_button.grid(row=1, column=0, sticky=N+S+E+W)
         exit_button = Button(self.main_window, text="Exit", command=exit, bg ="#f0f0f0")
-        exit_button.grid(row=5, column=0, sticky=N+S+E+W)
+        exit_button.grid(row=2, column=0, sticky=N+S+E+W)
 
         self.connect()
 
