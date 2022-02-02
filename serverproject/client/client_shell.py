@@ -124,13 +124,18 @@ class Application(Frame):
                 case "!disconnect":
                     client.close()
                     break
-                case "send":
+                case "receive_from_server":
                     self.receive_file()
+                    continue
+                case "send_to_server":
+                    path = "grim.txt"
+                    self.send_file(path)
                     continue
                 case _:
                     continue
 
     def send_message(self, receiver, message, encode=True):
+        message = str(message)
         packet = f"{len(message):<{self.CLIENT_CONFIG['header_size']}}" + message
         if encode:
             packet = packet.encode("utf-8")
@@ -166,7 +171,7 @@ class Application(Frame):
                     break
                 sent += self.client.send(bytes_read)
 
-    def receive_file(self, path): # take path as argument
+    def receive_file(self): # take path as argument
         filesize = int(self.receive_message(self.client))
         received = 0
         with open("temp.mp3", "wb") as file:

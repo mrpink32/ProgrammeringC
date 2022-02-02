@@ -57,7 +57,7 @@ def send_file(sender, path):
 def receive_file(receiver): # take path as argument
     filesize = int(receive_message(receiver))
     received = 0
-    with open("temp.mp3", "wb") as file:
+    with open("Files/temp.txt", "wb") as file:
         while True:
             bytes_read = receiver.recv(SERVER_CONFIG['buffer_size'])
             received += len(bytes_read)
@@ -102,9 +102,12 @@ def client_handler(client, client_address, lock):
                 case "!disconnect":
                     client.close()
                     break
-                case "send":
+                case "receive_from_server":
                     path = "music/09 Flamewall.mp3"
                     send_file(client, path)
+                    continue
+                case "send_to_server":
+                    receive_file(client)
                     continue
                 case _:
                     continue
