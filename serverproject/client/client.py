@@ -3,8 +3,6 @@ import ffmpeg
 from socket import *
 from tkinter import *
 
-from matplotlib.pyplot import disconnect
-
 class Application(Frame):  
     def __init__(self, master):
         Frame.__init__(self, master) 
@@ -78,24 +76,6 @@ def receive_message(receiver):
         message += packet.decode("utf-8")
         if len(message)-CLIENT_CONFIG['header_size'] == packet_length:
             return str(message[CLIENT_CONFIG['header_size']:])
-
-
-def send_file():
-    pass
-
-
-def receive_file(receiver): # take path as argument
-    pass
-    # with open("temp.wav", "wb") as file
-    #             i = 0
-    #             while True:
-    #                 print(i)
-    #                 i += 1
-    #                 b = client.recv(CLIENT_CONFIG['buffer_size'])
-    #                 if not b: 
-    #                     break
-    #                 file.write(b)
-
 
 
 def connect():

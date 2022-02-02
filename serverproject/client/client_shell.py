@@ -1,4 +1,5 @@
 import json, os
+from threading import *
 from socket import *
 from tkinter import *
 
@@ -118,28 +119,30 @@ class Application(Frame):
             message = str(input("Type command for server: "))
             self.send_message(client, message)
             match message:
-                case "disconnect":
+                case "!disconnect":
                     client.close()
                     break
                 case "send":
-                    self.receive_file(client)
+                    self.receive_file()
                     continue
                 case _:
                     continue
 
-    def send_message(self, sender, message, encode=True):
+    def send_message(self, receiver, message, encode=True):
         packet = f"{len(message):<{self.CLIENT_CONFIG['header_size']}}" + message
         if encode:
             packet = packet.encode("utf-8")
-        return sender.send(packet)
+        return receiver.send(packet)
 
     def receive_message(self, receiver, encode=True):
         message = ''
         new_packet = True
         while True:
             packet = receiver.recv(self.CLIENT_CONFIG['buffer_size'])
+            print(packet)
             if new_packet:
                 packet_length = int(packet[:self.CLIENT_CONFIG['header_size']])
+                print(packet[:self.CLIENT_CONFIG['header_size']])
                 new_packet = False
             if encode:
                 packet = packet.decode("utf-8")
@@ -147,20 +150,32 @@ class Application(Frame):
             if len(message)-self.CLIENT_CONFIG['header_size'] == packet_length:
                 return str(message[self.CLIENT_CONFIG['header_size']:])
 
-    def send_file(self, sender, path):
+    def send_file(self, path):
+        filesize = os.path.getsize(path)
+        self.send_message(self.client, filesize)
         with open(path, "rb") as file:
-            lines = []
-            for line in file:
-                lines.append(line)
-            self.send_message(sender, len(lines))
-            for line in lines:
-                self.send_message(sender, line, False)
+            sent = 0
+            print(filesize)
+            while True:
+                bytes_read = file.read(self.CLIENT_CONFIG['buffer_size'])
+                progress = sent/filesize*100
+                print(f"{progress}%")
+                if progress == 100:
+                    break
+                sent += self.client.send(bytes_read)
 
-    def receive_file(self, receiver): # take path as argument
-        with open("temp.wav", "wb") as file:
-            packets = self.receive_message(receiver)
-            for _ in range(0, len(packets)+1):
-                file.write(self.receive_message(receiver, False))
+    def receive_file(self): # take path as argument
+        filesize = int(self.receive_message(self.client))
+        received = 0
+        with open("temp.mp3", "wb") as file:
+            while True:
+                bytes_read = self.client.recv(self.CLIENT_CONFIG['buffer_size'])
+                received += len(bytes_read)
+                progress = received/filesize*100
+                print(f"{progress}%")
+                if progress == 100:
+                    break
+                file.write(bytes_read)
 
 
 def main():
