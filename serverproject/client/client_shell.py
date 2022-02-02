@@ -9,6 +9,8 @@ class Application(Frame):
         self.grid(sticky=N+S+E+W)
         with open("utils/client_config.json") as config: self.CLIENT_CONFIG = json.load(config)
         self.connection_status = StringVar()
+        self.custom_ip = StringVar()
+        self.custom_port = StringVar()
         self.setup()
         self.use_custom_port = False
         self.use_custom_ip = False
@@ -29,10 +31,10 @@ class Application(Frame):
             self.main_window.columnconfigure(column, weight=1, minsize=10)
         
         #texts
-        self.ip_text = Text(self.main_window,width=10, height=1, state="disabled")
-        self.ip_text.grid(row=1, column=0, sticky=N+S+E+W)
-        self.port_text = Text(self.main_window,width=10, height=1, state="disabled")
-        self.port_text.grid(row=3, column=0, sticky=N+S+E+W)
+        self.ip_entry = Entry(self.main_window,width=10, state="disabled", textvariable=self.custom_ip)
+        self.ip_entry.grid(row=1, column=0, sticky=N+S+E+W)
+        self.port_entry = Entry(self.main_window,width=10, state="disabled", textvariable=self.custom_port)
+        self.port_entry.grid(row=3, column=0, sticky=N+S+E+W)
 
         # labels
         ip_label = Label(self.main_window, text="Enter the ip")
@@ -56,19 +58,19 @@ class Application(Frame):
         if self.use_custom_ip == False:
             self.use_custom_ip = True
             print("normal")
-            self.ip_text.configure(state="normal")
+            self.ip_entry.configure(state="normal")
         else:
             self.use_custom_ip = False
             print("disable")
-            self.ip_text.configure(state="disabled")
+            self.ip_entry.configure(state="disabled")
 
     def toggle_port_check(self):
         if self.use_custom_port == False:
             self.use_custom_port = True
-            self.port_text.configure(state="normal")
+            self.port_entry.configure(state="normal")
         else:
             self.use_custom_port = False
-            self.port_text.configure(state="disabled")
+            self.port_entry.configure(state="disabled")
 
     def clear_frame(self):
         for widget in self.main_window.winfo_children():
@@ -96,8 +98,8 @@ class Application(Frame):
 
     def connect(self):
         ip, port = self.CLIENT_CONFIG['host'], self.CLIENT_CONFIG['port']
-        #ip = #string var in text if self.use_custom_ip else self.CLIENT_CONFIG['host']
-        #port = #string var in text if self.use_custom_port else self.CLIENT_CONFIG['port']
+        ip = self.custom_ip.get() if self.use_custom_ip else self.CLIENT_CONFIG['host']
+        port = self.custom_port.get() if self.use_custom_port else self.CLIENT_CONFIG['port']
         self.client = socket(AF_INET, SOCK_STREAM)
         while True:
             try:
@@ -164,7 +166,7 @@ class Application(Frame):
                     break
                 sent += self.client.send(bytes_read)
 
-    def receive_file(self): # take path as argument
+    def receive_file(self, path): # take path as argument
         filesize = int(self.receive_message(self.client))
         received = 0
         with open("temp.mp3", "wb") as file:
