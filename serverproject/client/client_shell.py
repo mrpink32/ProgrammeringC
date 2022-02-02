@@ -128,7 +128,7 @@ class Application(Frame):
                     self.receive_file()
                     continue
                 case "send_to_server":
-                    path = "grim.txt"
+                    path = "temp.mp3"
                     self.send_file(path)
                     continue
                 case _:
@@ -174,7 +174,7 @@ class Application(Frame):
     def receive_file(self): # take path as argument
         filesize = int(self.receive_message(self.client))
         received = 0
-        with open("temp.mp3", "wb") as file:
+        with open("temp.txt", "wb") as file:
             while True:
                 bytes_read = self.client.recv(self.CLIENT_CONFIG['buffer_size'])
                 received += len(bytes_read)
