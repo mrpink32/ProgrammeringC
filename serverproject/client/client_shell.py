@@ -128,7 +128,7 @@ class Application(Frame):
                     self.receive_file()
                     continue
                 case "send_to_server":
-                    path = "temp.mp3"
+                    path = "temp.txt"
                     self.send_file(path)
                     continue
                 case _:
@@ -165,11 +165,11 @@ class Application(Frame):
             print(filesize)
             while True:
                 bytes_read = file.read(self.CLIENT_CONFIG['buffer_size'])
+                sent += self.client.send(bytes_read)
                 progress = sent/filesize*100
                 print(f"{progress}%")
                 if progress == 100:
                     break
-                sent += self.client.send(bytes_read)
 
     def receive_file(self): # take path as argument
         filesize = int(self.receive_message(self.client))
@@ -178,11 +178,11 @@ class Application(Frame):
             while True:
                 bytes_read = self.client.recv(self.CLIENT_CONFIG['buffer_size'])
                 received += len(bytes_read)
+                file.write(bytes_read)
                 progress = received/filesize*100
                 print(f"{progress}%")
                 if progress == 100:
                     break
-                file.write(bytes_read)
 
 
 def main():

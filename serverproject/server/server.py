@@ -48,24 +48,25 @@ def send_file(sender, path):
         print(filesize)
         while True:
             bytes_read = file.read(SERVER_CONFIG['buffer_size'])
+            sent += sender.send(bytes_read) 
             progress = sent/filesize*100
             print(f"{progress}%")
             if progress == 100:
                 break
-            sent += sender.send(bytes_read) 
 
 def receive_file(receiver): # take path as argument
     filesize = int(receive_message(receiver))
+    print(filesize)
     received = 0
-    with open("Files/temp.mp3", "wb") as file:
+    with open("Files/temp", "wb") as file:
         while True:
             bytes_read = receiver.recv(SERVER_CONFIG['buffer_size'])
             received += len(bytes_read)
+            file.write(bytes_read)
             progress = received/filesize*100
             print(f"{progress}%")
             if progress == 100:
                 break
-            file.write(bytes_read)
 
 
 def main():
