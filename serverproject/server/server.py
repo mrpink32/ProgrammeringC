@@ -63,9 +63,9 @@ def receive_file(receiver): # take path as argument
             bytes_read = receiver.recv(SERVER_CONFIG['buffer_size'])
             received += len(bytes_read)
             file.write(bytes_read)
-            progress = received/filesize*100
-            print(f"{progress}%")
-            if progress == 100:
+            progress = received/filesize
+            print(f"{progress*100}%")
+            if progress == 1:
                 break
 
 

@@ -82,17 +82,22 @@ class Application(Frame):
 
     def main_shell(self):
         self.clear_frame()
-        for row in range(0,3):
+        for row in range(0,4):
             self.main_window.rowconfigure(row, weight=1)
         self.main_window.columnconfigure(0, weight=1, minsize=10)
 
+        #Label
         connection_status_label = Label(self.main_window, textvariable=self.connection_status)
         connection_status_label.grid(row=0, column=0, sticky=N+S+E+W)
 
-        disconnect_button = Button(self.main_window, text="Disconnect", command=self.disconnect, bg="#f0f0f0")
-        disconnect_button.grid(row=1, column=0, sticky=N+S+E+W)
-        exit_button = Button(self.main_window, text="Exit", command=exit, bg ="#f0f0f0")
-        exit_button.grid(row=2, column=0, sticky=N+S+E+W)
+        #buttons
+        upload_button = Button(self.main_window, text="Upload a file to the server", command=None, bg="#f0f0f0")
+        upload_button.grid(row=1, column=0, sticky=N+S+E+W)
+        download_button = Button(self.main_window, text="Download a file from the server", command=None, bg="#f0f0f0")
+        download_button.grid(row=2, column=0, sticky=N+S+E+W)
+
+        disconnect_button = Button(self.main_window, text="Exit", command=self.disconnect, bg="#f0f0f0")
+        disconnect_button.grid(row=3, column=0, sticky=N+S+E+W)
 
         self.connect()
 
@@ -113,7 +118,7 @@ class Application(Frame):
         self.client_handler(self.client)
 
     def disconnect(self):
-        self.send_message(self.client, "disconnect")
+        self.send_message(self.client, "!disconnect")
         exit()
 
     def client_handler(self, client):
@@ -166,22 +171,22 @@ class Application(Frame):
             while True:
                 bytes_read = file.read(self.CLIENT_CONFIG['buffer_size'])
                 sent += self.client.send(bytes_read)
-                progress = sent/filesize*100
-                print(f"{progress}%")
-                if progress == 100:
+                progress = sent/filesize
+                print(f"{progress*100}%")
+                if progress == 1:
                     break
 
     def receive_file(self): # take path as argument
         filesize = int(self.receive_message(self.client))
         received = 0
-        with open("temp.txt", "wb") as file:
+        with open("temp", "wb") as file:
             while True:
                 bytes_read = self.client.recv(self.CLIENT_CONFIG['buffer_size'])
                 received += len(bytes_read)
                 file.write(bytes_read)
-                progress = received/filesize*100
-                print(f"{progress}%")
-                if progress == 100:
+                progress = received/filesize
+                print(f"{progress*100}%")
+                if progress == 1:
                     break
 
 
