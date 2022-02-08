@@ -104,6 +104,11 @@ def client_handler(client, client_address, lock):
                     client.close()
                     break
                 case "receive_from_server":
+                    file_names = []
+                    for file in os.path.dirname:
+                        print(file)
+                        #file_names.append(file)
+
                     path = "music/09 Flamewall.mp3"
                     path = "Files/temp.txt"
                     send_file(client, path)
