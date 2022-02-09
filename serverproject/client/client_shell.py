@@ -91,7 +91,7 @@ class Application(Frame):
         connection_status_label.grid(row=0, column=0, sticky=N+S+E+W)
 
         #buttons
-        upload_button = Button(self.main_window, text="Upload a file to the server", command=None, bg="#f0f0f0")
+        upload_button = Button(self.main_window, text="Upload a file to the server", command=self.send_file, bg="#f0f0f0")
         upload_button.grid(row=1, column=0, sticky=N+S+E+W)
         download_button = Button(self.main_window, text="Download a file from the server", command=self.receive_file, bg="#f0f0f0")
         download_button.grid(row=2, column=0, sticky=N+S+E+W)
@@ -116,7 +116,8 @@ class Application(Frame):
                 self.client.connect((ip, port))
                 break
             except:
-                self.connection_status.set(self.LANG['connection_fail_message'])
+                #self.connection_status.set(self.LANG['connection_fail_message'])
+                print(self.LANG['connection_fail_message'])
                 continue
         self.connection_status.set(self.LANG['connected_message'])
         self.connection_status.set(self.receive_message(self.client))
@@ -139,7 +140,7 @@ class Application(Frame):
                     self.receive_file()
                     continue
                 case "send_to_server":
-                    path = "temp.txt"
+                    path = "temp"
                     self.send_file(path)
                     continue
                 case _:
@@ -168,7 +169,9 @@ class Application(Frame):
             if len(message)-self.CLIENT_CONFIG['header_size'] == packet_length:
                 return str(message[self.CLIENT_CONFIG['header_size']:])
 
-    def send_file(self, path):
+    def send_file(self):
+        self.send_message(self.client, "send_to_server")
+        path = "temp.txt"
         filesize = os.path.getsize(path)
         self.send_message(self.client, filesize)
         with open(path, "rb") as file:
@@ -187,7 +190,7 @@ class Application(Frame):
         self.send_message(self.client, "receive_from_server")
         filesize = int(self.receive_message(self.client))
         received = 0
-        with open("temp", "wb") as file:
+        with open("temp.txt", "wb") as file:
             while True:
                 bytes_read = self.client.recv(self.CLIENT_CONFIG['buffer_size'])
                 received += len(bytes_read)
