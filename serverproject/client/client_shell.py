@@ -57,11 +57,11 @@ class Application(Frame):
     def toggle_ip_check(self):
         if self.use_custom_ip == False:
             self.use_custom_ip = True
-            print("normal")
+            #print("normal")
             self.ip_entry.configure(state="normal")
         else:
             self.use_custom_ip = False
-            print("disable")
+            #print("disable")
             self.ip_entry.configure(state="disabled")
 
     def toggle_port_check(self):
@@ -158,10 +158,10 @@ class Application(Frame):
         new_packet = True
         while True:
             packet = receiver.recv(self.CLIENT_CONFIG['buffer_size'])
-            print(packet)
+            #print(packet)
             if new_packet:
                 packet_length = int(packet[:self.CLIENT_CONFIG['header_size']])
-                print(packet[:self.CLIENT_CONFIG['header_size']])
+                #print(packet[:self.CLIENT_CONFIG['header_size']])
                 new_packet = False
             if encode:
                 packet = packet.decode("utf-8")
@@ -171,17 +171,18 @@ class Application(Frame):
 
     def send_file(self):
         self.send_message(self.client, "send_to_server")
-        path = "temp.txt"
+        path = "temp.wav"
         filesize = os.path.getsize(path)
         self.send_message(self.client, filesize)
         with open(path, "rb") as file:
             sent = 0
-            print(filesize)
+            #print(filesize)
             while True:
                 bytes_read = file.read(self.CLIENT_CONFIG['buffer_size'])
                 sent += self.client.send(bytes_read)
                 progress = sent/filesize
-                print(f"{progress*100}%")
+                #print(f"{progress*100}%")
+                self.connection_status.set(f"{progress*100}%")
                 if progress == 1:
                     break
 
@@ -196,7 +197,8 @@ class Application(Frame):
                 received += len(bytes_read)
                 file.write(bytes_read)
                 progress = received/filesize
-                print(f"{progress*100}%")
+                #print(f"{progress*100}%")
+                self.connection_status.set(f"{progress*100}%")
                 if progress == 1:
                     break
 

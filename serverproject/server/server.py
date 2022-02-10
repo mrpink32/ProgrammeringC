@@ -14,7 +14,7 @@ class Application():
                 with open("lang/da_dk.json", encoding="utf-8") as _: self.LANG = json.load(_)
             case "ja":
                 with open("lang/ja_jp.json", encoding="utf-8") as _: self.LANG = json.load(_)
-        self.start_server()
+        #self.start_server()
     
     def start_server(self):
         if (self.SERVER_CONFIG['host'] != "localhost"):
@@ -124,6 +124,7 @@ class Application():
 
 def main():
     app = Application()
+    app.start_server()
 
 
 if __name__ == "__main__":

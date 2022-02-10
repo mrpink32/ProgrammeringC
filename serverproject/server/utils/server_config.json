@@ -1,5 +1,5 @@
 {
-	"host": "localhost",
+	"host": "",
 	"port": 9000,
 	"header_size": 10,
 	"max_queue": 1,
