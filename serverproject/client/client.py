@@ -42,7 +42,7 @@ class Application(Frame):
             testWin.rowconfigure(row, weight=1)     
         testWin.columnconfigure(0, weight=1, minsize=10)
 
-        dB = Button(testWin, text="Disonnect", command=disconnect, bg="#f0f0f0")
+        dB = Button(testWin, text="Disonnect", command=self.disconnect, bg="#f0f0f0")
         dB.grid(row=4, column=0, sticky=N+S+E+W)
         eB = Button(testWin, text="Exit", command=exit, bg ="#f0f0f0")
         eB.grid(row=5, column=0, sticky=N+S+E+W)

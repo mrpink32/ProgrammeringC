@@ -48,12 +48,14 @@ class Application():
                         client.close()
                         break
                     case "receive_from_server":
-                        #file_names = []
-                        #for file in os.path.dirname:
-                            #print(file)
-                            #file_names.append(file)
-                        path = "music/09 Flamewall.mp3"
-                        path = "Files/temp.txt"
+                        file_names = os.listdir(os.path.curdir + "/files")
+                        self.send_message(client, len(file_names))
+                        print(len(file_names))
+                        for name in file_names:
+                            self.send_message(client, name)
+                            print(name)
+                        path = "files/" + self.receive_message(client)
+                        print(path)
                         self.send_file(client, path)
                         continue
                     case "send_to_server":
@@ -111,7 +113,7 @@ class Application():
         filesize = int(self.receive_message(receiver))
         #print(filesize)
         received = 0
-        with open("Files/temp.txt", "wb") as file:
+        with open("files/temp.txt", "wb") as file:
             while True:
                 bytes_read = receiver.recv(self.SERVER_CONFIG['buffer_size'])
                 received += len(bytes_read)
