@@ -111,11 +111,12 @@ class Application(Frame):
             if file_list.curselection():
                 time.sleep(0.25)
                 item = file_list.get(ACTIVE)
+                file_overview_window.destroy()
+
                 print(item)
                 self.send_message(item)
                 self.receive_file(item)
                 break
-        file_overview_window.destroy()
 
     def connect(self):
         ip, port = self.CLIENT_CONFIG['host'], self.CLIENT_CONFIG['port']
