@@ -112,7 +112,6 @@ class Application(Frame):
                 time.sleep(0.25)
                 item = file_list.get(ACTIVE)
                 file_overview_window.destroy()
-
                 print(item)
                 self.send_message(item)
                 self.receive_file(item)
