@@ -83,16 +83,26 @@ class Application(Frame):
         message_label = Label(self.main_window, textvariable=self.message_variable)
         message_label.grid(row=0, column=0, sticky=N+S+E+W)
         #buttons
-        upload_button = Button(self.main_window, text="Upload a file to the server", command=lambda : Thread(target=self.send_file).start(), bg="#f0f0f0")
+        upload_button = Button(self.main_window, text="Upload a file to the server", command=lambda : Thread(target=self.client_file_overview).start(), bg="#f0f0f0")
         upload_button.grid(row=1, column=0, sticky=N+S+E+W)
-        download_button = Button(self.main_window, text="Download a file from the server", command=lambda : Thread(target=self.open_file_overview).start(), bg="#f0f0f0")
+        download_button = Button(self.main_window, text="Download a file from the server", command=lambda : Thread(target=self.server_file_overview).start(), bg="#f0f0f0")
         download_button.grid(row=2, column=0, sticky=N+S+E+W)
         exit_button = Button(self.main_window, text="Exit", command=self.disconnect, bg="#f0f0f0")
         exit_button.grid(row=3, column=0, sticky=N+S+E+W)
         #self.connect()
         Thread(target=self.connect).start()
 
-    def open_file_overview(self):
+    def client_file_overview(self):
+        file_overview_window = Toplevel()
+        file_overview_window.rowconfigure(0, weight=1)
+        file_overview_window.columnconfigure(0, weight=1)
+        file_list = Listbox(file_overview_window, activestyle=DOTBOX)
+        file_list.grid(row=0, column=0, sticky=N+S+E+W)
+
+        file_overview_window.destroy()
+        self.send_file()
+
+    def server_file_overview(self):
         file_overview_window = Toplevel()
         file_overview_window.rowconfigure(0, weight=1)
         file_overview_window.columnconfigure(0, weight=1)
@@ -109,7 +119,7 @@ class Application(Frame):
             file_list.insert(END, name)
         while True:
             if file_list.curselection():
-                time.sleep(0.25)
+                time.sleep(0.1)
                 item = file_list.get(ACTIVE)
                 file_overview_window.destroy()
                 print(item)
