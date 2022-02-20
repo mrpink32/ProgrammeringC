@@ -114,7 +114,7 @@ class Application():
     def receive_file(self, receiver):
         try:
             filesize = int(self.receive_message(receiver))
-            #print(filesize)
+            #print(f"file size: {filesize}")
             received = 0
             with open("files/temp.txt", "wb") as file:
                 while True:
