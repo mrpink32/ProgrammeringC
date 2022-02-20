@@ -98,9 +98,19 @@ class Application(Frame):
         file_overview_window.columnconfigure(0, weight=1)
         file_list = Listbox(file_overview_window, activestyle=DOTBOX)
         file_list.grid(row=0, column=0, sticky=N+S+E+W)
-
-        file_overview_window.destroy()
-        self.send_file()
+        file_names = os.listdir(os.path.curdir + "/files")
+        print(file_names)
+        for name in file_names:
+            file_list.insert(END, name)
+            print(name)
+        while True:
+            if file_list.curselection():
+                time.sleep(0.1)
+                item = file_list.get(ACTIVE)
+                file_overview_window.destroy()
+                print(item)
+                self.send_file(item)
+                break
 
     def server_file_overview(self):
         file_overview_window = Toplevel()
@@ -171,40 +181,41 @@ class Application(Frame):
             if len(message)-self.CLIENT_CONFIG['header_size'] == packet_length:
                 return str(message[self.CLIENT_CONFIG['header_size']:])
 
-    def send_file(self):
-        #maybe use this try except not sure
+    def send_file(self, filename):
         try:
+            # tells the server that you want to send a file
             self.send_message("send_to_server")
-            path = "temp.txt"
-            filesize = os.path.getsize(path)
+            # get filesize and send it to server
+            filesize = os.path.getsize(os.curdir + "/files/" + filename)
             self.send_message(filesize)
-            with open(path, "rb") as file:
+            # opens file and makes it readable in binary form
+            with open(os.curdir + "/files/" + filename, "rb") as file:
                 sent = 0
-                #print(filesize)
                 while True:
                     bytes_read = file.read(self.CLIENT_CONFIG['buffer_size'])
                     sent += self.client.send(bytes_read)
                     progress = sent/filesize
-                    #print(f"{progress*100}%")
                     self.message_variable.set(f"{progress*100}%")
                     if progress == 1:
                         break
-        except:
-            print("dead")
+        except Exception as e:
+            print(e)
 
-    def receive_file(self, path):
-        filesize = int(self.receive_message())
-        received = 0
-        with open(path, "wb") as file:
-            while True:
-                bytes_read = self.client.recv(self.CLIENT_CONFIG['buffer_size'])
-                received += len(bytes_read)
-                file.write(bytes_read)
-                progress = received/filesize
-                #print(f"{progress*100}%")
-                self.message_variable.set(f"{progress*100}%")
-                if progress == 1:
-                    break
+    def receive_file(self, filename):
+        try:
+            filesize = int(self.receive_message())
+            received = 0
+            with open(os.curdir + "/files/" + filename, "wb") as file:
+                while True:
+                    bytes_read = self.client.recv(self.CLIENT_CONFIG['buffer_size'])
+                    received += len(bytes_read)
+                    file.write(bytes_read)
+                    progress = received/filesize
+                    self.message_variable.set(f"{progress*100}%")
+                    if progress == 1:
+                        break
+        except Exception as e:
+            print(e)
 
 
 def main():
