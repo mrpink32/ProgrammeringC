@@ -53,7 +53,7 @@ class Application():
                         for name in file_names:
                             self.send_message(client, name)
                             print(name)
-                        path = "files/" + self.receive_message(client)
+                        path = os.path.curdir + "/files/" + self.receive_message(client)
                         print(path)
                         self.send_file(client, path)
                         continue
@@ -95,7 +95,7 @@ class Application():
                 return str(message[self.SERVER_CONFIG['header_size']:])
 
     def send_file(self, sender, path):
-        try:
+        #try:
             filesize = os.path.getsize(path)
             self.send_message(sender, filesize)
             with open(path, "rb") as file:
@@ -108,15 +108,16 @@ class Application():
                     print(f"{progress}%")
                     if progress == 100:
                         break
-        except Exception as e:
-            print(e)
+        #except Exception as e:
+            #Sprint(e)
 
     def receive_file(self, receiver):
-        try:
+        #try:
+            filename = self.receive_message(receiver)
             filesize = int(self.receive_message(receiver))
             #print(f"file size: {filesize}")
             received = 0
-            with open("files/temp.txt", "wb") as file:
+            with open(os.path.curdir + "/files/" + filename, "wb") as file:
                 while True:
                     bytes_read = receiver.recv(self.SERVER_CONFIG['buffer_size'])
                     received += len(bytes_read)
@@ -125,14 +126,14 @@ class Application():
                     print(f"{progress*100}%")
                     if progress == 1:
                         break
-        except Exception as e:
-            print(e)
+        #except Exception as e:
+            #print(e)
 
 
 def main():
     app = Application()
     app.start_server()
 
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 if __name__ == "__main__":
     main()
