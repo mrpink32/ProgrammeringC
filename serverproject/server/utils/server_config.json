@@ -1,10 +1,9 @@
 {
-	"host": "localhost",
+	"host": "",
 	"port": 9000,
 	"header_size": 10,
 	"max_queue": 1,
 	"max_connections": 2,
 	"buffer_size": 1024,
-	"language": "en",
-	"standard_path": "files/"
+	"language": "en"
 }
