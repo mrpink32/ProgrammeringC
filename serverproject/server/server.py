@@ -95,39 +95,31 @@ class Application():
                 return str(message[self.SERVER_CONFIG['header_size']:])
 
     def send_file(self, sender, path):
-        #try:
-            filesize = os.path.getsize(path)
-            self.send_message(sender, filesize)
-            with open(path, "rb") as file:
-                sent = 0
-                #print(filesize)
-                while True:
-                    bytes_read = file.read(self.SERVER_CONFIG['buffer_size'])
-                    sent += sender.send(bytes_read) 
-                    progress = sent/filesize*100
-                    print(f"{progress}%")
-                    if progress == 100:
-                        break
-        #except Exception as e:
-            #Sprint(e)
+        filesize = os.path.getsize(path)
+        self.send_message(sender, filesize)
+        with open(path, "rb") as file:
+            sent = 0
+            while True:
+                bytes_read = file.read(self.SERVER_CONFIG['buffer_size'])
+                sent += sender.send(bytes_read) 
+                progress = sent/filesize*100
+                print(f"{progress}%")
+                if progress == 100:
+                    break
 
     def receive_file(self, receiver):
-        #try:
-            filename = self.receive_message(receiver)
-            filesize = int(self.receive_message(receiver))
-            #print(f"file size: {filesize}")
-            received = 0
-            with open(os.path.curdir + "/files/" + filename, "wb") as file:
-                while True:
-                    bytes_read = receiver.recv(self.SERVER_CONFIG['buffer_size'])
-                    received += len(bytes_read)
-                    file.write(bytes_read)
-                    progress = received/filesize
-                    print(f"{progress*100}%")
-                    if progress == 1:
-                        break
-        #except Exception as e:
-            #print(e)
+        filename = self.receive_message(receiver)
+        filesize = int(self.receive_message(receiver))
+        received = 0
+        with open(os.path.curdir + "/files/" + filename, "wb") as file:
+            while True:
+                bytes_read = receiver.recv(self.SERVER_CONFIG['buffer_size'])
+                received += len(bytes_read)
+                file.write(bytes_read)
+                progress = received/filesize*100
+                print(f"{progress}%")
+                if progress == 100:
+                    break
 
 
 def main():
