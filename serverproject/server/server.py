@@ -16,7 +16,8 @@ class Application():
                 with open("lang/ja_jp.json", encoding="utf-8") as _: self.LANG = json.load(_)
     
     def start_server(self):
-        if (self.SERVER_CONFIG['host'] != "localhost"):
+        # computer's ip has to be used if server needs to accept non-local connections
+        if (self.SERVER_CONFIG['host'] == ""):
             self.SERVER_CONFIG['host'] = gethostname()
         server = socket(AF_INET, SOCK_STREAM)
         print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
@@ -86,7 +87,6 @@ class Application():
             packet = receiver.recv(self.SERVER_CONFIG['buffer_size'])
             if new_packet:
                 packet_length = int(packet[:self.SERVER_CONFIG['header_size']])
-                #print(packet[:self.SERVER_CONFIG['header_size']])
                 new_packet = False
             if encode:
                 packet = packet.decode("utf-8")

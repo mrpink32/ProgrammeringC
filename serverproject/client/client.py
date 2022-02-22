@@ -89,7 +89,14 @@ class Application(Frame):
         exit_button = Button(self.main_window, text="Exit", command=self.disconnect, bg="#f0f0f0")
         exit_button.grid(row=3, column=0, sticky=N+S+E+W)
         self.connect()
-        #Thread(target=self.connect).start()
+
+    def get_active_item(self, file_list):
+        while True:
+            if file_list.curselection():
+                time.sleep(0.1)
+                item = file_list.get(ACTIVE)
+                return item
+
 
     def client_file_overview(self):
         file_overview_window = Toplevel()
@@ -101,13 +108,10 @@ class Application(Frame):
         print(file_names)
         for name in file_names:
             file_list.insert(END, name)
-        while True:
-            if file_list.curselection():
-                time.sleep(0.1)
-                item = file_list.get(ACTIVE)
-                file_overview_window.destroy()
-                self.send_file(item)
-                break
+        # use await to not use a while loop you can get stuck in
+        item = self.get_active_item(file_list)
+        file_overview_window.destroy()
+        self.send_file(item)
 
     def server_file_overview(self):
         file_overview_window = Toplevel()
@@ -123,14 +127,10 @@ class Application(Frame):
         file_list.grid(row=0, column=0, sticky=N+S+E+W)
         for name in file_names:
             file_list.insert(END, name)
-        while True:
-            if file_list.curselection():
-                time.sleep(0.1)
-                item = file_list.get(ACTIVE)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-                file_overview_window.destroy()
-                self.send_message(item)
-                self.receive_file(item)
-                break
+        item = self.get_active_item(file_list)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+        file_overview_window.destroy()
+        self.send_message(item)
+        self.receive_file(item)
 
     def connect(self):
         ip, port = self.CLIENT_CONFIG['host'], self.CLIENT_CONFIG['port']
@@ -143,7 +143,6 @@ class Application(Frame):
                 break
             except:
                 self.message_variable.set(self.LANG['connection_fail_message'])
-                #print(self.LANG['connection_fail_message'])
                 continue
         self.message_variable.set(self.LANG['connected_message'])
         self.message_variable.set(self.receive_message())
@@ -180,41 +179,35 @@ class Application(Frame):
                 return str(message[self.CLIENT_CONFIG['header_size']:])
 
     def send_file(self, filename):
-        #try:
-            # tells the server that you want to send a file
-            self.send_message("send_to_server")
-            # get filesize and send it to server
-            filesize = os.path.getsize(os.curdir + "/files/" + filename)
-            self.send_message(filename)
-            self.send_message(filesize)
-            # opens file and makes it readable in binary form
-            with open(os.curdir + "/files/" + filename, "rb") as file:
-                sent = 0
-                while True:
-                    bytes_read = file.read(self.CLIENT_CONFIG['buffer_size'])
-                    sent += self.client.send(bytes_read)
-                    progress = sent/filesize
-                    self.message_variable.set(f"{progress*100}%")
-                    if progress == 1:
-                        break
-        #except Exception as e:
-            #print(e)
+        # tells the server that you want to send a file
+        self.send_message("send_to_server")
+        # get filesize and send it to server
+        filesize = os.path.getsize(os.curdir + "/files/" + filename)
+        self.send_message(filename)
+        self.send_message(filesize)
+        # opens file and makes it readable in binary form
+        with open(os.curdir + "/files/" + filename, "rb") as file:
+            sent = 0
+            while True:
+                bytes_read = file.read(self.CLIENT_CONFIG['buffer_size'])
+                sent += self.client.send(bytes_read)
+                progress = sent/filesize
+                self.message_variable.set(f"{progress*100}%")
+                if progress == 1:
+                    break
 
     def receive_file(self, filename):
-        #try:
-            filesize = int(self.receive_message())
-            received = 0
-            with open(os.curdir + "/files/" + filename, "wb") as file:
-                while True:
-                    bytes_read = self.client.recv(self.CLIENT_CONFIG['buffer_size'])
-                    received += len(bytes_read)
-                    file.write(bytes_read)
-                    progress = received/filesize
-                    self.message_variable.set(f"{progress*100}%")
-                    if progress == 1:
-                        break
-        #except Exception as e:
-            #print(e)
+        filesize = int(self.receive_message())
+        received = 0
+        with open(os.curdir + "/files/" + filename, "wb") as file:
+            while True:
+                bytes_read = self.client.recv(self.CLIENT_CONFIG['buffer_size'])
+                received += len(bytes_read)
+                file.write(bytes_read)
+                progress = received/filesize
+                self.message_variable.set(f"{progress*100}%")
+                if progress == 1:
+                    break
 
 
 def main():
