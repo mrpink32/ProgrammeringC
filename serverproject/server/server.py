@@ -1,4 +1,4 @@
-import json, os
+import json, os, time
 import threading
 from socket import *
 import _thread as thread
@@ -6,14 +6,20 @@ import _thread as thread
 
 class Application():
     def __init__(self):
-        with open("utils/server_config.json") as _: self.SERVER_CONFIG = json.load(_)
-        match  self.SERVER_CONFIG['language']:
-            case "en":
-                with open("lang/en_us.json", encoding="utf-8") as _: self.LANG = json.load(_)
-            case "da":
-                with open("lang/da_dk.json", encoding="utf-8") as _: self.LANG = json.load(_)
-            case "ja":
-                with open("lang/ja_jp.json", encoding="utf-8") as _: self.LANG = json.load(_)
+        try:
+            with open("utils/server_config.json") as _: self.SERVER_CONFIG = json.load(_)
+            match  self.SERVER_CONFIG['language']:
+                case "en":
+                    with open("lang/en_us.json", encoding="utf-8") as _: self.LANG = json.load(_)
+                case "da":
+                    with open("lang/da_dk.json", encoding="utf-8") as _: self.LANG = json.load(_)
+                case "ja":
+                    with open("lang/ja_jp.json", encoding="utf-8") as _: self.LANG = json.load(_)
+            self.start_server()
+        except Exception as e:
+            print(e)
+            time.sleep(10)
+            
     
     def start_server(self):
         # computer's ip has to be used if server needs to accept non-local connections
@@ -124,7 +130,7 @@ class Application():
 
 def main():
     app = Application()
-    app.start_server()
+    exit()
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 if __name__ == "__main__":
