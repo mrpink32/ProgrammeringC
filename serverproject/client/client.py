@@ -2,6 +2,7 @@ import json, os, time
 from socket import *
 from tkinter import *
 from threading import *
+import asyncio
 
 class Application(Frame):  
     def __init__(self, master):
@@ -90,9 +91,9 @@ class Application(Frame):
         exit_button.grid(row=3, column=0, sticky=N+S+E+W)
         self.connect()
 
-    def get_active_item(self, file_list):
-        while True:
-            if file_list.curselection():
+    async def get_active_item(self, file_list):
+        #while True:
+                await file_list.curselection()
                 time.sleep(0.1)
                 item = file_list.get(ACTIVE)
                 return item
@@ -108,7 +109,7 @@ class Application(Frame):
         print(file_names)
         for name in file_names:
             file_list.insert(END, name)
-        # use await to not use a while loop you can get stuck in
+        # use await to get around useing a while loop you can get stuck in
         item = self.get_active_item(file_list)
         file_overview_window.destroy()
         self.send_file(item)
