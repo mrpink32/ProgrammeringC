@@ -35,29 +35,34 @@ class Application(Frame):
         self.main_window.rowconfigure(0, weight=1)
         self.draw_space = Canvas(self.main_window, width=1280, height=640)
         self.draw_space.grid(sticky=N+W+S+E)
-        # move to game loop or handler of event for changing window size (if it exists)
-        self.calculate_player_size()
         self.game_loop(0)
 
     def game_loop(self, i):
+        window_width, window_height = self.window_size()
+        
+        # move to event for changing window size (if it exists)
+        self.calculate_player_size(window_width, window_height)
         self.draw_space.delete(ALL)
-        #receive other players position
         v = 320 + (math.sin((i * math.pi) / 180) * 256)
         print(v, i)
-        self.draw_player(v)
+        #receive other players position
+        self.draw_players(window_width, v)
         i += 1
         self.master.after(16, self.game_loop, i)
 
-    def draw_player(self, y_pos):
-        # make dependent on window width
-        x_pos = 50
+    def draw_players(self, window_width, y_pos):
+        x_pos = window_width * 0.04
         self.draw_space.create_rectangle(x_pos, y_pos, x_pos + self.player_width, y_pos + self.player_height, fill="#000000")
+        #self.draw_space.create_rectangle(window_width - x_pos, y_pos, window_width - x_pos + self.player_width, y_pos + self.player_height, fill="#000000")
 
-    def calculate_player_size(self):
-        self.player_width = self.main_window.winfo_width() * 0.1 #0.01
+    def calculate_player_size(self, window_width, window_height):
+        self.player_width = window_width * 0.01
         #print(self.main_window.winfo_height())
-        self.player_height = self.main_window.winfo_height() * 0.5 #0.10
+        self.player_height = window_height * 0.1
         #print(self.player_height)
+
+    def window_size(self):
+        return self.main_window.winfo_width(), self.main_window.winfo_height()
 
 
 class Server():
@@ -65,7 +70,6 @@ class Server():
         #self.server = 
         pass
         
-
 
 class Client():
     pass
