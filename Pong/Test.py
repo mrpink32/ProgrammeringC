@@ -1,5 +1,5 @@
 from tkinter import *
-import socket
+from socket import *
 import asyncio
 import math
 
@@ -65,12 +65,16 @@ class Application(Frame):
         return self.main_window.winfo_width(), self.main_window.winfo_height()
 
 
+
 class Server():
     def __init__(self):
+        # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
+        print("Starting server!")
         self.server_socket = socket.Socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind("localhost", 9000)
         self.server_socket.Listen(1)
-
+        print("server started!")
+        # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
     
         
 
