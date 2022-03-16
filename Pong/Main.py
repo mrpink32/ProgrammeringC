@@ -23,7 +23,7 @@ class Application(Frame):
         self.main_window = self.winfo_toplevel()
         for i in range(0, 5): self.main_window.columnconfigure(i, weight=1)
         for i in range(0, 7): self.main_window.rowconfigure(i, weight=1)
-        host_button = Button(self.main_window, text="Host", command=self.game_window)
+        host_button = Button(self.main_window, text="Host", command=Server)
         host_button.grid(column=2, row=1, sticky=N+W+S+E)
         join_button = Button(self.main_window, text="Join", command=self.game_window)
         join_button.grid(column=2, row=3, sticky=N+W+S+E)
@@ -79,14 +79,34 @@ class Application(Frame):
         return self.main_window.winfo_width(), self.main_window.winfo_height()
 
 
-
-class Server():
+class Server:
     def __init__(self):
-        #self.server = 
-        pass
+        # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
+        print("Starting server!")
+        self.server_socket = websockets.server.serve()
+        self.current_connections = 0
+        print("server started!")
+        # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
+        while True:
+            if self.current_connections < 1:
+                client, client_address = self.server_socket.accept()
+                print("grim")
+                # print(self.LANG['connected_message'].format(client_address))
+
+
+                #self.send_message(client, self.LANG['welcome_message'])
+
+
+                # todo handle client8btgv G3REF V
+                # thread.start_new_thread(self.client_handler, (client, client_address, lock)) 
+
+
+                self.current_connections += 1
+                print(self.current_connections)
+                # print(self.LANG['connection_count'].format(current_connections))
         
 
-class Client():
+class Client:
     pass
 
 def main():
