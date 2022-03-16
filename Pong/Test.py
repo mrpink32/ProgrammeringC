@@ -1,3 +1,4 @@
+import threading
 from tkinter import *
 from socket import *
 import asyncio
@@ -66,19 +67,38 @@ class Application(Frame):
 
 
 
-class Server():
+class Server:
     def __init__(self):
         # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
         self.server_socket = socket.Socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind("localhost", 9000)
-        self.server_socket.Listen(1)
+        self.server_socket.Listen(0)
+        self.current_connections = 0
         print("server started!")
         # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
+        while True:
+            if self.current_connections < 1:
+                client, client_address = self.server_socket.accept()
+                print("grim")
+                # print(self.LANG['connected_message'].format(client_address))
+
+
+                #self.send_message(client, self.LANG['welcome_message'])
+
+
+                # todo handle client8btgv G3REF V
+                # thread.start_new_thread(self.client_handler, (client, client_address, lock)) 
+
+
+                self.current_connections += 1
+                print(self.current_connections)
+                # print(self.LANG['connection_count'].format(current_connections))
+        
     
         
 
-class Client():
+class Client:
     pass
 
 
