@@ -56,10 +56,10 @@ class Application(Frame):
         self.bind("<W>",self.move_up)
         self.bind("<s>",self.move_down)
 
-    def move_up(self,i):
-        while True:
-            if keyboard.read_key() == "W":
-                print("hehjsdohosdhofuhwedfhujshifdoifjsoijfjdosfjsdjofjsdojifodsiofijsdoijfjs")
+    # kan godt komme til at virke, men tror der er en bedre metode
+    def move_up(self):
+        if keyboard.read_key() == "W":
+            print("hehjsdohosdhofuhwedfhujshifdoifjsoijfjdosfjsdjofjsdojifodsiofijsdoijfjs")
 
     def move_down(self):
         pass
