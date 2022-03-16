@@ -2,6 +2,7 @@ from tkinter import *
 import websockets
 import asyncio
 import math
+import keyboard
 
 
 class Application(Frame):
@@ -43,12 +44,25 @@ class Application(Frame):
         # move to event for changing window size (if it exists)
         self.calculate_player_size(window_width, window_height)
         self.draw_space.delete(ALL)
-        v = 320 + (math.sin((i * math.pi) / 180) * 256)
-        print(v, i)
+        #v = 320 + (math.sin((i * math.pi) / 180) * 256)
+        v = 320
+        print(v,i)
         #receive other players position
-        self.draw_players(window_width, v)
-        i += 1
-        self.master.after(16, self.game_loop, i)
+        i = 1
+        self.draw_players(window_width,v)
+        self.master.after(16, self.game_loop,i)
+
+    def inputs(self):
+        self.bind("<W>",self.move_up)
+        self.bind("<s>",self.move_down)
+
+    def move_up(self,i):
+        while True:
+            if keyboard.read_key() == "W":
+                print("hehjsdohosdhofuhwedfhujshifdoifjsoijfjdosfjsdjofjsdojifodsiofijsdoijfjs")
+
+    def move_down(self):
+        pass
 
     def draw_players(self, window_width, y_pos):
         x_pos = window_width * 0.04
@@ -65,6 +79,7 @@ class Application(Frame):
         return self.main_window.winfo_width(), self.main_window.winfo_height()
 
 
+
 class Server():
     def __init__(self):
         #self.server = 
@@ -73,7 +88,6 @@ class Server():
 
 class Client():
     pass
-
 
 def main():
     app = Application(Tk())
