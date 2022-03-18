@@ -2,7 +2,6 @@ from tkinter import *
 import websockets
 import asyncio
 import math
-import keyboard
 
 
 class Application(Frame):
@@ -46,23 +45,25 @@ class Application(Frame):
         self.draw_space.delete(ALL)
         #v = 320 + (math.sin((i * math.pi) / 180) * 256)
         v = 320
-        print(v,i)
+        #print(v,i)
         #receive other players position
         i = 1
         self.draw_players(window_width,v)
         self.master.after(16, self.game_loop,i)
 
-    def inputs(self):
-        self.bind("<W>",self.move_up)
-        self.bind("<s>",self.move_down)
+    def inputs(self, event):
+        #print(event.char)
+        match event.char:
+            case 'w':
+                self.move_up()
+            case 's':
+                self. move_down()
 
-    # kan godt komme til at virke, men tror der er en bedre metode
     def move_up(self):
-        if keyboard.read_key() == "W":
-            print("hehjsdohosdhofuhwedfhujshifdoifjsoijfjdosfjsdjofjsdojifodsiofijsdoijfjs")
+        print("moving up...")
 
     def move_down(self):
-        pass
+        print("moving down...")
 
     def draw_players(self, window_width, y_pos):
         x_pos = window_width * 0.04

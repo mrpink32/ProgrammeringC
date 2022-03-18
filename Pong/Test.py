@@ -1,4 +1,3 @@
-import threading
 from tkinter import *
 from socket import *
 import asyncio
@@ -23,7 +22,7 @@ class Application(Frame):
         self.main_window = self.winfo_toplevel()
         for i in range(0, 5): self.main_window.columnconfigure(i, weight=1)
         for i in range(0, 7): self.main_window.rowconfigure(i, weight=1)
-        host_button = Button(self.main_window, text="Host", command=self.game_window)
+        host_button = Button(self.main_window, text="Host", command=Server)
         host_button.grid(column=2, row=1, sticky=N+W+S+E)
         join_button = Button(self.main_window, text="Join", command=self.game_window)
         join_button.grid(column=2, row=3, sticky=N+W+S+E)
@@ -44,12 +43,27 @@ class Application(Frame):
         # move to event for changing window size (if it exists)
         self.calculate_player_size(window_width, window_height)
         self.draw_space.delete(ALL)
-        v = 320 + (math.sin((i * math.pi) / 180) * 256)
-        print(v, i)
+        #v = 320 + (math.sin((i * math.pi) / 180) * 256)
+        v = 320
+        #print(v,i)
         #receive other players position
-        self.draw_players(window_width, v)
-        i += 1
-        self.master.after(16, self.game_loop, i)
+        i = 1
+        self.draw_players(window_width,v)
+        self.master.after(16, self.game_loop,i)
+
+    def inputs(self, event):
+        #print(event.char)
+        match event.char:
+            case 'w':
+                self.move_up()
+            case 's':
+                self. move_down()
+
+    def move_up(self):
+        print("moving up...")
+
+    def move_down(self):
+        print("moving down...")
 
     def draw_players(self, window_width, y_pos):
         x_pos = window_width * 0.04
@@ -95,16 +109,17 @@ class Server:
                 print(self.current_connections)
                 # print(self.LANG['connection_count'].format(current_connections))
         
-    
         
 
 class Client:
     pass
 
 
+
 def main():
     app = Application(Tk())
     app.main_menu()
+    app.master.bind('<KeyPress>', app.inputs)
     app.mainloop()
 
 
