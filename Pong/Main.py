@@ -8,7 +8,6 @@ class Application(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.grid(sticky=N+W+S+E)
-
     
     def clear_frame(self):
         for widget in self.main_window.winfo_children():
@@ -35,39 +34,34 @@ class Application(Frame):
         self.main_window.rowconfigure(0, weight=1)
         self.draw_space = Canvas(self.main_window, width=1280, height=640)
         self.draw_space.grid(sticky=N+W+S+E)
-        self.game_loop(0)
+        self.player1 = Player(320)
+        #self.player2 = Player()
+        self.game_loop()
 
-    def game_loop(self, i):
+    def game_loop(self):
         window_width, window_height = self.window_size()
         
         # move to event for changing window size (if it exists)
         self.calculate_player_size(window_width, window_height)
         self.draw_space.delete(ALL)
-        #v = 320 + (math.sin((i * math.pi) / 180) * 256)
-        v = 320
-        #print(v,i)
         #receive other players position
-        i = 1
-        self.draw_players(window_width,v)
-        self.master.after(16, self.game_loop,i)
+        print(self.player1.y_pos)
+        self.draw_players(window_width)
+        self.master.after(16, self.game_loop)
 
     def inputs(self, event):
         #print(event.char)
         match event.char:
             case 'w':
-                self.move_up()
+                print("moving up...")
+                self.player1.move(-1)
             case 's':
-                self. move_down()
+                print("moving down...")
+                self.player1.move(1)
 
-    def move_up(self):
-        print("moving up...")
-
-    def move_down(self):
-        print("moving down...")
-
-    def draw_players(self, window_width, y_pos):
+    def draw_players(self, window_width):
         x_pos = window_width * 0.04
-        self.draw_space.create_rectangle(x_pos, y_pos, x_pos + self.player_width, y_pos + self.player_height, fill="#000000")
+        self.draw_space.create_rectangle(x_pos, self.player1.y_pos, x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#000000")
         #self.draw_space.create_rectangle(window_width - x_pos, y_pos, window_width - x_pos + self.player_width, y_pos + self.player_height, fill="#000000")
 
     def calculate_player_size(self, window_width, window_height):
@@ -78,6 +72,16 @@ class Application(Frame):
 
     def window_size(self):
         return self.main_window.winfo_width(), self.main_window.winfo_height()
+
+
+
+class Player:
+    def __init__(self, y_pos):
+        self.y_pos = y_pos
+        self.speed = 5
+    def move(self, inputs):
+        self.y_pos += inputs * self.speed
+
 
 
 class Server:
@@ -105,14 +109,18 @@ class Server:
                 self.current_connections += 1
                 print(self.current_connections)
                 # print(self.LANG['connection_count'].format(current_connections))
-        
+
+
 
 class Client:
     pass
 
+
+
 def main():
     app = Application(Tk())
     app.main_menu()
+    app.master.bind('<KeyPress>', app.inputs)
     app.mainloop()
 
 
