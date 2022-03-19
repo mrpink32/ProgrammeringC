@@ -76,8 +76,8 @@ class Application(Frame):
 
 
 class Player:
-    def __init__(self, y_pos):
-        self.y_pos = y_pos
+    def __init__(self, start_pos):
+        self.y_pos = start_pos
         self.speed = 5
     def move(self, inputs):
         self.y_pos += inputs * self.speed
