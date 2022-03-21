@@ -1,7 +1,6 @@
 from tkinter import *
-import websockets
-import asyncio
-import math
+import websocket
+import threading
 
 
 class Application(Frame):
@@ -35,7 +34,7 @@ class Application(Frame):
         self.draw_space = Canvas(self.main_window, width=1280, height=640)
         self.draw_space.grid(sticky=N+W+S+E)
         self.player1 = Player(320)
-        #self.player2 = Player()
+        #self.player2 = Player(320)
         self.game_loop()
 
     def game_loop(self):
@@ -84,18 +83,26 @@ class Player:
     def move(self, inputs):    
         self.y_pos += inputs * self.speed
 
+
+
 class Server:
     def __init__(self):
         # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
-        self.server_socket = websockets.server.serve()
+        server_socket = websocket.WebSocketApp("localhost")
+        server_socket_thread = threading.Thread(target=lambda: server_socket.run_forever())
+        server_socket_thread.start()
         self.current_connections = 0
         print("server started!")
         # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
-        while True:
-            if self.current_connections < 1:
-                client, client_address = self.server_socket.accept()
-                print("grim")
+        
+        Client()
+        server_socket.send(9)
+        
+        # while True:
+        #     if self.current_connections < 1:
+        #         client, client_address = self.server_socket.accept()
+        #         print("grim")
                 # print(self.LANG['connected_message'].format(client_address))
 
 
@@ -106,14 +113,19 @@ class Server:
                 # thread.start_new_thread(self.client_handler, (client, client_address, lock)) 
 
 
-                self.current_connections += 1
-                print(self.current_connections)
+                #self.current_connections += 1
+                #print(self.current_connections)
                 # print(self.LANG['connection_count'].format(current_connections))
 
 
 
 class Client:
-    pass
+    def __init__(self):
+        self.test_socket = websocket.WebSocketApp("localhost", on_message=self.grim)
+        test_thread = threading.Thread(target=lambda: self.test_socket.run_forever())
+        test_thread.start()
+    def grim(self, message):
+        print(message)
 
 
 
@@ -126,4 +138,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
