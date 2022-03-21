@@ -1,7 +1,6 @@
 from tkinter import *
 from socket import *
-import asyncio
-import math
+import threading
 
 
 class Application(Frame):
@@ -88,9 +87,9 @@ class Server:
     def __init__(self):
         # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
-        self.server_socket = socket.Socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_socket.bind("localhost", 9000)
-        self.server_socket.Listen(0)
+        self.server_socket = socket(AF_INET, SOCK_STREAM)
+        self.server_socket.bind(("localhost", 9000))
+        self.server_socket.listen(0)
         self.current_connections = 0
         print("server started!")
         # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
@@ -115,7 +114,9 @@ class Server:
         
 
 class Client:
-    pass
+    def __init__(self):
+        self.client_socket = socket(AF_INET, SOCK_STREAM)
+        self.client_socket.connect(("localhost", 9000))
 
 
 
