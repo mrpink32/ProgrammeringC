@@ -39,7 +39,6 @@ class Application(Frame):
 
     def game_loop(self):
         self.window_size()
-        # move to event for changing window size (if it exists)
         self.calculate_player_size()
         self.draw_space.delete(ALL)
         #receive other players position
@@ -48,7 +47,6 @@ class Application(Frame):
         self.master.after(16, self.game_loop)
 
     def inputs(self, event):
-        #print(event.char)
         match event.char:
             case 'w':
                 print("moving up...")
@@ -63,13 +61,10 @@ class Application(Frame):
     def draw_players(self):
         x_pos = self.window_width * 0.04
         self.draw_space.create_rectangle(x_pos, self.player1.y_pos, x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#000000")
-        #self.draw_space.create_rectangle(window_width - x_pos, y_pos, window_width - x_pos + self.player_width, y_pos + self.playfer_height, fill="#000000")
 
     def calculate_player_size(self):
         self.player_width = self.window_width * 0.01
-        #print(self.main_window.winfo_height())
         self.player_height = self.window_height * 0.1
-        #print(self.player_height)
 
     def window_size(self):
         self.window_width, self.window_height = self.main_window.winfo_width(), self.main_window.winfo_height()

@@ -38,39 +38,35 @@ class Application(Frame):
         self.game_loop()
 
     def game_loop(self):
-        window_width, window_height = self.window_size()
-        
-        # move to event for changing window size (if it exists)
-        self.calculate_player_size(window_width, window_height)
+        self.window_size()
+        self.calculate_player_size()
         self.draw_space.delete(ALL)
         #receive other players position
         print(self.player1.y_pos)
-        self.draw_players(window_width)
+        self.draw_players()
         self.master.after(16, self.game_loop)
 
     def inputs(self, event):
-        #print(event.char)
         match event.char:
             case 'w':
-                print("moving up...")
-                self.player1.move(-1)
+                if self.player1.y_pos > 0:
+                    print("moving up...")
+                    self.player1.move(-1)
             case 's':
-                print("moving down...")
-                self.player1.move(1)
+                if self.player1.y_pos < self.window_height - self.player_height:
+                    print("moving down...")
+                    self.player1.move(1)
 
-    def draw_players(self, window_width):
-        x_pos = window_width * 0.04
+    def draw_players(self):
+        x_pos = self.window_width * 0.04
         self.draw_space.create_rectangle(x_pos, self.player1.y_pos, x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#000000")
-        #self.draw_space.create_rectangle(window_width - x_pos, y_pos, window_width - x_pos + self.player_width, y_pos + self.player_height, fill="#000000")
 
-    def calculate_player_size(self, window_width, window_height):
-        self.player_width = window_width * 0.01
-        #print(self.main_window.winfo_height())
-        self.player_height = window_height * 0.1
-        #print(self.player_height)
+    def calculate_player_size(self):
+        self.player_width = self.window_width * 0.01
+        self.player_height = self.window_height * 0.1
 
     def window_size(self):
-        return self.main_window.winfo_width(), self.main_window.winfo_height()
+        self.window_width, self.window_height = self.main_window.winfo_width(), self.main_window.winfo_height()
 
 
 
