@@ -47,9 +47,16 @@ class Application(Frame):
         self.master.after(16, self.game_loop)
 
     def draw_players(self):
-        x_pos = self.window_width * 0.04
-        self.draw_space.create_rectangle(x_pos, self.player1.y_pos, x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#000000")
-        self.draw_space.create_rectangle(self.window_width - (x_pos + self.player_width), self.player2.y_pos, self.window_width - x_pos + self.player_width, self.player2.y_pos + self.player_height, fill="#000000")
+        self.player1.x_pos = self.window_width * 0.04
+        self.player2.x_pos = self.window_width - self.window_width * 0.04 
+        self.draw_space.create_rectangle(self.player1.x_pos, self.player1.y_pos, self.player1.x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#0000ff")
+        self.draw_space.create_rectangle(self.player2.x_pos - self.player_width, self.player2.y_pos, self.player2.x_pos, self.player2.y_pos + self.player_height, fill="#ff0000")
+
+    def draw_ball(self):
+        Ball = self.create_oval(10,10,50,50,fill = "black")
+        Ball_speed_x = Ball_speed_y = 3
+        self.move(Ball,Ball_speed_x,Ball_speed_y)
+        #https://youtu.be/XFU7FC-i-_Y til resten af lortet jeg mangler
 
     def calculate_player_size(self):
         self.player_width = self.window_width * 0.01
@@ -63,20 +70,21 @@ class Application(Frame):
             case 'w':
                 if self.player1.y_pos > 0:
                     print("moving up...")
-                    self.player1.move(-1)
+                    self.player1.move(-self.window_height*0.01)
             case 's':
                 if self.player1.y_pos < self.window_height - self.player_height:
                     print("moving down...")
-                    self.player1.move(1)
+                    self.player1.move(self.window_height*0.01)
 
 
 
 class Player:
     def __init__(self, start_pos):
+        self.x_pos = 0
         self.y_pos = start_pos
-        self.speed = 5
+        #self.speed = 5 
     def move(self, inputs):    
-        self.y_pos += inputs * self.speed
+        self.y_pos += inputs
 
 
 
