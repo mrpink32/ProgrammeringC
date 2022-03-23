@@ -10,7 +10,8 @@ class Application():
             with open("utils/server_config.json") as _: self.SERVER_CONFIG = json.load(_)
             match  self.SERVER_CONFIG['language']:
                 case "en":
-                    with open("lang/en_us.json", encoding="utf-8") as _: self.LANG = json.load(_)
+                    with open("lang/en_us.json", encoding="utf-8") as _: 
+                        self.LANG = json.load(_)
                 case "da":
                     with open("lang/da_dk.json", encoding="utf-8") as _: self.LANG = json.load(_)
                 case "ja":

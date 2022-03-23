@@ -12,7 +12,7 @@ class Application(Frame):
         for widget in self.main_window.winfo_children():
             widget.destroy()
         #https://stackoverflow.com/questions/49313874/how-to-remove-columns-or-rows-while-redrawing-a-grid-in-python3-tkinter
-        for i in range(0, 5):
+        for i in range(0, 7):
             self.main_window.grid_columnconfigure(i, weight=0)
             self.main_window.grid_rowconfigure(i, weight=0)
 
@@ -32,19 +32,31 @@ class Application(Frame):
         self.main_window.columnconfigure(0, weight=1)
         self.main_window.rowconfigure(0, weight=1)
         self.draw_space = Canvas(self.main_window, width=1280, height=640)
-        self.draw_space.grid(sticky=N+W+S+E)
+        self.draw_space.grid(sticky=N+W+S+E) #, rowspan=10, columnspan=10
         self.player1 = Player(320)
-        #self.player2 = Player()
+        self.player2 = Player(320)
         self.game_loop()
 
     def game_loop(self):
+        self.draw_space.delete(ALL)
         self.window_size()
         self.calculate_player_size()
-        self.draw_space.delete(ALL)
         #receive other players position
-        print(self.player1.y_pos)
+        #print(self.player1.y_pos)
         self.draw_players()
         self.master.after(16, self.game_loop)
+
+    def draw_players(self):
+        x_pos = self.window_width * 0.04
+        self.draw_space.create_rectangle(x_pos, self.player1.y_pos, x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#000000")
+        self.draw_space.create_rectangle(self.window_width - (x_pos + self.player_width), self.player2.y_pos, self.window_width - x_pos + self.player_width, self.player2.y_pos + self.player_height, fill="#000000")
+
+    def calculate_player_size(self):
+        self.player_width = self.window_width * 0.01
+        self.player_height = self.window_height * 0.1
+
+    def window_size(self):
+        self.window_width, self.window_height = self.main_window.winfo_width(), self.main_window.winfo_height()
 
     def inputs(self, event):
         match event.char:
@@ -56,17 +68,6 @@ class Application(Frame):
                 if self.player1.y_pos < self.window_height - self.player_height:
                     print("moving down...")
                     self.player1.move(1)
-
-    def draw_players(self):
-        x_pos = self.window_width * 0.04
-        self.draw_space.create_rectangle(x_pos, self.player1.y_pos, x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#000000")
-
-    def calculate_player_size(self):
-        self.player_width = self.window_width * 0.01
-        self.player_height = self.window_height * 0.1
-
-    def window_size(self):
-        self.window_width, self.window_height = self.main_window.winfo_width(), self.main_window.winfo_height()
 
 
 
@@ -108,6 +109,7 @@ class Server:
                 # print(self.LANG['connection_count'].format(current_connections))
         
         
+        
 
 class Client:
     def __init__(self):
@@ -125,4 +127,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
