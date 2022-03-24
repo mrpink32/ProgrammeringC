@@ -1,15 +1,24 @@
+import websocket
+import threading
 
+def on_message(ws, message):
+    print(message)
 
-websocket.enableTrace(True)
-socket = "localhost"                 
-ws = websocket.WebSocketApp(socket,
-                                            on_open=self.on_open)#, 
-                                                #on_message=on_message,
-                                                #on_close=on_close) 
+def on_error(ws, error):
+    print(error)
 
-wst = threading.Thread(target=lambda: ws.run_forever())
-wst.daemon = True                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-wst.start()
+def on_close(ws, close_status_code, close_msg):
+    print("### closed ###")
 
-def on_open(self):
-    print("grim")
+def on_open(ws):
+    print("Opened connection")
+
+if __name__ == "__main__":
+    websocket.enableTrace(True)
+    ws = websocket.WebSocketApp("",
+                              on_open=on_open,
+                              on_message=on_message,
+                              on_error=on_error,
+                              on_close=on_close)
+
+    ws.run_forever()

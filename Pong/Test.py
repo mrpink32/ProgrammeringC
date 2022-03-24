@@ -32,7 +32,7 @@ class Application(Frame):
         self.main_window.columnconfigure(0, weight=1)
         self.main_window.rowconfigure(0, weight=1)
         self.draw_space = Canvas(self.main_window, width=1280, height=640)
-        self.draw_space.grid(sticky=N+W+S+E) #, rowspan=10, columnspan=10
+        self.draw_space.grid(sticky=N+W+S+E)
         self.player1 = Player(320)
         self.player2 = Player(320)
         self.game_loop()
@@ -56,7 +56,9 @@ class Application(Frame):
         self.player_height = self.window_height * 0.1
 
     def window_size(self):
-        self.window_width, self.window_height = self.main_window.winfo_width(), self.main_window.winfo_height()
+        temp_width, temp_height = self.main_window.winfo_width(), self.main_window.winfo_height()
+        if self.window_width != temp_width or self.window_height != temp_height:
+            self.window_width, self.window_height = temp_width, temp_height
 
     def inputs(self, event):
         match event.char:
@@ -107,6 +109,7 @@ class Server:
                 self.current_connections += 1
                 print(self.current_connections)
                 # print(self.LANG['connection_count'].format(current_connections))
+        
         
         
         
