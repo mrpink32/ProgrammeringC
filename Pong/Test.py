@@ -1,12 +1,16 @@
 from tkinter import *
 from socket import *
 import threading
+import math
+
+import screeninfo
 
 
 class Application(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.grid(sticky=N+W+S+E)
+        self.screen_width, self.screen_height = screeninfo.get_monitors()[0].width, screeninfo.get_monitors()[0].height
     
     def clear_frame(self):
         for widget in self.main_window.winfo_children():
@@ -31,8 +35,9 @@ class Application(Frame):
         self.clear_frame()
         self.main_window.columnconfigure(0, weight=1)
         self.main_window.rowconfigure(0, weight=1)
-        self.draw_space = Canvas(self.main_window, width=1280, height=640)
+        self.draw_space = Canvas(self.main_window, width=self.screen_width/2, height=self.screen_height/2)
         self.draw_space.grid(sticky=N+W+S+E)
+        self.frame_rate = math.floor(1000 / 60)
         self.player1 = Player(320)
         self.player2 = Player(320)
         self.game_loop()
@@ -44,21 +49,24 @@ class Application(Frame):
         #receive other players position
         #print(self.player1.y_pos)
         self.draw_players()
-        self.master.after(16, self.game_loop)
+        self.master.after(self.frame_rate, self.game_loop)
 
     def draw_players(self):
-        x_pos = self.window_width * 0.04
-        self.draw_space.create_rectangle(x_pos, self.player1.y_pos, x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#000000")
-        self.draw_space.create_rectangle(self.window_width - (x_pos + self.player_width), self.player2.y_pos, self.window_width - x_pos + self.player_width, self.player2.y_pos + self.player_height, fill="#000000")
+        self.player1.x_pos = self.window_width * 0.04
+        self.player2.x_pos = self.window_width - self.window_width * 0.04
+        #perc = self.window_height / self.player1.y_pos
+        #print(perc)
+        #self.player1.y_pos = self.window_height * (1 - perc)
+        #self.player1.y_pos = self.window_height * perc
+        self.draw_space.create_rectangle(self.player1.x_pos, self.player1.y_pos, self.player1.x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#0000ff")
+        self.draw_space.create_rectangle(self.player2.x_pos - self.player_width, self.player2.y_pos, self.player2.x_pos, self.player2.y_pos + self.player_height, fill="#ff0000")
 
     def calculate_player_size(self):
         self.player_width = self.window_width * 0.01
         self.player_height = self.window_height * 0.1
 
     def window_size(self):
-        temp_width, temp_height = self.main_window.winfo_width(), self.main_window.winfo_height()
-        if self.window_width != temp_width or self.window_height != temp_height:
-            self.window_width, self.window_height = temp_width, temp_height
+        self.window_width, self.window_height = self.main_window.winfo_width(), self.main_window.winfo_height()
 
     def inputs(self, event):
         match event.char:
@@ -75,6 +83,7 @@ class Application(Frame):
 
 class Player:
     def __init__(self, start_pos):
+        self.x_pos = 0
         self.y_pos = start_pos
         self.speed = 5
     def move(self, inputs):
