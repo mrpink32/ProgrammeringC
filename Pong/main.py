@@ -1,9 +1,8 @@
+import lib.custom_networking as cn
+import _thread as thread
 from tkinter import *
 from socket import *
-import threading
-import _thread as thread
-import math
-import lib.custom_networking as cn
+import math, time
 #import screeninfo
 
 
@@ -120,43 +119,55 @@ class Server:
     def __init__(self, app):
         # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
-        self.server_socket = socket(AF_INET, SOCK_STREAM)
-        self.server_socket.bind((cn.HOST, cn.PORT))
-        self.server_socket.listen(0)
-        self.current_connections = 0
+        server_socket=socket(AF_INET, SOCK_STREAM)
+        server_socket.bind((cn.HOST, cn.PORT))
+        server_socket.listen(0)
+        current_connections=0
         print("server started!")
         # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
         while True:
-            if self.current_connections < cn.MAX_CONNECTIONS:
-                self.client, client_address = self.server_socket.accept()
-                # print(self.LANG['connected_message'].format(client_address))
-                #self.send_message(client, self.LANG['welcome_message'])
-                # thread.start_new_thread(self.client_handler, (client, client_address, lock)) 
-                self.current_connections += 1
-                print("Current connections:", self.current_connections)
-                # print(self.LANG['connection_count'].format(current_connections))
-            else:
-                #self.client.sendall(str(app.player1.y_pos).encode("utf-8"))
-                #app.player2.y_pos = float(self.client.recv(24).decode("utf-8"))
-                cn.send_message(self.client, app.player1.y_pos)
+            try:
+                if current_connections<cn.MAX_CONNECTIONS:
+                    self.client, client_address=server_socket.accept()
+                    # print(self.LANG['connected_message'].format(client_address))
+                    #self.send_message(client, self.LANG['welcome_message'])
+                    # thread.start_new_thread(self.client_handler, (client, client_address, lock)) 
+                    current_connections+=1
+                    print("Current connections:", current_connections)
+                    # print(self.LANG['connection_count'].format(current_connections))
+                else:
+                    # send coords
+                    cn.send_message(self.client, app.player1.y_pos)
+                    #print("Coords sent:", result)
+                    # receive coords
+                    package=float(cn.receive_message(self.client))
+                    app.player2.y_pos=package
+                    time.sleep(0.01)
+            except Exception as e:
+                print(e)
+                current_connections-=1
         
 
 
 class Client:
     def __init__(self, app):
-        self.client_socket = socket(AF_INET, SOCK_STREAM)
-        self.client_socket.connect(("localhost", 9000))
-        while self.client_socket is not None:
-            package = cn.receive_message(self.client_socket)
-            package=float(package)
-            app.player2.y_pos = package
-            print(package, type(package))
-            #self.client_socket.sendall(str(app.player1.y_pos).encode("utf-8"))
+        client_socket=socket(AF_INET, SOCK_STREAM)
+        client_socket.connect((cn.HOST, cn.PORT))
+        while client_socket is not None:
+            try:
+                # receive coords
+                package=float(cn.receive_message(client_socket))
+                app.player2.y_pos=package
+                # send coords
+                cn.send_message(client_socket, app.player1.y_pos)
+            except Exception as e:
+                print(e)
 
 
 
 def main():
     app = Application(Tk(), 60)
+    app.master.title("Pong multiplayer")
     app.main_menu()
     app.master.bind('<KeyPress>', app.inputs)
     app.master.bind('<Configure>', app.configure_event)

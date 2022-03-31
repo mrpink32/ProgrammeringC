@@ -84,12 +84,60 @@ class Application(Frame):
 
     def start_server(self):
         self.game_window()
-        thread.start_new_thread(lambda:Server(self))
+        thread.start_new_thread(self.server)
     
     def start_client(self):
         self.game_window()
         #threading.Thread(target=lambda : Client(self)).start()
-        thread.start_new_thread(lambda:Client(self))
+        thread.start_new_thread(self.client)
+#class Server:
+    def server(self):
+        # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
+        self.master.title("Server")
+        print("Starting server!")
+        self.server_socket=socket(AF_INET, SOCK_STREAM)
+        self.server_socket.bind((cn.HOST, cn.PORT))
+        self.server_socket.listen(0)
+        current_connections=0
+        print("server started!")
+        # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
+        while True:
+            try:
+                if current_connections<cn.MAX_CONNECTIONS:
+                    self.client, client_address=self.server_socket.accept()
+                    # print(self.LANG['connected_message'].format(client_address))
+                    #self.send_message(client, self.LANG['welcome_message'])
+                    # thread.start_new_thread(self.client_handler, (client, client_address, lock)) 
+                    current_connections+=1
+                    print("Current connections:", current_connections)
+                    # print(self.LANG['connection_count'].format(current_connections))
+                else:
+                    # send coords
+                    result = cn.send_message(self.client, self.player1.y_pos)
+                    print("Coords sent:", result)
+                    # receive coords
+                    package=float(cn.receive_message(self.client))
+                    self.player2.y_pos=package
+                    time.sleep(0.01)
+            except Exception as e:
+                print(e)
+                current_connections-=1
+#class Client:
+    def client(self):
+        self.master.title("Client")
+        client_socket=socket(AF_INET, SOCK_STREAM)
+        client_socket.connect((cn.HOST, cn.PORT))
+        while client_socket is not None:
+            try:
+                # receive coords
+                package=float(cn.receive_message(client_socket))
+                self.player2.y_pos=package
+                # send coords
+                result = cn.send_message(client_socket, self.player1.y_pos)
+                print("Coords sent:", result)
+                print(package, type(package))
+            except Exception as e:
+                print(e)
 
 
 # class Ball:
@@ -114,51 +162,10 @@ class Player:
         self.y_pos += inputs * self.speed
 
 
-
-class Server:
-    def __init__(self, app):
-        # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
-        app.master.title("Server")
-        print("Starting server!")
-        self.server_socket=socket(AF_INET, SOCK_STREAM)
-        self.server_socket.bind((cn.HOST, cn.PORT))
-        self.server_socket.listen(0)
-        current_connections=0
-        print("server started!")
-        # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
-        while True:
-            try:
-                if current_connections<cn.MAX_CONNECTIONS:
-                    self.client, client_address=self.server_socket.accept()
-                    # print(self.LANG['connected_message'].format(client_address))
-                    #self.send_message(client, self.LANG['welcome_message'])
-                    # thread.start_new_thread(self.client_handler, (client, client_address, lock)) 
-                    current_connections+=1
-                    print("Current connections:", current_connections)
-                    # print(self.LANG['connection_count'].format(current_connections))
-                else:
-                    #self.client.sendall(str(app.player1.y_pos).encode("utf-8"))
-                    #app.player2.y_pos=float(self.client.recv(24).decode("utf-8"))
-                    cn.send_message(self.client, app.player1.y_pos)
-                    print("Coords sent")
-            except Exception as e:
-                print(e)
-                current_connections-=1
         
 
 
-class Client:
-    def __init__(self, app):
-        app.master.title("Client")
-        self.client_socket=socket(AF_INET, SOCK_STREAM)
-        self.client_socket.connect((cn.HOST, cn.PORT))
-        while True: #self.client_socket is not None:
-            print("Hello from client true loop")
-            package=cn.receive_message(self.client_socket)
-            package=float(package)
-            app.player2.y_pos=package
-            print(package)
-            #self.client_socket.sendall(str(app.player1.y_pos).encode("utf-8"))
+
 
 
 

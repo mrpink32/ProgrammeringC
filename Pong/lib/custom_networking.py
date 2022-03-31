@@ -6,7 +6,7 @@ PORT=9000
 HEADER_SIZE=10
 MAX_QUEUE=0
 MAX_CONNECTIONS=1
-BUFFER_SIZE=1024
+BUFFER_SIZE=16
 
 def send_message(receiver, message, encode=True):
     message = str(message)
@@ -14,6 +14,7 @@ def send_message(receiver, message, encode=True):
     if encode:
         packet = packet.encode("utf-8")
     receiver.send(packet)
+    #return sent
 def receive_message(receiver, encode=True):
     message = ''
     new_packet = True
