@@ -52,10 +52,8 @@ class Application(Frame):
         self.draw_space.create_rectangle(self.player1.x_pos, self.player1.y_pos, self.player1.x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#0000ff")
         self.draw_space.create_rectangle(self.player2.x_pos - self.player_width, self.player2.y_pos, self.player2.x_pos, self.player2.y_pos + self.player_height, fill="#ff0000")
 
-    def draw_ball(self):
-        Ball = self.create_oval(10,10,50,50,fill = "black")
-        Ball_speed_x = Ball_speed_y = 3
-        self.move(Ball,Ball_speed_x,Ball_speed_y)
+    def draw_ball(self,Ball_speed_x, Ball_speed_y):
+        Ball_thing = self.create_oval(10,10,50,50,fill = "black")
         #https://youtu.be/XFU7FC-i-_Y til resten af lortet jeg mangler
 
     def calculate_player_size(self):
@@ -76,6 +74,18 @@ class Application(Frame):
                     print("moving down...")
                     self.player1.move(self.window_height*0.01)
 
+class Ball:
+    def __init__(self):
+        Ball_speed_x = 3
+        Ball_speed_y = 3
+
+    def moveBall(self,Ball_thing):
+        self.move(Ball_thing,Ball_speed_x,Ball_speed_y)
+        (left_pos,top_pos,right_pos,bottom_pos) = self.coords()
+        if left_pos <= 0 or right_pos >= 100:#fjern 100, det er en placeholder
+            Ball_speed_x = -Ball_speed_x
+        if top_pos <= 0 or bottom_pos >= 100: #--||--
+            Ball_speed_y = -Ball_speed_y
 
 
 class Player:
