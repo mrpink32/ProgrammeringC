@@ -2,7 +2,6 @@ from tkinter import *
 from socket import *
 import threading
 import math
-from turtle import window_height
 
 import screeninfo
 
@@ -13,6 +12,7 @@ class Application(Frame):
         self.grid(sticky=N+W+S+E)
         self.screen_width, self.screen_height = screeninfo.get_monitors()[0].width, screeninfo.get_monitors()[0].height
         self.frame_time = math.floor(1000 / frame_target)
+        self.is_game_running = False
     
     def clear_frame(self):
         for widget in self.main_window.winfo_children():
@@ -26,9 +26,9 @@ class Application(Frame):
         self.main_window = self.winfo_toplevel()
         for i in range(0, 5): self.main_window.columnconfigure(i, weight=1)
         for i in range(0, 7): self.main_window.rowconfigure(i, weight=1)
-        host_button = Button(self.main_window, text="Host", command=lambda : Server())
+        host_button = Button(self.main_window, text="Host", command=self.start_server)
         host_button.grid(column=2, row=1, sticky=N+W+S+E)
-        join_button = Button(self.main_window, text="Join", command=self.game_window)
+        join_button = Button(self.main_window, text="Join", command=self.start_client)
         join_button.grid(column=2, row=3, sticky=N+W+S+E)
         exit_button = Button(self.main_window, text="Exit", command=exit)
         exit_button.grid(column=2, row=5, sticky=N+W+S+E)
@@ -51,12 +51,10 @@ class Application(Frame):
         self.master.after(self.frame_time, self.game_loop)
 
     def draw_players(self):
-        print("draw!")
         self.player1.x_pos = self.window_width * 0.04
         self.player2.x_pos = self.window_width - self.player1.x_pos
         self.draw_space.create_rectangle(self.player1.x_pos, self.player1.y_pos, self.player1.x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#0000ff")
         self.draw_space.create_rectangle(self.player2.x_pos - self.player_width, self.player2.y_pos, self.player2.x_pos, self.player2.y_pos + self.player_height, fill="#ff0000")
-        print("done drawing!")
 
     def calculate_player_size(self):
         self.player_width = self.window_width * 0.01
@@ -68,12 +66,7 @@ class Application(Frame):
     def configure_event(self, event):
         #self.window_width, self.window_height = event.width, event.height
         self.window_size()
-        print(f"{self.window_width}, {self.window_height}")
         self.calculate_player_size()
-        if self.is_game_running:
-            perc = self.window_height / self.player1.y_pos
-            print(perc)
-            self.player1.y_pos = self.window_height * perc
 
     def inputs(self, event):
         match event.char:
@@ -85,6 +78,15 @@ class Application(Frame):
                 if self.player1.y_pos < self.window_height - self.player_height:
                     print("moving down...")
                     self.player1.move(1)
+
+    def start_server(self):
+        threading.Thread(target=lambda : Server(self)).start()
+        self.game_window()
+    
+    def start_client(self):
+        threading.Thread(target=Client).start()
+        self.game_window()
+
 
 
 
@@ -99,7 +101,7 @@ class Player:
 
 
 class Server:
-    def __init__(self):
+    def __init__(self, app):
         # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
         self.server_socket = socket(AF_INET, SOCK_STREAM)
@@ -118,21 +120,21 @@ class Server:
                 #self.send_message(client, self.LANG['welcome_message'])
 
 
-                # todo handle client8btgv G3REF V
                 # thread.start_new_thread(self.client_handler, (client, client_address, lock)) 
 
 
                 self.current_connections += 1
                 print(self.current_connections)
                 # print(self.LANG['connection_count'].format(current_connections))
-        
-        
-        
-        
+            else:
+                self.server_socket.sendall(app.player1.y_pos)
+                client.recv()
         
 
+
+
 class Client:
-    def __init__(self):
+    def __init__(self, app):
         self.client_socket = socket(AF_INET, SOCK_STREAM)
         self.client_socket.connect(("localhost", 9000))
 
