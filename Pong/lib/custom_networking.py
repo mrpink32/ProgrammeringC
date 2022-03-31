@@ -1,4 +1,7 @@
-HOST="localhost"
+from socket import *
+
+
+HOST="192.168.0.25"
 PORT=9000
 HEADER_SIZE=10
 MAX_QUEUE=0

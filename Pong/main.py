@@ -85,12 +85,12 @@ class Application(Frame):
 
     def start_server(self):
         self.game_window()
-        thread.start_new_thread(Server, (self))
+        thread.start_new_thread(lambda:Server(app=self))
     
     def start_client(self):
         self.game_window()
         #threading.Thread(target=lambda : Client(self)).start()
-        thread.start_new_thread(Client, (self))
+        thread.start_new_thread(lambda:Client(app=self))
 
 
 # class Ball:
@@ -127,17 +127,11 @@ class Server:
         print("server started!")
         # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
         while True:
-            if self.current_connections < 1:
+            if self.current_connections < cn.MAX_CONNECTIONS:
                 self.client, client_address = self.server_socket.accept()
                 # print(self.LANG['connected_message'].format(client_address))
-
-
                 #self.send_message(client, self.LANG['welcome_message'])
-
-
                 # thread.start_new_thread(self.client_handler, (client, client_address, lock)) 
-
-
                 self.current_connections += 1
                 print("Current connections:", self.current_connections)
                 # print(self.LANG['connection_count'].format(current_connections))
