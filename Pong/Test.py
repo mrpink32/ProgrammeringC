@@ -2,15 +2,17 @@ from tkinter import *
 from socket import *
 import threading
 import math
+from turtle import window_height
 
 import screeninfo
 
 
 class Application(Frame):
-    def __init__(self, master):
+    def __init__(self, master, frame_target):
         Frame.__init__(self, master)
         self.grid(sticky=N+W+S+E)
         self.screen_width, self.screen_height = screeninfo.get_monitors()[0].width, screeninfo.get_monitors()[0].height
+        self.frame_time = math.floor(1000 / frame_target)
     
     def clear_frame(self):
         for widget in self.main_window.winfo_children():
@@ -24,7 +26,7 @@ class Application(Frame):
         self.main_window = self.winfo_toplevel()
         for i in range(0, 5): self.main_window.columnconfigure(i, weight=1)
         for i in range(0, 7): self.main_window.rowconfigure(i, weight=1)
-        host_button = Button(self.main_window, text="Host", command=Server)
+        host_button = Button(self.main_window, text="Host", command=lambda : Server())
         host_button.grid(column=2, row=1, sticky=N+W+S+E)
         join_button = Button(self.main_window, text="Join", command=self.game_window)
         join_button.grid(column=2, row=3, sticky=N+W+S+E)
@@ -37,29 +39,24 @@ class Application(Frame):
         self.main_window.rowconfigure(0, weight=1)
         self.draw_space = Canvas(self.main_window, width=self.screen_width/2, height=self.screen_height/2)
         self.draw_space.grid(sticky=N+W+S+E)
-        self.frame_rate = math.floor(1000 / 60)
-        self.player1 = Player(320)
-        self.player2 = Player(320)
+        self.player1 = Player(self.window_height/2)
+        self.player2 = Player(self.window_height/2)
+        self.is_game_running = True
         self.game_loop()
 
     def game_loop(self):
         self.draw_space.delete(ALL)
-        self.window_size()
-        self.calculate_player_size()
-        #receive other players position
-        #print(self.player1.y_pos)
+        #receive other players y position
         self.draw_players()
-        self.master.after(self.frame_rate, self.game_loop)
+        self.master.after(self.frame_time, self.game_loop)
 
     def draw_players(self):
+        print("draw!")
         self.player1.x_pos = self.window_width * 0.04
-        self.player2.x_pos = self.window_width - self.window_width * 0.04
-        #perc = self.window_height / self.player1.y_pos
-        #print(perc)
-        #self.player1.y_pos = self.window_height * (1 - perc)
-        #self.player1.y_pos = self.window_height * perc
+        self.player2.x_pos = self.window_width - self.player1.x_pos
         self.draw_space.create_rectangle(self.player1.x_pos, self.player1.y_pos, self.player1.x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#0000ff")
         self.draw_space.create_rectangle(self.player2.x_pos - self.player_width, self.player2.y_pos, self.player2.x_pos, self.player2.y_pos + self.player_height, fill="#ff0000")
+        print("done drawing!")
 
     def calculate_player_size(self):
         self.player_width = self.window_width * 0.01
@@ -67,6 +64,16 @@ class Application(Frame):
 
     def window_size(self):
         self.window_width, self.window_height = self.main_window.winfo_width(), self.main_window.winfo_height()
+
+    def configure_event(self, event):
+        #self.window_width, self.window_height = event.width, event.height
+        self.window_size()
+        print(f"{self.window_width}, {self.window_height}")
+        self.calculate_player_size()
+        if self.is_game_running:
+            perc = self.window_height / self.player1.y_pos
+            print(perc)
+            self.player1.y_pos = self.window_height * perc
 
     def inputs(self, event):
         match event.char:
@@ -82,9 +89,9 @@ class Application(Frame):
 
 
 class Player:
-    def __init__(self, start_pos):
+    def __init__(self, start_height):
         self.x_pos = 0
-        self.y_pos = start_pos
+        self.y_pos = start_height
         self.speed = 5
     def move(self, inputs):
         self.y_pos += inputs * self.speed
@@ -122,6 +129,7 @@ class Server:
         
         
         
+        
 
 class Client:
     def __init__(self):
@@ -131,9 +139,10 @@ class Client:
 
 
 def main():
-    app = Application(Tk())
+    app = Application(Tk(), 60)
     app.main_menu()
     app.master.bind('<KeyPress>', app.inputs)
+    app.master.bind('<Configure>', app.configure_event)
     app.mainloop()
 
 
