@@ -7,6 +7,7 @@ class Application(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.grid(sticky=N+W+S+E)
+        self.screen_width, self.screen_height = 1920,1080 #screeninfo.get_monitors()[0].width, screeninfo.get_monitors()[0].height
     
     def clear_frame(self):
         for widget in self.main_window.winfo_children():
@@ -31,10 +32,11 @@ class Application(Frame):
         self.clear_frame()
         self.main_window.columnconfigure(0, weight=1)
         self.main_window.rowconfigure(0, weight=1)
-        self.draw_space = Canvas(self.main_window, width=1280, height=640)
+        self.draw_space = Canvas(self.main_window, width=self.screen_width/2, height=self.screen_height/2)
         self.draw_space.grid(sticky=N+W+S+E) #, rowspan=10, columnspan=10
         self.player1 = Player(320)
         self.player2 = Player(320)
+        self.Ball = Ball(self.screen_width/2,self.screen_height/2)
         self.game_loop()
 
     def game_loop(self):
@@ -44,6 +46,7 @@ class Application(Frame):
         #receive other players position
         #print(self.player1.y_pos)
         self.draw_players()
+        self.draw_Ball()
         self.master.after(16, self.game_loop)
 
     def draw_players(self):
@@ -52,8 +55,8 @@ class Application(Frame):
         self.draw_space.create_rectangle(self.player1.x_pos, self.player1.y_pos, self.player1.x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#0000ff")
         self.draw_space.create_rectangle(self.player2.x_pos - self.player_width, self.player2.y_pos, self.player2.x_pos, self.player2.y_pos + self.player_height, fill="#ff0000")
 
-    def draw_ball(self,Ball_speed_x, Ball_speed_y):
-        Ball_thing = self.create_oval(10,10,50,50,fill = "black")
+    def draw_Ball(self):
+       Ball_ting = self.draw_space.create_oval((self.window_width/2)-20, (self.window_height/2)-20, (self.window_width/2)+20, (self.window_height/2)+20, fill="#000000")
         #https://youtu.be/XFU7FC-i-_Y til resten af lortet jeg mangler
 
     def calculate_player_size(self):
@@ -75,14 +78,15 @@ class Application(Frame):
                     self.player1.move(self.window_height*0.01)
 
 class Ball:
-    def __init__(self):
-        Ball_speed_x = 3
-        Ball_speed_y = 3
-
-    def moveBall(self,Ball_thing):
-        self.move(Ball_thing,Ball_speed_x,Ball_speed_y)
+    def __init__(self,start_x_pos,start_y_pos):
+        self.ball_start_x_pos = start_x_pos 
+        self.ball_start_y_pos = start_y_pos
+        self.ball_x_speed = 3
+        self.ball_y_speed = 3
+    def moveBall(self):
+        self.move(Ball_ting,Ball_speed_x,Ball_speed_y)
         (left_pos,top_pos,right_pos,bottom_pos) = self.coords()
-        if left_pos <= 0 or right_pos >= 100:#fjern 100, det er en placeholder
+        if left_pos <= 0 or right_pos >=100: #fjern 100, det er en placeholder
             Ball_speed_x = -Ball_speed_x
         if top_pos <= 0 or bottom_pos >= 100: #--||--
             Ball_speed_y = -Ball_speed_y
