@@ -1,8 +1,10 @@
+from cmath import pi
 import lib.custom_networking as cn
+import math, time, random
 import _thread as thread
 from tkinter import *
 from socket import *
-import math, time
+
 #import screeninfo
 
 
@@ -39,29 +41,33 @@ class Application(Frame):
         self.main_window.rowconfigure(0, weight=1)
         self.player1 = Player(self.screen_height/2)
         self.player2 = Player(self.screen_height/2)
+        self.ball = Ball(self.screen_width/2, self.screen_height/2)
         self.draw_space = Canvas(self.main_window, width=self.screen_width, height=self.screen_height)
         self.draw_space.grid(sticky=N+W+S+E)
+        self.is_game_running = True
         self.game_loop()
 
     def game_loop(self):
         self.draw_space.delete(ALL)
-        #receive other players y position
+        self.ball.move()
+        self.draw_ball()
         self.draw_players()
         self.master.after(self.frame_time, self.game_loop)
 
     def draw_players(self):
-        self.player1.x_pos = self.window_width * 0.04
-        self.player2.x_pos = self.window_width - self.player1.x_pos
-        self.draw_space.create_rectangle(self.player1.x_pos, self.player1.y_pos, self.player1.x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#0000ff")
-        self.draw_space.create_rectangle(self.player2.x_pos - self.player_width, self.player2.y_pos, self.player2.x_pos, self.player2.y_pos + self.player_height, fill="#ff0000")
+        self.draw_space.create_rectangle(self.player1x_pos, self.player1.y_pos, self.player1x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#0000ff")
+        self.draw_space.create_rectangle(self.player2x_pos - self.player_width, self.player2.y_pos, self.player2x_pos, self.player2.y_pos + self.player_height, fill="#ff0000")
 
-    # def draw_ball(self,Ball_speed_x, Ball_speed_y):
-    #     Ball_thing = self.create_oval(10,10,50,50,fill = "black")
+    def draw_ball(self):
+        self.draw_space.create_oval(self.ball.x_pos - self.ball_size, self.ball.y_pos - self.ball_size, self.ball.x_pos + self.ball_size, self.ball.y_pos + self.ball_size ,fill="#000000")
         #https://youtu.be/XFU7FC-i-_Y til resten af lortet jeg mangler
 
     def calculate_player_size(self):
         self.player_width = self.window_width * 0.01
         self.player_height = self.window_height * 0.1
+        self.ball_size = 15
+        self.player1x_pos = self.window_width * 0.04
+        self.player2x_pos = self.window_width - self.player1x_pos
 
     def window_size(self):
         self.window_width, self.window_height = self.main_window.winfo_width(), self.main_window.winfo_height()
@@ -70,6 +76,8 @@ class Application(Frame):
         self.window_width, self.window_height = event.width, event.height
         #self.window_size()
         self.calculate_player_size()
+        
+
 
     def inputs(self, event):
         match event.char:
@@ -92,22 +100,22 @@ class Application(Frame):
         thread.start_new_thread(lambda:Client(app=self))
 
 
-# class Ball:
-#     def __init__(self):
-#         Ball_speed_x = 3
-#         Ball_speed_y = 3
 
-#     def moveBall(self,Ball_thing):
-#         self.move(Ball_thing,Ball_speed_x,Ball_speed_y)
-#         (left_pos,top_pos,right_pos,bottom_pos) = self.coords()
-#         if left_pos <= 0 or right_pos >= 100:#fjern 100, det er en placeholder
-#             Ball_speed_x = -Ball_speed_x
-#         if top_pos <= 0 or bottom_pos >= 100: #--||--
-#             Ball_speed_y = -Ball_speed_y
+class Ball:
+    def __init__(self, start_width, start_height):
+        self.x_pos = start_width
+        self.y_pos = start_height
+        self.speed = 5
+        self.move_direction = random.randint(1, 359)
+    def move(self):
+        move_direction_radian = (self.move_direction * math.pi)/180        
+        self.x_pos += math.sin(move_direction_radian) * self.speed
+        self.y_pos += math.cos(move_direction_radian) * self.speed
+
+
 
 class Player:
     def __init__(self, start_height):
-        self.x_pos = 0
         self.y_pos = start_height
         self.speed = 5
     def move(self, inputs):
@@ -142,7 +150,7 @@ class Server:
                     # receive coords
                     package=float(cn.receive_message(self.client))
                     app.player2.y_pos=package
-                    time.sleep(0.01)
+                    time.sleep(0.005)
             except Exception as e:
                 print(e)
                 current_connections-=1
@@ -152,17 +160,21 @@ class Server:
 class Client:
     def __init__(self, app):
         client_socket=socket(AF_INET, SOCK_STREAM)
-        client_socket.connect((cn.HOST, cn.PORT))
-        while client_socket is not None:
+        while True:
             try:
-                # receive coords
-                package=float(cn.receive_message(client_socket))
-                app.player2.y_pos=package
-                # send coords
-                cn.send_message(client_socket, app.player1.y_pos)
+                client_socket.connect((cn.HOST, cn.PORT))
+                while client_socket is not None:
+                    try:
+                        # receive coords
+                        package=float(cn.receive_message(client_socket))
+                        app.player2.y_pos=package
+                        # send coords
+                        cn.send_message(client_socket, app.player1.y_pos)
+                    except Exception as e:
+                        print(e)
+                        break
             except Exception as e:
                 print(e)
-
 
 
 def main():

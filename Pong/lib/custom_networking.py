@@ -1,7 +1,7 @@
 from socket import *
 
 
-HOST="192.168.0.25"
+HOST="10.156.189.211" #""192.168.0.25"
 PORT=9000
 HEADER_SIZE=10
 MAX_QUEUE=0
