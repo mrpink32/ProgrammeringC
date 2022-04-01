@@ -1,4 +1,3 @@
-from cmath import pi
 import lib.custom_networking as cn
 import math, time, random
 import _thread as thread
@@ -15,19 +14,18 @@ class Application(Frame):
         self.screen_width, self.screen_height = 1920, 1080 #screeninfo.get_monitors()[0].width, screeninfo.get_monitors()[0].height
         self.frame_time = math.floor(1000 / frame_target)
 
-    
     def clear_frame(self):
         for widget in self.main_window.winfo_children():
             widget.destroy()
         #https://stackoverflow.com/questions/49313874/how-to-remove-columns-or-rows-while-redrawing-a-grid-in-python3-tkinter
         for i in range(0, 7):
-            self.main_window.grid_columnconfigure(i, weight=0)
             self.main_window.grid_rowconfigure(i, weight=0)
-
+            self.main_window.grid_columnconfigure(i, weight=0)
+    
     def main_menu(self):
         self.main_window = self.winfo_toplevel()
-        for i in range(0, 5): self.main_window.columnconfigure(i, weight=1)
         for i in range(0, 7): self.main_window.rowconfigure(i, weight=1)
+        for i in range(0, 5): self.main_window.columnconfigure(i, weight=1)
         host_button = Button(self.main_window, text="Host", command=self.start_server)
         host_button.grid(column=2, row=1, sticky=N+W+S+E)
         join_button = Button(self.main_window, text="Join", command=self.start_client)
@@ -57,15 +55,14 @@ class Application(Frame):
     def draw_players(self):
         self.draw_space.create_rectangle(self.player1x_pos, self.player1.y_pos, self.player1x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#0000ff")
         self.draw_space.create_rectangle(self.player2x_pos - self.player_width, self.player2.y_pos, self.player2x_pos, self.player2.y_pos + self.player_height, fill="#ff0000")
-
+    
     def draw_ball(self):
         self.draw_space.create_oval(self.ball.x_pos - self.ball_size, self.ball.y_pos - self.ball_size, self.ball.x_pos + self.ball_size, self.ball.y_pos + self.ball_size ,fill="#000000")
-        #https://youtu.be/XFU7FC-i-_Y til resten af lortet jeg mangler
 
     def calculate_player_size(self):
         self.player_width = self.window_width * 0.01
         self.player_height = self.window_height * 0.1
-        self.ball_size = 15
+        self.ball_size = 20
         self.player1x_pos = self.window_width * 0.04
         self.player2x_pos = self.window_width - self.player1x_pos
 
@@ -76,8 +73,6 @@ class Application(Frame):
         self.window_width, self.window_height = event.width, event.height
         #self.window_size()
         self.calculate_player_size()
-        
-
 
     def inputs(self, event):
         match event.char:
