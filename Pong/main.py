@@ -12,6 +12,7 @@ class Application(Frame):
         self.grid(sticky=N+W+S+E)
         self.screen_width, self.screen_height = 1920, 1080 #screeninfo.get_monitors()[0].width, screeninfo.get_monitors()[0].height
         self.frame_time = math.floor(1000 / frame_target)
+
     
     def clear_frame(self):
         for widget in self.main_window.winfo_children():
@@ -40,7 +41,6 @@ class Application(Frame):
         self.player2 = Player(self.screen_height/2)
         self.draw_space = Canvas(self.main_window, width=self.screen_width, height=self.screen_height)
         self.draw_space.grid(sticky=N+W+S+E)
-        
         self.game_loop()
 
     def game_loop(self):
@@ -121,7 +121,7 @@ class Server:
         print("Starting server!")
         server_socket=socket(AF_INET, SOCK_STREAM)
         server_socket.bind((cn.HOST, cn.PORT))
-        server_socket.listen(0)
+        server_socket.listen(cn.MAX_QUEUE)
         current_connections=0
         print("server started!")
         # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
