@@ -11,7 +11,7 @@ class Application(Frame):
     def __init__(self, master, frame_target):
         Frame.__init__(self, master)
         self.grid(sticky=N+W+S+E)
-        self.screen_width, self.screen_height = 1920, 1080 #screeninfo.get_monitors()[0].width, screeninfo.get_monitors()[0].height
+        self.screen_width, self.screen_height = 1920/2, 1080/2 #screeninfo.get_monitors()[0].width, screeninfo.get_monitors()[0].height
         self.frame_time = math.floor(1000 / frame_target)
 
     def clear_frame(self):
