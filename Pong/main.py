@@ -129,23 +129,18 @@ class Server:
         print("server started!")
         # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
         while True:
-            try:
+            try: 
                 if current_connections<cn.MAX_CONNECTIONS:
                     self.client, client_address=server_socket.accept()
-                    # print(self.LANG['connected_message'].format(client_address))
-                    #self.send_message(client, self.LANG['welcome_message'])
-                    # thread.start_new_thread(self.client_handler, (client, client_address, lock)) 
                     current_connections+=1
                     print("Current connections:", current_connections)
-                    # print(self.LANG['connection_count'].format(current_connections))
                 else:
                     # send coords
                     cn.send_message(self.client, app.player1.y_pos)
-                    #print("Coords sent:", result)
                     # receive coords
                     package=float(cn.receive_message(self.client))
                     app.player2.y_pos=package
-                    time.sleep(0.005)
+                    time.sleep(0.01)
             except Exception as e:
                 print(e)
                 current_connections-=1
