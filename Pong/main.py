@@ -152,7 +152,7 @@ class Client:
         client_socket=socket(AF_INET, SOCK_STREAM)
         while True:
             try:
-                client_socket.connect((cn.HOST, cn.PORT))
+                client_socket.connect(("195.249.51.75", cn.PORT))
                 while client_socket is not None:
                     try:
                         # receive coords
