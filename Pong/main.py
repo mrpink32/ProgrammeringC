@@ -108,7 +108,7 @@ class Ball:
         self.x_pos = start_width
         self.y_pos = start_height
         self.speed = 5
-        self.move_direction = random.randint(1, 359)
+        self.move_direction = random.randint(45, 120)
     def move(self):
         move_direction_radian = (self.move_direction * math.pi)/180        
         self.x_pos += math.sin(move_direction_radian) * self.speed
