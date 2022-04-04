@@ -1,12 +1,12 @@
 from socket import *
 
 
-HOST="192.168.0.25" #""192.168.0.25"
 PORT=9000
 HEADER_SIZE=10
 MAX_QUEUE=0
 MAX_CONNECTIONS=1
 BUFFER_SIZE=16
+
 
 def send_message(receiver, message, encode=True):
     message = str(message)

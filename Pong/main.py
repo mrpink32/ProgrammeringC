@@ -50,6 +50,7 @@ class Application(Frame):
         self.ball.move()
         self.draw_ball()
         self.draw_players()
+        self.draw_ui()
         self.master.after(self.frame_time, self.game_loop)
 
     def draw_players(self):
@@ -59,6 +60,10 @@ class Application(Frame):
     def draw_ball(self):
         self.draw_space.create_oval(self.ball.x_pos - self.ball_size, self.ball.y_pos - self.ball_size, self.ball.x_pos + self.ball_size, self.ball.y_pos + self.ball_size ,fill="#000000")
 
+    def draw_ui(self):
+        self.draw_space.create_text(self.point1_x_pos, self.points_y_pos, text=self.player1.points)
+        self.draw_space.create_text(self.point2_x_pos, self.points_y_pos, text=self.player2.points)
+
     def calculate_player_size(self):
         self.player_width = self.window_width * 0.01
         self.player_height = self.window_height * 0.1
@@ -66,13 +71,15 @@ class Application(Frame):
         self.player1x_pos = self.window_width * 0.04
         self.player2x_pos = self.window_width - self.player1x_pos
 
-    def window_size(self):
-        self.window_width, self.window_height = self.main_window.winfo_width(), self.main_window.winfo_height()
+    def calculate_ui_size(self):
+        self.point1_x_pos = self.window_width / 5
+        self.point2_x_pos = self.window_width - self.point1_x_pos
+        self.points_y_pos = self.window_height / 10
 
     def configure_event(self, event):
         self.window_width, self.window_height = event.width, event.height
-        #self.window_size()
         self.calculate_player_size()
+        self.calculate_ui_size()
 
     def inputs(self, event):
         match event.char:
@@ -113,6 +120,7 @@ class Player:
     def __init__(self, start_height):
         self.y_pos = start_height
         self.speed = 5
+        self.points = 0
     def move(self, inputs):
         self.y_pos += inputs * self.speed
 
@@ -122,42 +130,42 @@ class Server:
     def __init__(self, app):
         # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
-        server_socket=socket(AF_INET, SOCK_STREAM)
-        server_socket.bind((cn.HOST, cn.PORT))
+        server_socket = socket(AF_INET, SOCK_STREAM)
+        server_socket.bind((gethostname(), cn.PORT))
         server_socket.listen(cn.MAX_QUEUE)
-        current_connections=0
+        current_connections = 0
         print("server started!")
         # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
         while True:
             try: 
-                if current_connections<cn.MAX_CONNECTIONS:
-                    self.client, client_address=server_socket.accept()
-                    current_connections+=1
+                if current_connections < cn.MAX_CONNECTIONS:
+                    self.client, client_address = server_socket.accept()
+                    current_connections += 1
                     print("Current connections:", current_connections)
                 else:
                     # send coords
                     cn.send_message(self.client, app.player1.y_pos)
                     # receive coords
-                    package=float(cn.receive_message(self.client))
-                    app.player2.y_pos=package
-                    time.sleep(0.01)
+                    package = float(cn.receive_message(self.client))
+                    app.player2.y_pos = package
+                    time.sleep(0.005)
             except Exception as e:
                 print(e)
-                current_connections-=1
-        
+                current_connections -= 1
+
 
 
 class Client:
     def __init__(self, app):
-        client_socket=socket(AF_INET, SOCK_STREAM)
+        client_socket = socket(AF_INET, SOCK_STREAM)
         while True:
             try:
                 client_socket.connect(("195.249.51.75", cn.PORT))
                 while client_socket is not None:
                     try:
                         # receive coords
-                        package=float(cn.receive_message(client_socket))
-                        app.player2.y_pos=package
+                        package = float(cn.receive_message(client_socket))
+                        app.player2.y_pos = package
                         # send coords
                         cn.send_message(client_socket, app.player1.y_pos)
                     except Exception as e:
