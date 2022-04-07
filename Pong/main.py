@@ -1,9 +1,8 @@
 import lib.custom_networking as cn
-import math, time, random
+import math, time, random, cmath
 import _thread as thread
 from tkinter import *
 from socket import *
-
 #import screeninfo
 
 
@@ -11,8 +10,9 @@ class Application(Frame):
     def __init__(self, master, frame_target):
         Frame.__init__(self, master)
         self.grid(sticky=N+W+S+E)
-        self.screen_width, self.screen_height = 1920/2, 1080/2 #screeninfo.get_monitors()[0].width, screeninfo.get_monitors()[0].height
+        self.screen_width, self.screen_height = 1920, 1080 #screeninfo.get_monitors()[0].width, screeninfo.get_monitors()[0].height
         self.frame_time = math.floor(1000 / frame_target)
+        self.is_client_connected = False
 
     def clear_frame(self):
         for widget in self.main_window.winfo_children():
@@ -37,17 +37,18 @@ class Application(Frame):
         self.clear_frame()
         self.main_window.columnconfigure(0, weight=1)
         self.main_window.rowconfigure(0, weight=1)
-        self.player1 = Player(self.screen_height/2)
-        self.player2 = Player(self.screen_height/2)
-        self.ball = Ball(self.screen_width/2, self.screen_height/2)
         self.draw_space = Canvas(self.main_window, width=self.screen_width, height=self.screen_height)
         self.draw_space.grid(sticky=N+W+S+E)
-        self.is_game_running = True
+        self.player1 = Player(self.screen_height/2, self)
+        self.player2 = Player(self.screen_height/2, self)
+        self.ball = Ball(self.screen_width/2, self.screen_height/2, self)
         self.game_loop()
 
     def game_loop(self):
         self.draw_space.delete(ALL)
-        self.ball.move()
+        if self.is_client_connected:
+            self.ball.move()
+            self.detect_collision()
         self.draw_ball()
         self.draw_players()
         self.draw_ui()
@@ -61,6 +62,10 @@ class Application(Frame):
         self.draw_space.create_oval(self.ball.x_pos - self.ball_size, self.ball.y_pos - self.ball_size, self.ball.x_pos + self.ball_size, self.ball.y_pos + self.ball_size ,fill="#000000")
 
     def draw_ui(self):
+        # point_info = [self.point1_x_pos, self.points_y_pos, self.player1.points, self.point2_x_pos, self.points_y_pos, self.player2.points]
+        # for i in range(0, 2):
+        #     x_pos, y_pos, points = point_info[0+i*3], point_info[1+i*3],point_info[2+i*3],
+        #     self.draw_space.create_text(x_pos, y_pos, text=points)
         self.draw_space.create_text(self.point1_x_pos, self.points_y_pos, text=self.player1.points)
         self.draw_space.create_text(self.point2_x_pos, self.points_y_pos, text=self.player2.points)
 
@@ -76,6 +81,22 @@ class Application(Frame):
         self.point2_x_pos = self.window_width - self.point1_x_pos
         self.points_y_pos = self.window_height / 10
 
+    def detect_collision(self):
+        # for face in self.ball.hitbox:
+        #     if face
+        if self.ball.y_pos <= 0 or self.ball.y_pos >= self.window_height:
+            # print((cmath.acos(self.ball.move_direction) * 180) / math.pi)
+            angle_out = (math.acos(180 - self.ball.move_direction) * 180) / math.pi
+            print(angle_out)
+            #self.ball.move_direction = (cmath.acos(self.ball.move_direction) * 180) / math.pi * 2
+        # turn into match statement
+        if self.ball.x_pos >= self.window_width:
+            self.player1.points += 1
+            self.ball.reset(self.window_width/2, self.window_height/2)
+        if self.ball.x_pos <= 0:
+            self.player2.points += 1
+            self.ball.reset(self.window_width/2, self.window_height/2)
+            
     def configure_event(self, event):
         self.window_width, self.window_height = event.width, event.height
         self.calculate_player_size()
@@ -94,36 +115,45 @@ class Application(Frame):
 
     def start_server(self):
         self.game_window()
-        thread.start_new_thread(lambda:Server(app=self))
+        thread.start_new_thread(lambda : Server(app=self))
     
     def start_client(self):
         self.game_window()
-        #threading.Thread(target=lambda : Client(self)).start()
-        thread.start_new_thread(lambda:Client(app=self))
-
+        thread.start_new_thread(lambda : Client(app=self))
 
 
 class Ball:
-    def __init__(self, start_width, start_height):
+    def __init__(self, start_width, start_height, hitbox):
         self.x_pos = start_width
         self.y_pos = start_height
         self.speed = 5
-        self.move_direction = random.randint(45, 120)
+        self.hitbox = hitbox
+        self.direction()
     def move(self):
-        move_direction_radian = (self.move_direction * math.pi)/180        
-        self.x_pos += math.sin(move_direction_radian) * self.speed
-        self.y_pos += math.cos(move_direction_radian) * self.speed
-
+        move_direction_radian = (self.move_direction * math.pi) / 180        
+        self.x_pos += math.cos(move_direction_radian) * self.speed
+        self.y_pos += math.sin(move_direction_radian) * self.speed
+    def reset(self, start_width, start_height):
+        self.x_pos = start_width
+        self.y_pos = start_height
+        self.direction()
+    def direction(self):
+        while True:
+            val = random.randint(0, 360)
+            if val != 90 or val != 270:
+                self.move_direction = val
+                print(self.move_direction)
+                break
 
 
 class Player:
-    def __init__(self, start_height):
+    def __init__(self, start_height, hitbox):
         self.y_pos = start_height
         self.speed = 5
+        self.hitbox = hitbox
         self.points = 0
     def move(self, inputs):
         self.y_pos += inputs * self.speed
-
 
 
 class Server:
@@ -131,7 +161,7 @@ class Server:
         # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
         server_socket = socket(AF_INET, SOCK_STREAM)
-        server_socket.bind((gethostname(), cn.PORT))
+        server_socket.bind(("localhost", cn.PORT)) # gethostname()
         server_socket.listen(cn.MAX_QUEUE)
         current_connections = 0
         print("server started!")
@@ -141,18 +171,20 @@ class Server:
                 if current_connections < cn.MAX_CONNECTIONS:
                     self.client, client_address = server_socket.accept()
                     current_connections += 1
+                    app.is_client_connected = True
                     print("Current connections:", current_connections)
                 else:
                     # send coords
-                    cn.send_message(self.client, app.player1.y_pos)
+                    payload = [app.ball.x_pos, app.ball.y_pos, app.player1.y_pos, app.player1.points, app.player2.points]
+                    for item in payload: 
+                        cn.send_message(self.client, item)
+                        time.sleep(0.002)
                     # receive coords
-                    package = float(cn.receive_message(self.client))
-                    app.player2.y_pos = package
-                    time.sleep(0.005)
+                    app.player2.y_pos = cn.receive_message(self.client, float)
             except Exception as e:
                 print(e)
                 current_connections -= 1
-
+                app.is_client_connected = False
 
 
 class Client:
@@ -160,12 +192,15 @@ class Client:
         client_socket = socket(AF_INET, SOCK_STREAM)
         while True:
             try:
-                client_socket.connect(("195.249.51.75", cn.PORT))
+                client_socket.connect(("localhost", cn.PORT))
                 while client_socket is not None:
                     try:
                         # receive coords
-                        package = float(cn.receive_message(client_socket))
-                        app.player2.y_pos = package
+                        app.ball.x_pos = cn.receive_message(client_socket, float)
+                        app.ball.y_pos = cn.receive_message(client_socket, float)
+                        app.player2.y_pos = cn.receive_message(client_socket, float)
+                        app.player1.points = cn.receive_message(client_socket, int)
+                        app.player2.points = cn.receive_message(client_socket, int)
                         # send coords
                         cn.send_message(client_socket, app.player1.y_pos)
                     except Exception as e:
