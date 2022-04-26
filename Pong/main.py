@@ -178,7 +178,7 @@ class Server:
         # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
         server_socket = socket(AF_INET, SOCK_STREAM)
-        server_socket.bind(("10.156.190.49", cn.PORT)) # gethostname()
+        server_socket.bind((gethostname(), cn.PORT)) # gethostname()
         server_socket.listen(cn.MAX_QUEUE)
         current_connections = 0
         print("server started!")
@@ -191,6 +191,7 @@ class Server:
                     app.is_client_connected = True
                     print("Current connections:", current_connections)
                 else:
+                    print("starting to send and receive")
                     # send coords
                     payload = [app.ball.x_pos, app.ball.y_pos, app.player1.y_pos, app.player1.points, app.player2.points]
                     for item in payload: 
@@ -214,6 +215,7 @@ class Client:
                 print("Connected")
                 while client_socket is not None:
                     try:
+                        print("receiving and sending...")
                         # receive coords
                         app.ball.x_pos = cn.receive_message(client_socket, float)
                         app.ball.y_pos = cn.receive_message(client_socket, float)
