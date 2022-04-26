@@ -178,7 +178,7 @@ class Server:
         # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
         server_socket = socket(AF_INET, SOCK_STREAM)
-        server_socket.bind(("localhost", cn.PORT)) # gethostname()
+        server_socket.bind(("10.156.190.49", cn.PORT)) # gethostname()
         server_socket.listen(cn.MAX_QUEUE)
         current_connections = 0
         print("server started!")
@@ -209,7 +209,7 @@ class Client:
         client_socket = socket(AF_INET, SOCK_STREAM)
         while True:
             try:
-                client_socket.connect(("localhost", cn.PORT))
+                client_socket.connect(("10.156.190.49", cn.PORT))
                 while client_socket is not None:
                     try:
                         # receive coords
