@@ -178,7 +178,7 @@ class Server:
         # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
         server_socket = socket(AF_INET, SOCK_STREAM)
-        server_socket.bind(("10.156.190.49", cn.PORT)) # gethostname()
+        server_socket.bind(("localhost", cn.PORT)) # gethostname()
         server_socket.listen(cn.MAX_QUEUE)
         current_connections = 0
         print("server started!")
@@ -195,9 +195,10 @@ class Server:
                     payload = [app.ball.x_pos, app.ball.y_pos, app.player1.y_pos, app.player1.points, app.player2.points]
                     for item in payload: 
                         cn.send_message(self.client, item)
-                        time.sleep(0.002)
+                        time.sleep(0.005)
                     # receive coords
                     app.player2.y_pos = cn.receive_message(self.client, float)
+                    print("tasks done")
             except Exception as e:
                 print(e)
                 current_connections -= 1
@@ -209,7 +210,7 @@ class Client:
         client_socket = socket(AF_INET, SOCK_STREAM)
         while True:
             try:
-                client_socket.connect(("10.156.190.49", cn.PORT))
+                client_socket.connect(("localhost", cn.PORT))
                 while client_socket is not None:
                     try:
                         # receive coords
@@ -220,6 +221,7 @@ class Client:
                         app.player2.points = cn.receive_message(client_socket, int)
                         # send coords
                         cn.send_message(client_socket, app.player2.y_pos)
+                        print("tasks done")
                     except Exception as e:
                         print(e)
                         break
