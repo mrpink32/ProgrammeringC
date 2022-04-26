@@ -195,7 +195,7 @@ class Server:
                     payload = [app.ball.x_pos, app.ball.y_pos, app.player1.y_pos, app.player1.points, app.player2.points]
                     for item in payload: 
                         cn.send_message(self.client, item)
-                        time.sleep(0.001)
+                        time.sleep(0.002)
                     # receive coords
                     app.player2.y_pos = cn.receive_message(self.client, float)
                     print("tasks done")
