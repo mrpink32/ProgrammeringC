@@ -95,6 +95,9 @@ class Application(Frame):
                 angle_out = 180 - self.ball.move_direction # 90 - (180 - self.ball.move_direction)
                 self.ball.move_direction = angle_out
                 # print("bot angle", angle_out)
+            case self.ball.y_pos if self.ball.y_pos > self.window_height:
+                self.ball.y_pos = self.window_height * 0.9
+
         match self.ball.x_pos:
             case self.ball.x_pos if self.ball.x_pos >= self.window_width:
                 self.player1.points += 1
@@ -143,7 +146,7 @@ class Ball:
     def __init__(self, start_width, start_height, hitbox):
         self.x_pos = start_width
         self.y_pos = start_height
-        self.speed = 5
+        self.speed = 4
         self.hitbox = hitbox
         self.direction()
     def move(self):
@@ -155,7 +158,7 @@ class Ball:
         self.y_pos = start_height
         self.direction()
     def direction(self):
-        while True:
+        while True: 
             val = random.randint(0, 360)
             if val != 90 or val != 270:
                 self.move_direction = val
@@ -196,7 +199,8 @@ class Server:
                     payload = [app.ball.x_pos, app.ball.y_pos, app.player1.y_pos, app.player1.points, app.player2.points]
                     for item in payload: 
                         cn.send_message(self.client, item)
-                        time.sleep(0.008)
+                        print("send message")
+                        time.sleep(0.016)
                     # receive coords
                     app.player2.y_pos = cn.receive_message(self.client, float)
                     print("tasks done")
