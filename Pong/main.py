@@ -74,7 +74,7 @@ class Application(Frame):
     def calculate_player_size(self):
         self.player_width = self.window_width * 0.01
         self.player_height = self.window_height * 0.1
-        self.ball_size = 20
+        self.ball_size = 15
         self.player1x_pos = self.window_width * 0.04
         self.player2x_pos = self.window_width - self.player1x_pos
 
@@ -86,18 +86,18 @@ class Application(Frame):
     def detect_collision(self):
         # for face in self.ball.hitbox:
         #     if face
-        match self.ball.y_pos:
-            case self.ball.y_pos if self.ball.y_pos == 0:
-                angle_out = 360 - self.ball.move_direction # 90 - (360 - self.ball.move_direction)
-                self.ball.move_direction = angle_out
+        if self.ball.y_pos <= 0 or self.ball.y_pos >= self.window_height:
+            angle_out = 360 - self.ball.move_direction # 90 - (360 - self.ball.move_direction)
+            self.ball.move_direction = angle_out
+        # match self.ball.y_pos:
+            # case self.ball.y_pos if self.ball.y_pos <= 0:
+                # angle_out = 360 - self.ball.move_direction
+                # self.ball.move_direction = angle_out
                 # print("top angle", angle_out)
-            case self.ball.y_pos if self.ball.y_pos == self.window_height:
-                angle_out = 180 - self.ball.move_direction # 90 - (180 - self.ball.move_direction)
-                self.ball.move_direction = angle_out
+            # case self.ball.y_pos if self.ball.y_pos >= self.window_height:
+                # angle_out = 360 - self.ball.move_direction
+                # self.ball.move_direction = angle_out
                 # print("bot angle", angle_out)
-            # case self.ball.y_pos if self.ball.y_pos > self.window_height:
-                # self.ball.y_pos = self.window_height * 0.9
-
         match self.ball.x_pos:
             case self.ball.x_pos if self.ball.x_pos >= self.window_width:
                 self.player1.points += 1
@@ -146,7 +146,7 @@ class Ball:
     def __init__(self, start_width, start_height, hitbox):
         self.x_pos = start_width
         self.y_pos = start_height
-        self.speed = 4
+        self.speed = 5
         self.hitbox = hitbox
         self.direction()
     def move(self):
