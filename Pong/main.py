@@ -1,6 +1,7 @@
 import lib.custom_networking as cn
 import math, time, random
 import _thread as thread
+import threading
 from tkinter import *
 from socket import *
 
@@ -133,7 +134,10 @@ class Application(Frame):
     
     def start_client(self):
         self.game_window()
-        thread.start_new_thread(lambda : Client(app=self))
+        # thread.start_new_thread(lambda : Client(app=self))
+        client_thread = threading.Thread(target=lambda : Client(self))
+        client_thread.start()
+        #thread.start_new_thread(Client, (self))
 
 class Ball:
     def __init__(self, start_width, start_height, ball_radius=15):
