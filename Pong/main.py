@@ -216,7 +216,7 @@ class Client:
         client_socket = socket(AF_INET, SOCK_STREAM)
         while True:
             try:
-                client_socket.connect(("192.168.0.25", cn.PORT)) # 10.156.188.58
+                client_socket.connect(("192.168.0.14", cn.PORT)) # 10.156.188.58
                 print("Connected")
                 while client_socket is not None:
                     try:

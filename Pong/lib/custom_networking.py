@@ -1,7 +1,6 @@
 from socket import *
-import ctypes
 
-PORT=9000
+PORT=4000
 HEADER_SIZE=10
 MAX_QUEUE=0
 MAX_CONNECTIONS=1
