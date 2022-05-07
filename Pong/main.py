@@ -235,7 +235,6 @@ class Client:
                         print("tasks done")
                     except Exception as e:
                         print(e)
-                        break
             except Exception as e:
                 print(e)
 
