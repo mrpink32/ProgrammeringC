@@ -3,14 +3,13 @@ import math, time, random
 import _thread as thread
 from tkinter import *
 from socket import *
-#import screeninfo
 
 
 class Application(Frame):
     def __init__(self, master, frame_target):
         Frame.__init__(self, master)
         self.grid(sticky=N+W+S+E)
-        self.screen_width, self.screen_height = 1920/2, 1080/2 #screeninfo.get_monitors()[0].width, screeninfo.get_monitors()[0].height
+        self.screen_width, self.screen_height = 1920/2, 1080/2
         self.frame_time = math.floor(1000 / frame_target)
         self.is_client_connected = False
         self.is_host = False
@@ -40,10 +39,12 @@ class Application(Frame):
         self.main_window.rowconfigure(0, weight=1)
         self.draw_space = Canvas(self.main_window, width=self.screen_width, height=self.screen_height)
         self.draw_space.grid(sticky=N+W+S+E)
-        self.player1 = Player(self.screen_height/2, self)
-        self.player2 = Player(self.screen_height/2, self)
-        self.ball = Ball(self.screen_width/2, self.screen_height/2, self)
+        self.ball = Ball(self.screen_width/2, self.screen_height/2, 15)
+        self.player1 = Player(self.screen_width * 0.04, self.screen_height/2)
+        self.player2 = Player(self.screen_width - self.screen_width * 0.04, self.screen_height/2)
+        self.master.bind('<Configure>', self.configure_event)
         self.master.bind('<KeyPress>', self.inputs)
+        self.configure_event()
         self.game_loop()
 
     def game_loop(self):
@@ -56,12 +57,12 @@ class Application(Frame):
         self.draw_ui()
         self.master.after(self.frame_time, self.game_loop)
 
-    def draw_players(self):
-        self.draw_space.create_rectangle(self.player1x_pos, self.player1.y_pos, self.player1x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#0000ff")
-        self.draw_space.create_rectangle(self.player2x_pos - self.player_width, self.player2.y_pos, self.player2x_pos, self.player2.y_pos + self.player_height, fill="#ff0000")
-    
     def draw_ball(self):
-        self.draw_space.create_oval(self.ball.x_pos - self.ball_size, self.ball.y_pos - self.ball_size, self.ball.x_pos + self.ball_size, self.ball.y_pos + self.ball_size ,fill="#000000")
+        self.draw_space.create_oval(self.ball.x_pos - self.ball.radius, self.ball.y_pos - self.ball.radius, self.ball.x_pos + self.ball.radius, self.ball.y_pos + self.ball.radius, fill="#000000")
+
+    def draw_players(self):
+        self.draw_space.create_rectangle(self.player1.x_pos, self.player1.y_pos, self.player1.x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#0000ff")
+        self.draw_space.create_rectangle(self.player2.x_pos - self.player_width, self.player2.y_pos, self.player2.x_pos, self.player2.y_pos + self.player_height, fill="#ff0000")
 
     def draw_ui(self):
         # point_info = [self.point1_x_pos, self.points_y_pos, self.player1.points, self.point2_x_pos, self.points_y_pos, self.player2.points]
@@ -71,14 +72,13 @@ class Application(Frame):
         self.draw_space.create_text(self.point1_x_pos, self.points_y_pos, text=self.player1.points)
         self.draw_space.create_text(self.point2_x_pos, self.points_y_pos, text=self.player2.points)
 
-    def calculate_player_size(self):
-        self.player_width = self.window_width * 0.01
-        self.player_height = self.window_height * 0.1
-        self.ball_size = 15
-        self.player1x_pos = self.window_width * 0.04
-        self.player2x_pos = self.window_width - self.player1x_pos
+    def get_window_size(self):
+        return self.main_window.winfo_width(), self.main_window.winfo_height()
 
-    def calculate_ui_size(self):
+    def get_player_size(self):
+        return self.window_width * 0.01, self.window_height * 0.1
+
+    def get_ui_size(self):
         self.point1_x_pos = self.window_width / 5
         self.point2_x_pos = self.window_width - self.point1_x_pos
         self.points_y_pos = self.window_height / 10
@@ -86,18 +86,12 @@ class Application(Frame):
     def detect_collision(self):
         # for face in self.ball.hitbox:
         #     if face
-        if self.ball.y_pos <= 0 or self.ball.y_pos >= self.window_height:
-            angle_out = 360 - self.ball.move_direction # 90 - (360 - self.ball.move_direction)
+        if self.ball.x_pos <= self.player1.x_pos and self.player1.y_pos > self.ball.y_pos < self.player1.y_pos + self.player_height:
+            angle_out = 360 - self.ball.move_direction
             self.ball.move_direction = angle_out
-        # match self.ball.y_pos:
-            # case self.ball.y_pos if self.ball.y_pos <= 0:
-                # angle_out = 360 - self.ball.move_direction
-                # self.ball.move_direction = angle_out
-                # print("top angle", angle_out)
-            # case self.ball.y_pos if self.ball.y_pos >= self.window_height:
-                # angle_out = 360 - self.ball.move_direction
-                # self.ball.move_direction = angle_out
-                # print("bot angle", angle_out)
+        if self.ball.y_pos <= 0 or self.ball.y_pos >= self.window_height:
+            angle_out = 360 - self.ball.move_direction
+            self.ball.move_direction = angle_out
         match self.ball.x_pos:
             case self.ball.x_pos if self.ball.x_pos >= self.window_width:
                 self.player1.points += 1
@@ -106,10 +100,10 @@ class Application(Frame):
                 self.player2.points += 1
                 self.ball.reset(self.window_width/2, self.window_height/2)
             
-    def configure_event(self, event):
-        self.window_width, self.window_height = event.width, event.height
-        self.calculate_player_size()
-        self.calculate_ui_size()
+    def configure_event(self, event=None):
+        self.window_width, self.window_height = self.get_window_size()
+        self.player_width, self.player_height = self.get_player_size()
+        self.get_ui_size()
 
     def inputs(self, event):
         match event.char:
@@ -141,22 +135,24 @@ class Application(Frame):
         self.game_window()
         thread.start_new_thread(lambda : Client(app=self))
 
-
 class Ball:
-    def __init__(self, start_width, start_height, hitbox):
+    def __init__(self, start_width, start_height, ball_radius=15):
         self.x_pos = start_width
         self.y_pos = start_height
+        self.radius = ball_radius
         self.speed = 5
-        self.hitbox = hitbox
         self.direction()
+
     def move(self):
         move_direction_radian = (self.move_direction * math.pi) / 180        
         self.x_pos += math.cos(move_direction_radian) * self.speed
         self.y_pos += math.sin(move_direction_radian) * self.speed
+
     def reset(self, start_width, start_height):
         self.x_pos = start_width
         self.y_pos = start_height
         self.direction()
+
     def direction(self):
         while True: 
             val = random.randint(0, 360)
@@ -165,16 +161,16 @@ class Ball:
                 print(self.move_direction)
                 break
 
-
 class Player:
-    def __init__(self, start_height, hitbox):
+    def __init__(self, start_width, start_height):
+
+        self.x_pos = start_width
         self.y_pos = start_height
         self.speed = 5
-        self.hitbox = hitbox
         self.points = 0
+
     def move(self, inputs):
         self.y_pos += inputs * self.speed
-
 
 class Server:
     def __init__(self, app):
@@ -200,7 +196,7 @@ class Server:
                     for item in payload: 
                         cn.send_message(self.client, item)
                         print("send message")
-                        time.sleep(0.016)
+                        time.sleep(0.002)
                     # receive coords
                     app.player2.y_pos = cn.receive_message(self.client, float)
                     print("tasks done")
@@ -209,13 +205,12 @@ class Server:
                 current_connections -= 1
                 app.is_client_connected = False
 
-
 class Client:
     def __init__(self, app):
         client_socket = socket(AF_INET, SOCK_STREAM)
         while True:
             try:
-                client_socket.connect(("10.156.188.58", cn.PORT))
+                client_socket.connect(("192.168.0.25", cn.PORT)) # 10.156.188.58
                 print("Connected")
                 while client_socket is not None:
                     try:
@@ -240,14 +235,11 @@ class Client:
             except Exception as e:
                 print(e)
 
-
 def main():
     app = Application(Tk(), 60)
     app.master.title("Pong multiplayer")
     app.main_menu()
-    app.master.bind('<Configure>', app.configure_event)
     app.mainloop()
-
 
 if __name__ == "__main__":
     main()
