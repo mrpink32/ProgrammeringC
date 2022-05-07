@@ -183,7 +183,7 @@ class Server:
         # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
         server_socket = socket(AF_INET, SOCK_STREAM)
-        server_socket.bind(("192.168.0.14", cn.PORT)) # gethostname()
+        server_socket.bind(("192.168.0.25", cn.PORT)) # gethostname()
         server_socket.listen(cn.MAX_QUEUE)
         current_connections = 0
         print("server started!")
