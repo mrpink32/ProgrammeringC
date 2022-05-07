@@ -1,9 +1,9 @@
 import lib.custom_networking as cn
-import math, time, random
-import _thread as thread
-import threading
 from tkinter import *
 from socket import *
+import math, random
+import threading
+
 
 
 class Application(Frame):
