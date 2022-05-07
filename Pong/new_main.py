@@ -183,7 +183,7 @@ class Server:
         # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
         server_socket = socket(AF_INET, SOCK_STREAM)
-        server_socket.bind((gethostname(), cn.PORT)) # gethostname()
+        server_socket.bind(("192.168.0.14", cn.PORT)) # gethostname()
         server_socket.listen(cn.MAX_QUEUE)
         current_connections = 0
         print("server started!")
@@ -196,16 +196,13 @@ class Server:
                     app.is_client_connected = True
                     print("Current connections:", current_connections)
                 else:
-                    print("starting to send and receive")
+                    print("trying to send and receive")
                     # send coords
-                    payload = [app.ball.x_pos, app.ball.y_pos, app.player1.y_pos, app.player1.points, app.player2.points]
-                    for item in payload: 
-                        cn.send_message(self.client, item)
-                        print("send message")
-                        time.sleep(0.01)
+                    payload = f"{app.ball.x_pos},{app.ball.y_pos},{app.player1.y_pos},{app.player1.points},{app.player2.points}"
+                    cn.send_message(self.client, payload)
                     # receive coords
                     app.player2.y_pos = cn.receive_message(self.client, float)
-                    print("tasks done")
+                    print("task done")
             except Exception as e:
                 print(e)
                 current_connections -= 1
@@ -216,27 +213,25 @@ class Client:
         client_socket = socket(AF_INET, SOCK_STREAM)
         while True:
             try:
-                client_socket.connect(("192.168.0.14", cn.PORT)) # 10.156.188.58
+                client_socket.connect(("195.249.51.75", cn.PORT)) # 10.156.188.58
                 print("Connected")
                 while client_socket is not None:
                     try:
-                        print("receiving and sending...")
                         # receive coords
-                        app.ball.x_pos = cn.receive_message(client_socket, float)
-                        print("receiving and sending...")
-                        app.ball.y_pos = cn.receive_message(client_socket, float)
-                        print("receiving and sending...")
-                        app.player1.y_pos = cn.receive_message(client_socket, float)
-                        print("receiving and sending...")
-                        app.player1.points = cn.receive_message(client_socket, int)
-                        print("receiving and sending...")
-                        app.player2.points = cn.receive_message(client_socket, int)
-                        print("receiving and sending...")
+                        packet = cn.receive_message(client_socket)
+                        message = packet.split(',')
+                        print(f"message: {message}")
+                        app.ball.x_pos = float(message[0])
+                        app.ball.y_pos = float(message[1])
+                        app.player1.y_pos = float(message[2])
+                        app.player1.points = int(message[3])
+                        app.player2.points = int(message[4])
                         # send coords
                         cn.send_message(client_socket, app.player2.y_pos)
-                        print("tasks done")
+                        print("task done")
                     except Exception as e:
                         print(e)
+                        print("grim exception")
             except Exception as e:
                 print(e)
 
