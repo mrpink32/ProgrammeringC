@@ -130,7 +130,9 @@ class Application(Frame):
     def start_server(self):
         self.is_host = True
         self.game_window()
-        thread.start_new_thread(lambda : Server(app=self))
+        #thread.start_new_thread(lambda : Server(app=self))
+        server_thread = threading.Thread(target=lambda : Server(self))
+        server_thread.start()
     
     def start_client(self):
         self.game_window()
@@ -200,7 +202,7 @@ class Server:
                     for item in payload: 
                         cn.send_message(self.client, item)
                         print("send message")
-                        time.sleep(0.002)
+                        time.sleep(0.01)
                     # receive coords
                     app.player2.y_pos = cn.receive_message(self.client, float)
                     print("tasks done")
