@@ -81,11 +81,16 @@ class Application(Frame):
 
     def detect_collision(self):
         # to do turn into one:
-        if (self.player1.x_pos - self.player_width) < self.ball.x_pos < (self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height):
+        if (self.player1.x_pos - self.player_width) < range(self.ball.x_pos - self.ball.radius, self.ball.x_pos + self.ball.radius) < (self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height): #self.ball.x_pos
             angle_out = 180 - self.ball.move_direction
             self.ball.move_direction = angle_out
             self.ball.speed += 0.25
             print("hit on player 1")
+        # if range(self.ball.x_pos - self.ball.radius, self.ball.x_pos + self.ball.radius) in range(self.player1.x_pos - self.player_width, self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height): #self.ball.x_pos
+        #     angle_out = 180 - self.ball.move_direction
+        #     self.ball.move_direction = angle_out
+        #     self.ball.speed += 0.25
+        #     print("hit on player 1")
         if (self.player2.x_pos - self.player_width) < self.ball.x_pos < (self.player2.x_pos + self.player_width) and (self.player2.y_pos - self.player_height) < self.ball.y_pos < (self.player2.y_pos + self.player_height):
             angle_out = 180 - self.ball.move_direction
             self.ball.move_direction = angle_out
@@ -170,7 +175,7 @@ class Ball:
     def direction(self):
         while True: 
             val = random.randint(1, 359)
-            if val in range(85, 95) or val in range(265, 275) or val != 180:
+            if val in range(80, 100) or val in range(260, 280) or val != 180:
                 self.move_direction = val
                 print(self.move_direction)
                 break

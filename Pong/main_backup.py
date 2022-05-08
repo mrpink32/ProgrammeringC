@@ -38,7 +38,7 @@ class Application(Frame):
         self.main_window.rowconfigure(0, weight=1)
         self.draw_space = Canvas(self.main_window, width=self.screen_width, height=self.screen_height)
         self.draw_space.grid(sticky=N+W+S+E)
-        self.ball = Ball(self.screen_width/2, self.screen_height/2, 15)
+        self.ball = Ball(self.screen_width/2, self.screen_height/2)
         self.player1 = Player(self.screen_width * 0.04, self.screen_height/2)
         self.player2 = Player(self.screen_width - self.screen_width * 0.04, self.screen_height/2)
         self.master.bind('<Configure>', self.configure_event)
@@ -80,20 +80,21 @@ class Application(Frame):
         self.points_y_pos = self.window_height / 10
 
     def detect_collision(self):
-        # if self.ball.x_pos <= self.player1.x_pos and self.player1.y_pos > self.ball.y_pos < self.player1.y_pos + self.player_height:
-        #     angle_out = 360 - self.ball.move_direction
-        #     self.ball.move_direction = angle_out
-
-        if ((self.player1.x_pos - self.player_width) < self.ball.x_pos < (self.player1.x_pos + self.player_width)) and ((self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height)):
+        # to do turn into one:
+        if (self.player1.x_pos - self.player_width) < self.ball.x_pos < (self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height):
             angle_out = 180 - self.ball.move_direction
             self.ball.move_direction = angle_out
+            self.ball.speed += 0.25
             print("hit on player 1")
         if (self.player2.x_pos - self.player_width) < self.ball.x_pos < (self.player2.x_pos + self.player_width) and (self.player2.y_pos - self.player_height) < self.ball.y_pos < (self.player2.y_pos + self.player_height):
             angle_out = 180 - self.ball.move_direction
             self.ball.move_direction = angle_out
+            self.ball.speed += 0.25
             print("hit on player 2")
-        
-
+        # if (self.player1.x_pos - self.player_width) < self.ball.x_pos < (self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height):
+            # angle_out = 180 - self.ball.move_direction
+            # self.ball.move_direction = angle_out
+            # print("hit on player 1")
         
         # bounce from top and bottom
         if self.ball.y_pos <= 0 or self.ball.y_pos >= self.window_height:
@@ -146,11 +147,12 @@ class Application(Frame):
         client_thread.start()
 
 class Ball:
-    def __init__(self, start_width, start_height, ball_radius=15):
+    def __init__(self, start_width, start_height, start_speed=2, ball_radius=10):
         self.x_pos = start_width
         self.y_pos = start_height
         self.radius = ball_radius
-        self.speed = 2
+        self.start_speed = start_speed
+        self.speed = start_speed
         self.direction()
 
     def move(self):
@@ -161,12 +163,14 @@ class Ball:
     def reset(self, start_width, start_height):
         self.x_pos = start_width
         self.y_pos = start_height
+        self.speed = self.start_speed
         self.direction()
 
+    # todo "ban" more boring directions
     def direction(self):
         while True: 
             val = random.randint(1, 359)
-            if val != 90 or val != 270 or val != 180:
+            if val in range(80, 100) or val in range(260, 280) or val != 180:
                 self.move_direction = val
                 print(self.move_direction)
                 break
