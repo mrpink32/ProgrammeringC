@@ -23,14 +23,14 @@ class Application(Frame):
     
     def main_menu(self):
         self.main_window = self.winfo_toplevel()
-        for i in range(0, 7): self.main_window.rowconfigure(i, weight=1)
-        for i in range(0, 5): self.main_window.columnconfigure(i, weight=1)
+        for i in range(0, 3): self.main_window.rowconfigure(i, weight=1)
+        self.main_window.columnconfigure(0, weight=1)
         host_button = Button(self.main_window, text="Host", command=self.start_server)
-        host_button.grid(column=2, row=1, sticky=N+W+S+E)
+        host_button.grid(column=0, row=0, sticky=N+W+S+E)
         join_button = Button(self.main_window, text="Join", command=self.start_client)
-        join_button.grid(column=2, row=3, sticky=N+W+S+E)
+        join_button.grid(column=0, row=1, sticky=N+W+S+E)
         exit_button = Button(self.main_window, text="Exit", command=exit)
-        exit_button.grid(column=2, row=5, sticky=N+W+S+E)
+        exit_button.grid(column=0, row=2, sticky=N+W+S+E)
 
     def game_window(self):
         self.clear_frame()
@@ -81,25 +81,22 @@ class Application(Frame):
 
     def detect_collision(self):
         # to do turn into one:
+        for player in self.players:
+            if (player.x_pos - self.player_width) < self.ball.x_pos < (player.x_pos + self.player_width) and (player.y_pos - self.player_height) < self.ball.y_pos < (player.y_pos + self.player_height): #self.ball.x_pos
+                angle_out = 180 - self.ball.move_direction
+                self.ball.move_direction = angle_out
+                self.ball.speed += 0.25
+
         # if (self.player1.x_pos - self.player_width) < self.ball.x_pos < (self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height): #self.ball.x_pos
         #     angle_out = 180 - self.ball.move_direction
         #     self.ball.move_direction = angle_out
         #     self.ball.speed += 0.25
         #     print("hit on player 1")
-        if (self.player1.x_pos - self.player_width) < float_range((self.ball.x_pos - self.ball.radius), (self.ball.x_pos + self.ball.radius)) < (self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height): #self.ball.x_pos
-            angle_out = 180 - self.ball.move_direction
-            self.ball.move_direction = angle_out
-            self.ball.speed += 0.25
-            print("hit on player 1")
-        if (self.player2.x_pos - self.player_width) < self.ball.x_pos < (self.player2.x_pos + self.player_width) and (self.player2.y_pos - self.player_height) < self.ball.y_pos < (self.player2.y_pos + self.player_height):
-            angle_out = 180 - self.ball.move_direction
-            self.ball.move_direction = angle_out
-            self.ball.speed += 0.25
-            print("hit on player 2")
-        # if (self.player1.x_pos - self.player_width) < self.ball.x_pos < (self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height):
-            # angle_out = 180 - self.ball.move_direction
-            # self.ball.move_direction = angle_out
-            # print("hit on player 1")
+        # if (self.player2.x_pos - self.player_width) < self.ball.x_pos < (self.player2.x_pos + self.player_width) and (self.player2.y_pos - self.player_height) < self.ball.y_pos < (self.player2.y_pos + self.player_height):
+        #     angle_out = 180 - self.ball.move_direction
+        #     self.ball.move_direction = angle_out
+        #     self.ball.speed += 0.25
+        #     print("hit on player 2")
         
         # bounce from top and bottom
         if self.ball.y_pos <= 0 or self.ball.y_pos >= self.window_height:
@@ -241,19 +238,6 @@ class Client:
                         print(e)
             except Exception as e:
                 print(e)
-
-def float_range(start, stop):
-    frange = []
-    val = start
-    frange.append(val)
-    while True:
-        val += 1.0
-        frange.append(val)
-        if val == stop:
-            return frange
-
-        
-
 
 def main():
     app = Application(Tk(), 60)
