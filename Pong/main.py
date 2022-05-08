@@ -81,12 +81,12 @@ class Application(Frame):
 
     def detect_collision(self):
         # to do turn into one:
-        # if (self.player1.x_pos - self.player_width) < range(self.ball.x_pos - self.ball.radius, self.ball.x_pos + self.ball.radius) < (self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height): #self.ball.x_pos
+        # if (self.player1.x_pos - self.player_width) < self.ball.x_pos < (self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height): #self.ball.x_pos
         #     angle_out = 180 - self.ball.move_direction
         #     self.ball.move_direction = angle_out
         #     self.ball.speed += 0.25
         #     print("hit on player 1")
-        if range(self.ball.x_pos - self.ball.radius, self.ball.x_pos + self.ball.radius) in range(self.player1.x_pos - self.player_width, self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height): #self.ball.x_pos
+        if (self.player1.x_pos - self.player_width) < float_range((self.ball.x_pos - self.ball.radius), (self.ball.x_pos + self.ball.radius)) < (self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height): #self.ball.x_pos
             angle_out = 180 - self.ball.move_direction
             self.ball.move_direction = angle_out
             self.ball.speed += 0.25
@@ -150,6 +150,8 @@ class Application(Frame):
         self.game_window()
         client_thread = threading.Thread(target=lambda : Client(self))
         client_thread.start()
+
+        
 
 class Ball:
     def __init__(self, start_width, start_height, start_speed=2, ball_radius=10):
@@ -239,6 +241,19 @@ class Client:
                         print(e)
             except Exception as e:
                 print(e)
+
+def float_range(start, stop):
+    frange = []
+    val = start
+    frange.append(val)
+    while True:
+        val += 1.0
+        frange.append(val)
+        if val == stop:
+            return frange
+
+        
+
 
 def main():
     app = Application(Tk(), 60)
