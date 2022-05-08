@@ -125,14 +125,14 @@ class Application(Frame):
     # starts the game as a host
     def start_server(self):
         self.is_host = True
-        self.game_window()
         server_thread = threading.Thread(target=lambda : Server(self))
         server_thread.start()
+        self.game_window()
     # starts the game as a client
     def start_client(self):
-        self.game_window()
         client_thread = threading.Thread(target=lambda : Client(self))
         client_thread.start()
+        self.game_window()
 
 class Ball:
     # setup of basic necessities for the ball
