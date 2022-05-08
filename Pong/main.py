@@ -122,6 +122,8 @@ class Application(Frame):
                 else:
                     if self.player2.y_pos < self.window_height - self.player_height:
                         self.player2.move(1)
+            # case '\x1b':
+                # exit()
     # starts the game as a host
     def start_server(self):
         self.is_host = True
@@ -231,6 +233,7 @@ class Client:
 def main():
     app = Application(Tk(), 60)
     app.master.title("Pong multiplayer")
+    #app.master.bind('<Escape>', exit)
     app.main_menu()
     app.mainloop()
 
