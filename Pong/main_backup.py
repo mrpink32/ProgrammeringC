@@ -4,8 +4,6 @@ from socket import *
 import math, random
 import threading
 
-
-
 class Application(Frame):
     def __init__(self, master, frame_target):
         Frame.__init__(self, master)
@@ -46,6 +44,7 @@ class Application(Frame):
         self.master.bind('<Configure>', self.configure_event)
         self.master.bind('<KeyPress>', self.inputs)
         self.configure_event()
+        self.players = [self.player1, self.player2]
         self.game_loop()
 
     def game_loop(self):
@@ -62,14 +61,10 @@ class Application(Frame):
         self.draw_space.create_oval(self.ball.x_pos - self.ball.radius, self.ball.y_pos - self.ball.radius, self.ball.x_pos + self.ball.radius, self.ball.y_pos + self.ball.radius, fill="#000000")
 
     def draw_players(self):
-        self.draw_space.create_rectangle(self.player1.x_pos, self.player1.y_pos, self.player1.x_pos + self.player_width, self.player1.y_pos + self.player_height, fill="#0000ff")
-        self.draw_space.create_rectangle(self.player2.x_pos - self.player_width, self.player2.y_pos, self.player2.x_pos, self.player2.y_pos + self.player_height, fill="#ff0000")
+        for player in self.players:
+            self.draw_space.create_rectangle(player.x_pos - self.player_width, player.y_pos - self.player_height, player.x_pos + self.player_width, player.y_pos + self.player_height, fill="#000000")
 
     def draw_ui(self):
-        # point_info = [self.point1_x_pos, self.points_y_pos, self.player1.points, self.point2_x_pos, self.points_y_pos, self.player2.points]
-        # for i in range(0, 2):
-        #     x_pos, y_pos, points = point_info[0+i*3], point_info[1+i*3],point_info[2+i*3],
-        #     self.draw_space.create_text(x_pos, y_pos, text=points)
         self.draw_space.create_text(self.point1_x_pos, self.points_y_pos, text=self.player1.points)
         self.draw_space.create_text(self.point2_x_pos, self.points_y_pos, text=self.player2.points)
 
@@ -77,7 +72,7 @@ class Application(Frame):
         return self.main_window.winfo_width(), self.main_window.winfo_height()
 
     def get_player_size(self):
-        return self.window_width * 0.01, self.window_height * 0.1
+        return self.window_width * 0.005, self.window_height * 0.05
 
     def get_ui_size(self):
         self.point1_x_pos = self.window_width / 5
@@ -85,14 +80,26 @@ class Application(Frame):
         self.points_y_pos = self.window_height / 10
 
     def detect_collision(self):
-        # for face in self.ball.hitbox:
-        #     if face
-        if self.ball.x_pos <= self.player1.x_pos and self.player1.y_pos > self.ball.y_pos < self.player1.y_pos + self.player_height:
-            angle_out = 360 - self.ball.move_direction
+        # if self.ball.x_pos <= self.player1.x_pos and self.player1.y_pos > self.ball.y_pos < self.player1.y_pos + self.player_height:
+        #     angle_out = 360 - self.ball.move_direction
+        #     self.ball.move_direction = angle_out
+
+        if ((self.player1.x_pos - self.player_width) < self.ball.x_pos < (self.player1.x_pos + self.player_width)) and ((self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height)):
+            angle_out = 180 - self.ball.move_direction
             self.ball.move_direction = angle_out
+            print("hit on player 1")
+        if (self.player2.x_pos - self.player_width) < self.ball.x_pos < (self.player2.x_pos + self.player_width) and (self.player2.y_pos - self.player_height) < self.ball.y_pos < (self.player2.y_pos + self.player_height):
+            angle_out = 180 - self.ball.move_direction
+            self.ball.move_direction = angle_out
+            print("hit on player 2")
+        
+
+        
+        # bounce from top and bottom
         if self.ball.y_pos <= 0 or self.ball.y_pos >= self.window_height:
             angle_out = 360 - self.ball.move_direction
             self.ball.move_direction = angle_out
+        # check for goals
         match self.ball.x_pos:
             case self.ball.x_pos if self.ball.x_pos >= self.window_width:
                 self.player1.points += 1
@@ -110,11 +117,11 @@ class Application(Frame):
         match event.char:
             case 'w':
                 if self.is_host:
-                    if self.player1.y_pos > 0:
+                    if self.player1.y_pos > 0 + self.player_height:
                         print("moving up...")
                         self.player1.move(-1)
                 else:
-                    if self.player2.y_pos > 0:
+                    if self.player2.y_pos > 0 + self.player_height:
                         print("moving up...")
                         self.player2.move(-1)
             case 's':
@@ -130,23 +137,20 @@ class Application(Frame):
     def start_server(self):
         self.is_host = True
         self.game_window()
-        #thread.start_new_thread(lambda : Server(app=self))
         server_thread = threading.Thread(target=lambda : Server(self))
         server_thread.start()
-    
+
     def start_client(self):
         self.game_window()
-        # thread.start_new_thread(lambda : Client(app=self))
         client_thread = threading.Thread(target=lambda : Client(self))
         client_thread.start()
-        #thread.start_new_thread(Client, (self))
 
 class Ball:
     def __init__(self, start_width, start_height, ball_radius=15):
         self.x_pos = start_width
         self.y_pos = start_height
         self.radius = ball_radius
-        self.speed = 5
+        self.speed = 2
         self.direction()
 
     def move(self):
@@ -161,18 +165,17 @@ class Ball:
 
     def direction(self):
         while True: 
-            val = random.randint(0, 360)
-            if val != 90 or val != 270:
+            val = random.randint(1, 359)
+            if val != 90 or val != 270 or val != 180:
                 self.move_direction = val
                 print(self.move_direction)
                 break
 
 class Player:
     def __init__(self, start_width, start_height):
-
         self.x_pos = start_width
         self.y_pos = start_height
-        self.speed = 5
+        self.speed = 10
         self.points = 0
 
     def move(self, inputs):
@@ -180,14 +183,12 @@ class Player:
 
 class Server:
     def __init__(self, app):
-        # print(self.LANG['startup_message'].format(self.SERVER_CONFIG['port']))
         print("Starting server!")
         server_socket = socket(AF_INET, SOCK_STREAM)
         server_socket.bind(("192.168.0.25", cn.PORT)) # gethostname()
         server_socket.listen(cn.MAX_QUEUE)
         current_connections = 0
         print("server started!")
-        # print(self.LANG['started_message'].format(self.SERVER_CONFIG['host'], self.SERVER_CONFIG['port']))
         while True:
             try: 
                 if current_connections < cn.MAX_CONNECTIONS:
@@ -196,13 +197,11 @@ class Server:
                     app.is_client_connected = True
                     print("Current connections:", current_connections)
                 else:
-                    print("trying to send and receive")
                     # send coords
                     payload = f"{app.ball.x_pos},{app.ball.y_pos},{app.player1.y_pos},{app.player1.points},{app.player2.points}"
                     cn.send_message(self.client, payload)
                     # receive coords
                     app.player2.y_pos = cn.receive_message(self.client, float)
-                    print("task done")
             except Exception as e:
                 print(e)
                 current_connections -= 1
@@ -218,20 +217,17 @@ class Client:
                 while client_socket is not None:
                     try:
                         # receive coords
-                        packet = cn.receive_message(client_socket)
-                        message = packet.split(',')
-                        print(f"message: {message}")
-                        app.ball.x_pos = float(message[0])
-                        app.ball.y_pos = float(message[1])
-                        app.player1.y_pos = float(message[2])
-                        app.player1.points = int(message[3])
-                        app.player2.points = int(message[4])
+                        packet = cn.receive_message(client_socket).split(',')
+                        #print(f"message: {message}")
+                        app.ball.x_pos = float(packet[0])
+                        app.ball.y_pos = float(packet[1])
+                        app.player1.y_pos = float(packet[2])
+                        app.player1.points = int(packet[3])
+                        app.player2.points = int(packet[4])
                         # send coords
                         cn.send_message(client_socket, app.player2.y_pos)
-                        print("task done")
                     except Exception as e:
                         print(e)
-                        print("grim exception")
             except Exception as e:
                 print(e)
 
