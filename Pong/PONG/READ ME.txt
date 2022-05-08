@@ -1,0 +1,4 @@
+The target IP of the client can be set
+in the "custom_networking.py" script
+in the "HOST" variable and needs to be
+in a string format.

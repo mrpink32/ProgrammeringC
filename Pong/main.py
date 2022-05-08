@@ -211,7 +211,7 @@ class Client:
         # enters a loop of trying to connect to the server
         while True:
             try:
-                client_socket.connect(("195.249.51.75", cn.PORT))
+                client_socket.connect((cn.HOST, cn.PORT))
                 print("Connected")
                 # enters a loop acountable for receiving and sending data to the server
                 while client_socket is not None:
@@ -233,7 +233,6 @@ class Client:
 def main():
     app = Application(Tk(), 60)
     app.master.title("Pong multiplayer")
-    #app.master.bind('<Escape>', exit)
     app.main_menu()
     app.mainloop()
 

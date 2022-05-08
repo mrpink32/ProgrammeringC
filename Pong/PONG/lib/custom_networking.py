@@ -1,11 +1,10 @@
 from socket import *
 
-HOST = ""
-PORT = 9000
-HEADER_SIZE = 10
-MAX_QUEUE = 0 
-MAX_CONNECTIONS = 1
-BUFFER_SIZE = 16
+PORT=9000
+HEADER_SIZE=10
+MAX_QUEUE=0
+MAX_CONNECTIONS=1
+BUFFER_SIZE=16
 
 def send_message(receiver, message, encoding_style="utf-8"):
     message = str(message)
