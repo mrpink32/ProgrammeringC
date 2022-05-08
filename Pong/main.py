@@ -80,20 +80,21 @@ class Application(Frame):
         self.points_y_pos = self.window_height / 10
 
     def detect_collision(self):
-        # if self.ball.x_pos <= self.player1.x_pos and self.player1.y_pos > self.ball.y_pos < self.player1.y_pos + self.player_height:
-        #     angle_out = 360 - self.ball.move_direction
-        #     self.ball.move_direction = angle_out
-
-        if ((self.player1.x_pos - self.player_width) < self.ball.x_pos < (self.player1.x_pos + self.player_width)) and ((self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height)):
+        # to do turn into one:
+        if (self.player1.x_pos - self.player_width) < self.ball.x_pos < (self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height):
             angle_out = 180 - self.ball.move_direction
             self.ball.move_direction = angle_out
+            self.ball.speed += 0.25
             print("hit on player 1")
         if (self.player2.x_pos - self.player_width) < self.ball.x_pos < (self.player2.x_pos + self.player_width) and (self.player2.y_pos - self.player_height) < self.ball.y_pos < (self.player2.y_pos + self.player_height):
             angle_out = 180 - self.ball.move_direction
             self.ball.move_direction = angle_out
+            self.ball.speed += 0.25
             print("hit on player 2")
-        
-
+        # if (self.player1.x_pos - self.player_width) < self.ball.x_pos < (self.player1.x_pos + self.player_width) and (self.player1.y_pos - self.player_height) < self.ball.y_pos < (self.player1.y_pos + self.player_height):
+            # angle_out = 180 - self.ball.move_direction
+            # self.ball.move_direction = angle_out
+            # print("hit on player 1")
         
         # bounce from top and bottom
         if self.ball.y_pos <= 0 or self.ball.y_pos >= self.window_height:
@@ -163,6 +164,7 @@ class Ball:
         self.y_pos = start_height
         self.direction()
 
+    # todo "ban" more boring directions
     def direction(self):
         while True: 
             val = random.randint(1, 359)
