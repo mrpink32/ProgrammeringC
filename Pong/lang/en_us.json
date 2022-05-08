@@ -1,9 +1,0 @@
-{
-    "startup_message": "starting server on port: {}...",
-    "started_message": "server started on: {}:{}",
-    "connected_message": "connection from {} has been established!",
-    "welcome_message": "welcome to the server!",
-    "client_message": "message from client: {}",
-    "connection_count": "current_connections: {}",
-    "client_disconnect": "connection from {} has been interrupted!"
-}
