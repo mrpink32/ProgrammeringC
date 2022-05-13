@@ -182,7 +182,7 @@ class Server:
     def __init__(self, app):
         print("Starting server!")
         server_socket = socket(AF_INET, SOCK_STREAM)
-        server_socket.bind((gethostname(), cn.PORT))
+        server_socket.bind(("localhost", cn.PORT)) #gethostname()
         server_socket.listen(cn.MAX_QUEUE)
         current_connections = 0
         print("server started!")

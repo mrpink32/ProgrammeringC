@@ -1,6 +1,6 @@
 from socket import *
 
-HOST = ""
+HOST = "localhost" #"10.156.189.125"
 PORT = 9000
 HEADER_SIZE = 10
 MAX_QUEUE = 0 
